@@ -1,0 +1,478 @@
+[
+  {
+    "Path": "Assets\\InputSystem_Actions.inputactions",
+    "Bytes": 41005
+  },
+  {
+    "Path": "Assets\\Readme.asset",
+    "Bytes": 1144
+  },
+  {
+    "Path": "Assets\\Editor\\Apocalypse.Editor.asmdef",
+    "Bytes": 108
+  },
+  {
+    "Path": "Assets\\Editor\\PixelAssetImporter.cs",
+    "Bytes": 1492
+  },
+  {
+    "Path": "Assets\\Editor\\ProjectBuilder.cs",
+    "Bytes": 3742
+  },
+  {
+    "Path": "Assets\\Editor\\UIOptimizationBenchmark.cs",
+    "Bytes": 2173
+  },
+  {
+    "Path": "Assets\\Prefabs\\GameButton.prefab",
+    "Bytes": 6695
+  },
+  {
+    "Path": "Assets\\Prefabs\\GamePanel.prefab",
+    "Bytes": 2211
+  },
+  {
+    "Path": "Assets\\Resources\\activity-content.json",
+    "Bytes": 13973
+  },
+  {
+    "Path": "Assets\\Resources\\balance.json",
+    "Bytes": 9487
+  },
+  {
+    "Path": "Assets\\Resources\\content.json",
+    "Bytes": 15666
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Combat\\battle-actors-v1.png",
+    "Bytes": 1517588
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\alexander-v2.png",
+    "Bytes": 2751749
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\artemis-v2.png",
+    "Bytes": 2626141
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\arthur-v2.png",
+    "Bytes": 2732538
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\cleopatra-v2.png",
+    "Bytes": 2490360
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\curie-v2.png",
+    "Bytes": 1928233
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\genghis-v2.png",
+    "Bytes": 2644116
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\hades-v2.png",
+    "Bytes": 2802452
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\heracles-v2.png",
+    "Bytes": 2774088
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\hua-v2.png",
+    "Bytes": 2496776
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\joan-v2.png",
+    "Bytes": 2655663
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\leonardo-v2.png",
+    "Bytes": 2329977
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\leonidas-v2.png",
+    "Bytes": 2598848
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\musashi-v2.png",
+    "Bytes": 2234864
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\napoleon-v1.png",
+    "Bytes": 2600254
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\sejong-v2.png",
+    "Bytes": 2687705
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\tesla-v2.png",
+    "Bytes": 3185768
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\yi-v2.png",
+    "Bytes": 2956452
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\yog-v1.png",
+    "Bytes": 3049955
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\zeus-v2.png",
+    "Bytes": 2767498
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Constellations\\zhuge-v2.png",
+    "Bytes": 2692991
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Environments\\battle-interior-v1.png",
+    "Bytes": 2475572
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Environments\\chapel-v2.png",
+    "Bytes": 2376274
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Environments\\city-v2.png",
+    "Bytes": 2958204
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Environments\\clinic-v2.png",
+    "Bytes": 2497090
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Environments\\constellation-omen-v1.png",
+    "Bytes": 2036003
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Environments\\personnel-v2.png",
+    "Bytes": 2464207
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Environments\\rift-v2.png",
+    "Bytes": 3040361
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Environments\\warehouse-v2.png",
+    "Bytes": 2471760
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\beyr-v1.png",
+    "Bytes": 1254198
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\kael-v1.png",
+    "Bytes": 1275291
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\lyra-v1.png",
+    "Bytes": 1383400
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\nerissa-v1.png",
+    "Bytes": 1346319
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-00-v3.png",
+    "Bytes": 1124747
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-01-v3.png",
+    "Bytes": 1208942
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-02-v3.png",
+    "Bytes": 1186170
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-03-v3.png",
+    "Bytes": 1261657
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-04-v3.png",
+    "Bytes": 1326866
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-05-v3.png",
+    "Bytes": 1319924
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-06-v3.png",
+    "Bytes": 1279167
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-07-v3.png",
+    "Bytes": 1417152
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-08-v3.png",
+    "Bytes": 1315316
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-09-v3.png",
+    "Bytes": 1331484
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-10-v3.png",
+    "Bytes": 1358032
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Portraits\\survivor-11-v3.png",
+    "Bytes": 1288921
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Relics\\antikythera-v1.png",
+    "Bytes": 1850132
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Relics\\bicorne-v1.png",
+    "Bytes": 731078
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Relics\\dagger-v1.png",
+    "Bytes": 632829
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Relics\\grail-v1.png",
+    "Bytes": 918072
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Relics\\gungnir-v1.png",
+    "Bytes": 393562
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Relics\\nebra-v1.png",
+    "Bytes": 1818779
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Relics\\necronomicon-v1.png",
+    "Bytes": 1760698
+  },
+  {
+    "Path": "Assets\\Resources\\Art\\Relics\\solomon-v1.png",
+    "Bytes": 1121070
+  },
+  {
+    "Path": "Assets\\Scenes\\Apocalypse.unity",
+    "Bytes": 7040
+  },
+  {
+    "Path": "Assets\\Scenes\\SampleScene.unity",
+    "Bytes": 11413
+  },
+  {
+    "Path": "Assets\\Scripts\\Apocalypse.Runtime.asmdef",
+    "Bytes": 80
+  },
+  {
+    "Path": "Assets\\Scripts\\Core\\ActivityEngine.cs",
+    "Bytes": 17054
+  },
+  {
+    "Path": "Assets\\Scripts\\Core\\ActivityModels.cs",
+    "Bytes": 1874
+  },
+  {
+    "Path": "Assets\\Scripts\\Core\\CampaignPolicy.cs",
+    "Bytes": 1997
+  },
+  {
+    "Path": "Assets\\Scripts\\Core\\CombatEngine.cs",
+    "Bytes": 8671
+  },
+  {
+    "Path": "Assets\\Scripts\\Core\\CombatPresentation.cs",
+    "Bytes": 1165
+  },
+  {
+    "Path": "Assets\\Scripts\\Core\\GameEngine.cs",
+    "Bytes": 21263
+  },
+  {
+    "Path": "Assets\\Scripts\\Core\\Models.cs",
+    "Bytes": 9879
+  },
+  {
+    "Path": "Assets\\Scripts\\Core\\RelicEngine.cs",
+    "Bytes": 4856
+  },
+  {
+    "Path": "Assets\\Scripts\\Save\\SaveManager.cs",
+    "Bytes": 3882
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\ArtCatalog.cs",
+    "Bytes": 1946
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\BattleImpactGlyph.cs",
+    "Bytes": 848
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\BattleSceneUI.cs",
+    "Bytes": 17421
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\CodexIndex.cs",
+    "Bytes": 1013
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\ConstellationArtLease.cs",
+    "Bytes": 1530
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\FacilityUI.cs",
+    "Bytes": 5402
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\GameApp.cs",
+    "Bytes": 30049
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\NewGameUI.cs",
+    "Bytes": 2031
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\PixelPlate.cs",
+    "Bytes": 3609
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\PortraitIdentity.cs",
+    "Bytes": 431
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\SealGlyph.cs",
+    "Bytes": 1266
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\SingleScreenUI.cs",
+    "Bytes": 22045
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\SmokeRunner.cs",
+    "Bytes": 28054
+  },
+  {
+    "Path": "Assets\\Scripts\\UI\\VisualSkin.cs",
+    "Bytes": 5308
+  },
+  {
+    "Path": "Assets\\Settings\\DefaultVolumeProfile.asset",
+    "Bytes": 24035
+  },
+  {
+    "Path": "Assets\\Settings\\Mobile_Renderer.asset",
+    "Bytes": 1713
+  },
+  {
+    "Path": "Assets\\Settings\\Mobile_RPAsset.asset",
+    "Bytes": 4345
+  },
+  {
+    "Path": "Assets\\Settings\\PC_Renderer.asset",
+    "Bytes": 3439
+  },
+  {
+    "Path": "Assets\\Settings\\PC_RPAsset.asset",
+    "Bytes": 4669
+  },
+  {
+    "Path": "Assets\\Settings\\SampleSceneProfile.asset",
+    "Bytes": 3703
+  },
+  {
+    "Path": "Assets\\Settings\\UniversalRenderPipelineGlobalSettings.asset",
+    "Bytes": 26104
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\Apocalypse.EditMode.asmdef",
+    "Bytes": 142
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\ArtAssetTests.cs",
+    "Bytes": 5581
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\CombatPresentationTests.cs",
+    "Bytes": 4126
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\GameRulesTests.cs",
+    "Bytes": 13111
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\NewGameSaveTests.cs",
+    "Bytes": 1721
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\PlannerOrderTests.cs",
+    "Bytes": 21643
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\RegressionTests.cs",
+    "Bytes": 6497
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\RequestedChangesTests.cs",
+    "Bytes": 6995
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\RiftScoreAndScalingTests.cs",
+    "Bytes": 6749
+  },
+  {
+    "Path": "Assets\\Tests\\EditMode\\SimulationTests.cs",
+    "Bytes": 3708
+  },
+  {
+    "Path": "Assets\\Tests\\PlayMode\\Apocalypse.PlayMode.asmdef",
+    "Bytes": 125
+  },
+  {
+    "Path": "Assets\\Tests\\PlayMode\\BattleSceneTests.cs",
+    "Bytes": 4810
+  },
+  {
+    "Path": "Assets\\Tests\\PlayMode\\LogReuseTests.cs",
+    "Bytes": 2498
+  },
+  {
+    "Path": "Assets\\Tests\\PlayMode\\NavigationReadabilityTests.cs",
+    "Bytes": 4727
+  },
+  {
+    "Path": "Assets\\Tests\\PlayMode\\NewGameWarningTests.cs",
+    "Bytes": 4471
+  },
+  {
+    "Path": "Assets\\Tests\\PlayMode\\PlannerScreenTests.cs",
+    "Bytes": 6431
+  },
+  {
+    "Path": "Assets\\Tests\\PlayMode\\ScreenTests.cs",
+    "Bytes": 14195
+  },
+  {
+    "Path": "Assets\\Tests\\PlayMode\\SingleScreenTests.cs",
+    "Bytes": 5251
+  },
+  {
+    "Path": "Assets\\TutorialInfo\\Layout.wlt",
+    "Bytes": 15479
+  },
+  {
+    "Path": "Assets\\TutorialInfo\\Icons\\URP.png",
+    "Bytes": 24069
+  },
+  {
+    "Path": "Assets\\TutorialInfo\\Scripts\\Readme.cs",
+    "Bytes": 302
+  },
+  {
+    "Path": "Assets\\TutorialInfo\\Scripts\\Editor\\ReadmeEditor.cs",
+    "Bytes": 6677
+  }
+]

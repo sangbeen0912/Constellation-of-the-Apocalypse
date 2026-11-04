@@ -6,7 +6,7 @@ public class CombatPresentationTests
 {
     GameEngine Veteran()
     {
-        var g=GameEngine.New(790,GameData.LoadBalance(),GameData.LoadContent());g.Select(g.S.candidates[0].id);
+        var g=GameEngine.New(790,GameData.LoadBalance(),GameData.LoadContent());if(g.S.avatar==null)g.Select(g.S.candidates[0].id);
         g.S.day=2;g.S.activeRift=0;g.S.goal=Goal.Rift;g.S.phase=Phase.Running;g.S.hours=0;
         g.S.avatar.baseHealth=1000;g.S.avatar.health=1000;g.S.avatar.baseAttack=18;g.S.food=1000;g.S.avatar.sanity=100;
         g.S.demons[0].progress=50;return g;
@@ -50,6 +50,6 @@ public class CombatPresentationTests
         Assert.GreaterOrEqual(fight,0);g.Resolve(g.S.pending.id,fight);Assert.AreEqual("interior",replay.scene);Assert.AreEqual("읽혀서는 안 되는 기록",replay.eventTitle);
         g.S.phase=Phase.Running;g.S.hours=0;g.S.avatar.sanity=g.S.avatar.hunger=100;g.Battle(EnemyKind.Normal,1,Sin.Pride);
         Assert.AreEqual("rift",replay.scene);Assert.IsNull(replay.eventTitle);
-        CollectionAssert.IsSubsetOf(g.Content.activityEvents.Select(e=>e.scene).Distinct().ToArray(),new[]{"ruins","interior","chapel","rift"});
+        foreach(var e in g.Content.activityEvents)Assert.IsTrue(new[]{"ruins","interior","chapel","rift"}.Contains(e.scene)||e.scene.StartsWith("area:"),e.id);
     }
 }

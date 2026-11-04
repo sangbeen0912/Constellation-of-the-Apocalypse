@@ -18,10 +18,10 @@
   "combatRoundHours": 0.15,
   "minBattleHours": 0.5,
   "maxCombatRounds": 200,
-  "normalHp": 28,
+  "normalHp": 30,
   "specialHp": 55,
   "demonHp": 220,
-  "normalAttack": 4,
+  "normalAttack": 5,
   "specialAttack": 7,
   "demonAttack": 13,
   "normalStress": 3,
@@ -69,7 +69,9 @@
     -0.05,
     0.1,
     0,
-    -0.1
+    -0.1,
+    -0.1,
+    0.15
   ],
   "eventCosts": [
     {
@@ -225,7 +227,7 @@
       ]
     },
     {
-      "id": "F-01",
+      "id": "MUS-04",
       "hours": [
         7,
         0,
@@ -263,7 +265,7 @@
       ]
     },
     {
-      "id": "F-02",
+      "id": "MUS-08",
       "hours": [
         7,
         0,
@@ -301,7 +303,7 @@
       ]
     },
     {
-      "id": "F-03",
+      "id": "MUS-06",
       "hours": [
         6,
         0,
@@ -339,7 +341,7 @@
       ]
     },
     {
-      "id": "F-04",
+      "id": "ARM-10",
       "hours": [
         4,
         0,
@@ -375,348 +377,64 @@
         1,
         0
       ]
-    },
-    {
-      "id": "field-rescue",
-      "hours": [
-        0,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "field-cache",
-      "hours": [
-        2,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "field-prayer",
-      "hours": [
-        2,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        8,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "field-tower",
-      "hours": [
-        3,
-        0
-      ],
-      "hunger": [
-        8,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "rift-blockade",
-      "hours": [
-        0,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        3,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "rift-special",
-      "hours": [
-        0,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        1,
-        0
-      ]
-    },
-    {
-      "id": "rift-prayer",
-      "hours": [
-        2,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        8,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "recruit-kael",
-      "hours": [
-        0,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "recruit-nerissa",
-      "hours": [
-        0,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "recruit-beyr",
-      "hours": [
-        0,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
-    },
-    {
-      "id": "recruit-lyra",
-      "hours": [
-        0,
-        0
-      ],
-      "hunger": [
-        0,
-        0
-      ],
-      "sanity": [
-        0,
-        0
-      ],
-      "food": [
-        0,
-        0
-      ],
-      "kits": [
-        0,
-        0
-      ],
-      "normal": [
-        0,
-        0
-      ],
-      "special": [
-        0,
-        0
-      ]
     }
   ],
-  "_provisionalNotes": "횟수 분포 미확정: 빈 배열이면 균등 추첨하지 않고 임시 최소1회. 귀환 임계/성격/위험 가중치, 발견·신위 성공률, 희귀 영입은 기존 scoutSuccess 사용, 사건 비용/적 편성은 전부 임시값. 성장/보상/봉인/30% 대체는 Rules의 확정값."
+  "_provisionalNotes": "11월4일 사용자 위임 보완값은 november에 모았다. 하루3/4 균등, 식량 마트70%/그외2%, 의약품 발견60%, 미지정 조사2시간/정신비용8/낙상25%·8HP. 이동시간·보상·적스탯·성좌30%는 확정. 수량 없는 식량 지원·거래는1개.",
+  "november": {
+    "dailyWeights": [
+      1,
+      1
+    ],
+    "demonHp": [
+      300,
+      300,
+      260,
+      310,
+      360,
+      270,
+      330
+    ],
+    "demonAttack": [
+      9,
+      10,
+      9,
+      10,
+      8,
+      12,
+      8
+    ],
+    "specialHp": [
+      70,
+      55,
+      50,
+      55,
+      75,
+      45,
+      80
+    ],
+    "specialAttack": [
+      7,
+      9,
+      8,
+      9,
+      7,
+      11,
+      6
+    ],
+    "martFood": 0.7,
+    "otherFood": 0.02,
+    "supplyDiscovery": 0.6,
+    "crisisHp": 0.3,
+    "enemyCrisisHp": 0.25,
+    "boundaryLow": 30,
+    "boundaryHigh": 40,
+    "injuryChance": 0.25,
+    "injuryHp": 8,
+    "mentalCost": 8,
+    "defaultEventHours": 2,
+    "envyIncludesTriggerTurn": true,
+    "spawnIncludesCreationTurn": false,
+    "optionalEncounterChance": 0.35,
+    "noiseMultiplier": 0.8
+  }
 }

@@ -43,6 +43,12 @@ public class ArtAssetTests
             importer.GetSourceTextureWidthAndHeight(out int width,out int height);
             if(AssetDatabase.GetAssetPath(texture).Contains("/Portraits/"))
             { Assert.Greater(width,256);Assert.Greater(height,256);Assert.LessOrEqual(texture.width,256);Assert.AreEqual(256,importer.maxTextureSize); }
+            else if(AssetDatabase.GetAssetPath(texture).Contains("/Environments/"))
+            {
+                int cap=texture.name=="clinic-v2"||texture.name=="warehouse-v2"||texture.name=="personnel-v2"?512:1024;
+                Assert.AreEqual(cap,importer.maxTextureSize);Assert.AreEqual(cap,texture.width);
+                Assert.AreEqual(height/(float)width,texture.height/(float)texture.width,.003,"배경 비율을 보존합니다.");
+            }
             else { Assert.AreEqual(width,texture.width);Assert.AreEqual(height,texture.height); }
         }
     }

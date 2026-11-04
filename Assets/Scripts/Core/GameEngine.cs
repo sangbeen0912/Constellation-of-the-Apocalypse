@@ -21,10 +21,10 @@ namespace Apocalypse
                 // Legacy visits/wins cannot be converted into per-zombie scores faithfully.
                 foreach(var demon in S.demons) demon.progress = 0;
                 if(S.pending != null && S.pending.title == "균열의 마지막 문")
-                { S.pending.title="군단의 봉쇄선";S.pending.body="균열 진입로를 확보해야 악마의 본체에 도달할 수 있다.";S.pending.choices=new[]{"군단의 봉쇄선을 돌파한다","철수하고 다음을 준비한다"}; }
+                { var replacement=Content.activityEvents.FirstOrDefault(e=>e.id=="RF-005");if(replacement!=null)ApplyTemplate(S.pending,replacement); }
                 Log("옛 방문 기록은 처치 점수로 환산하지 않고 보존했다.");
             }
-            MigrateCurrentRules();
+            MigrateCurrentRules();InitializeNovember();
         }
         public static GameEngine New(uint seed, Balance b, Content c, PermanentData permanent = null)
         {
@@ -33,8 +33,8 @@ namespace Apocalypse
             if (permanent != null) s.permanent = permanent;
             var game = new GameEngine(s, b, c);
             for (int i = 0; i < 7; i++) s.demons.Add(new Demon { sin = (Sin)i });
-            for (int i = 0; i < 3; i++) s.candidates.Add(game.CreateCharacter(false));
-            game.Log("무너진 세계에 세 줄기의 생존 신호가 닿았다. 첫 화신체를 선택하십시오.");
+            s.candidates.Add(game.CreateCharacter(false));
+            game.Select(s.candidates[0].id);game.Log("한 생존자와 첫 계약을 맺었다.");
             return game;
         }
         public void Log(string message)
@@ -51,7 +51,7 @@ namespace Apocalypse
             bool mutant = allowMutation && Rng.Next() < B.mutantChance;
             var c = new Character { id = Id("npc"), name = Rng.Pick(first) + Rng.Pick(last),
                 baseHealth = Rng.Int(B.healthMin, B.healthMax + 1), baseAttack = Rng.Int(B.attackMin, B.attackMax + 1),
-                personality = (Temperament)Rng.Int(0, 4), mutant = mutant };
+                personality = (Temperament)Rng.Int(0, 6), mutant = mutant };
             if (mutant) { c.baseAttack += 5; c.baseHealth += 10; }
             c.health = c.MaxHealth;
             c.sanity = Rng.Int(75, 101); c.hunger = Rng.Int(75, 101);
@@ -145,6 +145,7 @@ namespace Apocalypse
         {
             if(S.phase!=Phase.Morning||S.avatar==null||S.hours>=24)return false;
             S.goal=goal==Goal.Rift&&S.activeRift>=0&&S.day>S.avatar.selectedDay?Goal.Rift:Goal.Explore;S.phase=Phase.Running;
+            S.exploration.current=S.goal==Goal.Rift?Area.Rift:S.exploration.selected;S.exploration.routeOffered=false;
             if(!S.dayStarted)
             {
                 S.dayStarted=true;S.normalWins=0;S.eventSlots=0;S.returnRequested=false;
@@ -189,6 +190,7 @@ namespace Apocalypse
             if(S.hours>=24-.00001){if(!EncounterConstellation())EndDay();return;}
             if(!string.IsNullOrEmpty(S.scheduledConstellation)&&S.hours>=S.constellationMeetingHour){EncounterConstellation();return;}
             bool bossReady=S.goal==Goal.Rift&&S.activeRift>=0&&S.day>S.avatar.selectedDay&&CanReachDemon((Sin)S.activeRift);
+            if(S.goal==Goal.Explore&&S.exploration.current==Area.Subway&&!S.exploration.routeOffered&&Rng.Next()<.35){OfferTransit();return;}
             if(S.eventSlots<S.eventTarget&&(S.hours>=S.nextImportantHour||bossReady&&S.eventSlots==0)){ShowGeneralEvent();return;}
             bool safe=S.day==S.avatar.selectedDay;
             if(ShouldReturn()){RequestReturn("상태와 남은 시간을 살펴 조기 귀환을 결정했다.");return;}
@@ -197,13 +199,14 @@ namespace Apocalypse
             bool assault=S.goal==Goal.Rift&&!safe&&S.activeRift>=0;
             int[] weights={S.food<80?55:assault?10:42,assault?5:38,safe||S.activeRift<0?0:assault?B.riftCombatWeight:B.exploreCombatWeight,10};
             if(S.avatar.personality==Temperament.Brave&&!safe&&S.activeRift>=0)weights[2]+=20;
-            if(S.avatar.personality==Temperament.Curious)weights[1]+=20;
+            if(S.avatar.personality==Temperament.Cold)weights[1]+=20;
             if(S.avatar.personality==Temperament.Cautious)weights[3]+=20;
+            if(S.exploration.current==Area.Residence&&Branch("HOM-01",1))weights[2]=Rules.Round(weights[2]*B.november.noiseMultiplier);
             int action=Rng.Weighted(weights);
             if(action==0){if(!SpendTime(Activity.Search,Math.Min(3,24-S.hours)))return;SearchFood();}
             else if(action==1){if(!SpendTime(Activity.Scout,Math.Min(3*(S.avatar.Has("zhuge")?1-B.zhugeTime:1),24-S.hours)))return;Log("폐허 정찰 · 생존 신호를 탐색한다.");}
             else if(action==2){if(!SpendTime(Activity.Travel,Math.Min(1,24-S.hours)))return;Battle(EnemyKind.Normal,Rng.Int(1,4),(Sin)S.activeRift);}
-            else {if(!SpendTime(Activity.Rest,Math.Min(2,24-S.hours)))return;S.avatar.sanity=Rules.Clamp(S.avatar.sanity+12);Log("잠시 쉬며 공포를 가라앉혔다.");}
+            else {if(!SpendTime(Activity.Rest,Math.Min(2,24-S.hours)))return;Log("잠시 멈춰 주변을 살피고 호흡을 가다듬었다.");}
             S.totalActions++;SavePoint();
         }
 
@@ -211,10 +214,11 @@ namespace Apocalypse
         public int ActiveSealCount { get { return S.demons.Count(d=>d.remaining>0); } }
         public double EnemyHealthMultiplier { get { return 1 + Rules.HealthPerSeal*ActiveSealCount; } }
         public double EnemyAttackMultiplier { get { return 1 + Rules.AttackPerSeal*ActiveSealCount; } }
-        public EnemyStats GetEnemyStats(EnemyKind kind, NamedZombieRecord named = null)
+        public EnemyStats GetEnemyStats(EnemyKind kind, NamedZombieRecord named = null, Sin? legion = null)
         {
-            int health=kind==EnemyKind.Demon?B.demonHp:kind==EnemyKind.Special?B.specialHp:kind==EnemyKind.Named&&named!=null?named.health:B.normalHp;
-            int attack=kind==EnemyKind.Demon?B.demonAttack:kind==EnemyKind.Special?B.specialAttack:kind==EnemyKind.Named&&named!=null?named.attack:B.normalAttack;
+            int sin=(int)(legion??(S.activeRift>=0?(Sin)S.activeRift:Sin.Wrath));
+            int health=kind==EnemyKind.Demon?B.november.demonHp[sin]:kind==EnemyKind.Special?B.november.specialHp[sin]:kind==EnemyKind.Named&&named!=null?named.health:B.normalHp;
+            int attack=kind==EnemyKind.Demon?B.november.demonAttack[sin]:kind==EnemyKind.Special?B.november.specialAttack[sin]:kind==EnemyKind.Named&&named!=null?named.attack:B.normalAttack;
             return new EnemyStats{health=Rules.Round(health*EnemyHealthMultiplier),attack=Rules.Round(attack*EnemyAttackMultiplier)};
         }
         void AddRiftProgress(EnemyKind kind, Sin legion)
@@ -228,7 +232,7 @@ namespace Apocalypse
         {
             if(!CanBattle(kind,legion,named)||count<1)return false;
             if(kind!=EnemyKind.Normal)count=1;
-            var enemies=new List<CombatEnemy>();for(int i=0;i<count;i++)enemies.Add(CreateEnemy(kind,legion,named));
+            var enemies=new List<BattleEnemy>();for(int i=0;i<count;i++)enemies.Add(CreateEnemy(kind,legion,named));
             return Fight(enemies,legion);
         }
 
@@ -263,6 +267,7 @@ namespace Apocalypse
             S.lastDeath = a.name + " · " + (combat ? "전투 사망" : "비전투 사망") + "\n" + cause + "\n" + Rules.Sins[(int)assigned] + " 군단의 네임드 좀비로 기록되었다.";
             CreditRelicDay(); CloseRelicLife(a);
             S.scheduledConstellation=null; S.pending=null; S.returnRequested=false;
+            S.plot=new PlotState();S.exploration=new ExplorationState{selected=S.exploration.selected};
             if (S.activeRift >= 0) { S.demons[S.activeRift].progress=0;Log(Rules.Sins[S.activeRift] + " 군단 철수 · 균열 폐쇄 · 진행도 초기화"); }
             S.activeRift = -1; Log(S.lastDeath.Replace('\n', ' ')); S.avatar = null;
             S.settledDay = S.day; AdvanceCalendar(); S.phase = Phase.Death; S.nextRiftDay = S.day + 1;
@@ -277,7 +282,7 @@ namespace Apocalypse
             S.report = S.day + "일 정산\n" + S.avatar.name + " 생존 · 활동 " + S.hours.ToString("0.0") + "/24시간\n" +
                 "신위 " + S.divinity + " · 식량 " + S.food + " · 봉인 " + S.demons.Count(d => d.remaining > 0) + "/7\n" +
                 "허기 " + Rules.Round(S.avatar.hunger) + " · 정신력 " + Rules.Round(S.avatar.sanity);
-            S.phase = Phase.Report; SavePoint();
+            S.exploration.current=Area.Shelter;S.exploration.rejected.Clear();S.phase = Phase.Report; SavePoint();
         }
         void AdvanceCalendar()
         {
@@ -305,7 +310,7 @@ namespace Apocalypse
         public void Validate()
         {
             if (S.day < 1 || S.hours < 0 || S.hours > 24.00001 || S.divinity < 0 || S.food < 0 || S.medicine<0 || S.syringes<0 || S.activeRift < -1 || S.activeRift > 6) throw new InvalidOperationException("Invalid world state");
-            if(S.eventSlots<0||S.eventSlots>3||S.eventTarget<0||S.eventTarget>3)throw new InvalidOperationException("Invalid daily event count");
+            if(S.eventSlots<0||S.eventSlots>4||S.eventTarget<0||S.eventTarget>4)throw new InvalidOperationException("Invalid daily event count");
             if(S.relics.Select(r=>r.id).Distinct().Count()!=S.relics.Count||S.relics.Any(r=>r.paidDays>r.days||r.paidZombies>r.Zombies||r.paidDemons>r.demonKills)||S.avatar!=null&&S.avatar.relics.Count>1)throw new InvalidOperationException("Invalid heirloom record");
             if (S.permanent.unlocked.Distinct().Count() != S.permanent.unlocked.Count || S.rewardLedger.Distinct().Count() != S.rewardLedger.Count) throw new InvalidOperationException("Duplicate transaction");
             if (S.candidates.Count + (S.avatar == null ? 0 : 1) > Rules.MaxNpc) throw new InvalidOperationException("NPC capacity exceeded");

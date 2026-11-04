@@ -8,7 +8,7 @@ public class RiftScoreAndScalingTests
     GameEngine g;
     [SetUp] public void Setup()
     {
-        g=GameEngine.New(832,GameData.LoadBalance(),GameData.LoadContent());g.Select(g.S.candidates[0].id);
+        g=GameEngine.New(832,GameData.LoadBalance(),GameData.LoadContent());if(g.S.avatar==null)g.Select(g.S.candidates[0].id);
         g.S.day=2;g.S.activeRift=0;g.S.phase=Phase.Running;g.S.goal=Goal.Explore;
         g.S.avatar.baseHealth=100000;g.S.avatar.health=100000;g.S.avatar.baseAttack=1000;
         g.S.avatar.hunger=g.S.avatar.sanity=100;g.S.food=100000;
@@ -53,7 +53,7 @@ public class RiftScoreAndScalingTests
         for(int i=0;i<100&&!named.defeated;i++)
         {
             g.S.hours=0;g.S.eventSlots=0;g.S.phase=Phase.Running;g.S.avatar.sanity=g.S.avatar.hunger=100;
-            Assert.IsTrue(g.PresentGeneralEvent("rift-special"));
+            Assert.IsTrue(g.PresentGeneralEvent("RF-005"));
             Assert.IsFalse(g.S.pending.body.Contains(named.name));g.Resolve(g.S.pending.id,0);
         }
         Assert.IsTrue(named.defeated);
@@ -65,8 +65,8 @@ public class RiftScoreAndScalingTests
         {
             foreach(var demon in g.S.demons)demon.remaining=0;
             for(int i=1;i<=seals;i++)g.S.demons[i].remaining=10;
-            int[] health={g.B.normalHp,g.B.specialHp,named.health,g.B.demonHp};
-            int[] attack={g.B.normalAttack,g.B.specialAttack,named.attack,g.B.demonAttack};
+            int[] health={g.B.normalHp,g.B.november.specialHp[0],named.health,g.B.november.demonHp[0]};
+            int[] attack={g.B.normalAttack,g.B.november.specialAttack[0],named.attack,g.B.november.demonAttack[0]};
             for(int kind=0;kind<4;kind++)
             {
                 var actual=g.GetEnemyStats((EnemyKind)kind,named);
@@ -91,7 +91,7 @@ public class RiftScoreAndScalingTests
     {
         g.S.demons[0].progress=23;g.S.avatar.health=0;Assert.IsTrue(g.CheckDeath(true,Sin.Pride));
         Assert.AreEqual(0,g.S.demons[0].progress);Assert.AreEqual(-1,g.S.activeRift);
-        g.Select(g.S.candidates[0].id);g.S.day++;g.S.activeRift=0;g.S.demons[0].progress=35;
+        if(g.S.avatar==null)g.Select(g.S.candidates[0].id);g.S.day++;g.S.activeRift=0;g.S.demons[0].progress=35;
         Assert.IsTrue(g.Seal(Sin.Pride,"reset"));Assert.AreEqual(0,g.S.demons[0].progress);
     }
     [Test] public void LegacySaveMigratesWithoutInventingPointsOrLosingResourcesAndStars()
@@ -102,6 +102,6 @@ public class RiftScoreAndScalingTests
         var migrated=new GameEngine(JsonUtility.FromJson<GameState>(old),g.B,g.Content);
         Assert.AreEqual(0,migrated.S.demons[0].progress);Assert.AreEqual(g.S.divinity,migrated.S.divinity);
         Assert.IsTrue(migrated.S.permanent.unlocked.Contains("sejong"));Assert.AreEqual("old-event",migrated.S.pending.id);
-        Assert.AreEqual("군단의 봉쇄선",migrated.S.pending.title);Assert.AreEqual(Rules.RulesRevision,migrated.S.rulesRevision);
+        Assert.AreEqual("군단의 집결지",migrated.S.pending.title);Assert.AreEqual(Rules.RulesRevision,migrated.S.rulesRevision);
     }
 }

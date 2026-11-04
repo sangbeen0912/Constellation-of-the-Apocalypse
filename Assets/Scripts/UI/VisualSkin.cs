@@ -26,7 +26,7 @@ namespace Apocalypse
             Meter(side,"체력",a.health,a.MaxHealth,new Color(.66f,.29f,.25f));
             Meter(side,"정신력",a.sanity,100,new Color(.39f,.57f,.63f));
             Meter(side,"허기",a.hunger,100,new Color(.65f,.58f,.33f));
-            Label(side,Game.S.controlLocked?"개입권 잠김":"개입 가능",19,26,Game.S.controlLocked?new Color(.95f,.45f,.35f):muted);
+            controlStatus=Label(side,Game.S.controlLocked?"개입권 잠김":"개입 가능",19,26,Game.S.controlLocked?new Color(.95f,.45f,.35f):muted);
             Label(side,"관측 메뉴",18,26,gold);
         }
         void RenderResourceHeader(Transform parent)
@@ -37,7 +37,7 @@ namespace Apocalypse
                 float x=.42f+i*.139f;
                 var tile=Box(parent,"Resource "+i,new Vector2(x,.926f),new Vector2(x+.132f,.981f),panel);
                 Plate(tile,panel,false,i==0);
-                Positioned(tile,text[i],new Vector2(.10f,.08f),new Vector2(.94f,.92f),24,i==0?gold:ink);
+                resourceTexts[i]=Positioned(tile,text[i],new Vector2(.10f,.08f),new Vector2(.94f,.92f),24,i==0?gold:ink);
             }
         }
         Button PlacedButton(Transform parent,string label,Vector2 min,Vector2 max,System.Action action,bool enabled=true,bool accent=false)

@@ -10,7 +10,7 @@ public class RequestedChangesTests
     GameEngine g;
     [SetUp] public void Setup()
     {
-        g=GameEngine.New(721,GameData.LoadBalance(),GameData.LoadContent());g.Select(g.S.candidates[0].id);
+        g=GameEngine.New(721,GameData.LoadBalance(),GameData.LoadContent());if(g.S.avatar==null)g.Select(g.S.candidates[0].id);
         g.S.day=2;g.S.activeRift=0;g.S.avatar.personality=Temperament.Brave;g.S.avatar.baseAttack=1000;g.S.avatar.baseHealth=10000;g.S.avatar.health=10000;g.S.food=10000;
     }
     [Test] public void OnlyTwoGoalsAndLegacyGoalsMigrate()
@@ -45,7 +45,7 @@ public class RequestedChangesTests
         int[] kills=new int[2];
         for(int mode=0;mode<2;mode++)for(uint seed=1;seed<=40;seed++)
         {
-            var x=GameEngine.New(seed,g.B,g.Content);x.Select(x.S.candidates[0].id);x.S.avatar.personality=Temperament.Brave;x.S.avatar.baseHealth=100000;x.S.avatar.health=100000;x.S.avatar.baseAttack=1000;x.S.food=100000;x.S.day=2;x.S.activeRift=0;x.S.constellationRolledDay=2;x.StartDay(mode==0?Goal.Explore:Goal.Rift);
+            var x=GameEngine.New(seed,g.B,g.Content);if(x.S.avatar==null)x.Select(x.S.candidates[0].id);x.S.avatar.personality=Temperament.Brave;x.S.avatar.baseHealth=100000;x.S.avatar.health=100000;x.S.avatar.baseAttack=1000;x.S.food=100000;x.S.day=2;x.S.activeRift=0;x.S.constellationRolledDay=2;x.StartDay(mode==0?Goal.Explore:Goal.Rift);
             for(int step=0;step<200&&x.S.phase!=Phase.Report;step++){if(x.S.phase==Phase.Event)x.Resolve(x.S.pending.id,0);else x.Tick();}
             kills[mode]+=x.S.totalKills;
         }

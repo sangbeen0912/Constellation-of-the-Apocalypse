@@ -53,7 +53,7 @@ namespace Apocalypse
                 throw new InvalidDataException("지원하지 않거나 손상된 저장 데이터입니다.");
             if(s.rulesRevision<Rules.RulesRevision && file!=path+".tmp")
             {
-                string archive=file+".pre-20261030.bak";
+                string archive=file+(s.rulesRevision<3?".pre-20261030.bak":".pre-20261104.bak");
                 if(!File.Exists(archive))File.Copy(file,archive,false);
             }
             return s;

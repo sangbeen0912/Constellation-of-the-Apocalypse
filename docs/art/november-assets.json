@@ -1,0 +1,46 @@
+[
+  {
+    "path": "Assets/Resources/Art/Environments/november-areas-v1.png",
+    "bytes": 3245682,
+    "sha256": "19379abba07b4e08748cac6e68c5d0287de0075f01045fa6585009dfe6ac7775",
+    "width": 2103,
+    "height": 748,
+    "mode": "RGB"
+  },
+  {
+    "path": "Assets/Resources/Art/Combat/legion-enemies-v2.png",
+    "bytes": 1459511,
+    "sha256": "7b498947f196eeffc5b56de13abcb3a34d2c251c798761ccda4939b3f5a2d830",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "Assets/Resources/Art/Relics/yata-mirror-v1.png",
+    "bytes": 1218798,
+    "sha256": "d4de33fd62d6d5782c555d22a85bb855f3aa3cbcc91845358d253fd34f376d69",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "Assets/Resources/Art/Relics/green-dragon-blade-v1.png",
+    "bytes": 479820,
+    "sha256": "2e1dcea7b4396d7d39011d86d4554b00b49430abbd7bfe7607683f0aefbeb528",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ]
+  }
+]

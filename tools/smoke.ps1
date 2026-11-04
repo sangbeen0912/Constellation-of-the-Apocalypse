@@ -4,8 +4,8 @@ $taskRoot = Split-Path -Parent $PSScriptRoot
 $taskPublished = Join-Path $taskRoot 'TestResults\PlayerQA'
 $taskOutput = Join-Path $taskPublished ('Runs\' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $taskOutput -Force | Out-Null
-$taskExe = Join-Path $taskRoot 'Builds\Windows\ApocalypseConstellation.exe'
-if (!(Test-Path -LiteralPath $taskExe)) { throw 'Windows 빌드가 없습니다. 먼저 tools/verify.ps1을 실행하십시오.' }
+$taskExe = Join-Path $taskRoot 'Builds\QA\ApocalypseConstellation.exe'
+if (!(Test-Path -LiteralPath $taskExe)) { throw 'Windows 빌드가 없습니다. 먼저 tools/verify.ps1 -BuildQA를 실행하십시오.' }
 $taskCampaign=Get-Content -LiteralPath (Join-Path $taskRoot 'TestResults\simulation-1000.json') -Raw | ConvertFrom-Json
 if(!$taskCampaign.winningSeeds -or $taskCampaign.winningSeeds.Count -lt 1){throw '새 규칙에서 승리를 재현한 캠페인 시드가 필요합니다.'}
 $taskSeed=$taskCampaign.winningSeeds[0]

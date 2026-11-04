@@ -11,7 +11,7 @@ namespace Apocalypse
             if(S.recruitedRare==null)S.recruitedRare=new List<string>();
             if(S.additionalSupplies==null)S.additionalSupplies=new List<SupplyStack>();
             if(S.relics==null)S.relics=new List<Relic>();
-            if(S.rulesRevision<Rules.RulesRevision)
+            if(S.rulesRevision<3)
             {
                 // Old random relics have no equivalent in the eight unique heirlooms.
                 // Archive ownership rather than invent a conversion or erase the old save.
@@ -25,11 +25,11 @@ namespace Apocalypse
                     var template=Content.activityEvents.FirstOrDefault(e=>e.title==S.pending.title);
                     if(template!=null)ApplyTemplate(S.pending,template);
                     else if(S.pending.title=="균열의 마지막 문" && (S.activeRift<0||!CanReachDemon((Sin)S.activeRift)))
-                        ApplyTemplate(S.pending,Content.activityEvents.First(e=>e.id=="rift-blockade"));
+                        ApplyTemplate(S.pending,Content.activityEvents.First(e=>e.id=="RF-005"));
                 }
                 S.eventTarget=Math.Max(Math.Min(S.eventSlots,3),DailyEventCount());
                 S.eventSlots=Math.Min(S.eventSlots,S.eventTarget);
-                S.rulesRevision=Rules.RulesRevision;
+                S.rulesRevision=3;
                 Log("10월30일 통합 규칙 적용 · 균열50점 / 봉인100·120일 / 전승 성유물");
             }
             foreach(var relic in S.relics)if(relic.history==null)relic.history=new List<RelicChapter>();
@@ -37,9 +37,8 @@ namespace Apocalypse
         }
         public int DailyEventCount()
         {
-            var weights=B.dailyEventCountWeights;
-            if(weights!=null&&weights.Length==3&&weights.All(n=>n>=0)&&weights.Sum()>0)return Rng.Weighted(weights)+1;
-            return Math.Max(1,Math.Min(3,B.dailyEventCountFallback));
+            var w=B.november.dailyWeights;
+            return w!=null&&w.Length==2&&w[0]>=0&&w[1]>=0&&w[0]+w[1]>0?3+Rng.Weighted(w):3;
         }
         public TreatmentPreview PreviewTreatment(bool mental,bool sleep=false,bool useItem=false)
         {
@@ -56,17 +55,15 @@ namespace Apocalypse
         public bool ShouldReturn()
         {
             var a=S.avatar;if(a==null)return false;
-            double personality=B.returnPersonalityOffsets!=null&&B.returnPersonalityOffsets.Length==4?B.returnPersonalityOffsets[(int)a.personality]:0;
+            double personality=B.returnPersonalityOffsets!=null&&B.returnPersonalityOffsets.Length==6?B.returnPersonalityOffsets[(int)a.personality]:0;
             double risk=S.goal==Goal.Rift?ActiveSealCount*B.returnRiskPerSeal:0;
             return a.health/a.MaxHealth<=B.returnHealthRatio+personality+risk || a.hunger<B.returnHunger ||
-                a.sanity<B.returnSanity || S.hours>=B.returnHour || 24-S.hours<B.minBattleHours;
+                a.sanity<B.returnSanity || 24-S.hours<B.minBattleHours;
         }
         public bool RequestReturn(string reason)
         {
             if(S.phase!=Phase.Running||S.avatar==null)return false;
             S.returnRequested=true;S.returnReason=reason;
-            // A living normal return still receives at least one general choice.
-            if(S.eventSlots==0&&S.hours<24){ShowGeneralEvent();return true;}
             ContinueReturn();return true;
         }
         void ContinueReturn()
@@ -91,9 +88,10 @@ namespace Apocalypse
             if(location==Goal.Rift&&(S.activeRift<0||S.avatar==null||S.day==S.avatar.selectedDay))return new List<ActivityEvent>();
             bool safe=S.avatar!=null&&S.day==S.avatar.selectedDay;
             return Content.activityEvents.Where(e=>e.location==location &&
+                e.area==(location==Goal.Rift?Area.Rift:S.exploration.current==Area.Shelter?Area.Residence:S.exploration.current) && !e.id.StartsWith("TRN-") && PlotEligible(e) && TemplateAffordable(e) &&
                 (string.IsNullOrEmpty(e.relicId)||!S.relics.Any(r=>r.id==e.relicId)) &&
                 (string.IsNullOrEmpty(e.rareNpcId)||(!S.recruitedRare.Contains(e.rareNpcId)&&S.candidates.Count+(S.avatar==null?0:1)<Rules.MaxNpc)) &&
-                (!e.divinityEvent||S.divineEventDay!=S.day) &&
+                
                 (!safe||e.options.Any(o=>o.normal==0&&o.special==0&&!o.boss))).ToList();
         }
         public ActivityEvent DrawGeneralEvent(Goal location)
@@ -102,8 +100,9 @@ namespace Apocalypse
         }
         void ApplyTemplate(ChoiceEvent destination,ActivityEvent template)
         {
-            destination.templateId=template.id;destination.title=template.title;destination.body=template.body;destination.scene=template.scene;
-            destination.options=template.options.Select(o=>new EventOption{text=o.text,relicId=o.relicId,rareNpcId=o.rareNpcId,chance=o.chance,hours=o.hours,hunger=o.hunger,sanity=o.sanity,food=o.food,kits=o.kits,syringes=o.syringes,normal=o.normal,special=o.special,recruit=o.recruit,discoverFood=o.discoverFood,divinity=o.divinity,returnHome=o.returnHome,boss=o.boss}).ToArray();
+            destination.templateId=template.id;destination.title=template.title;destination.body=template.body;destination.scene=template.scene;destination.context=PlotContext(template);
+            destination.options=template.options.Select(o=>o.Copy()).ToArray();
+            foreach(var o in destination.options){if(o.defaultHours)o.hours=B.november.defaultEventHours;if(o.mentalRisk)o.sanity=B.november.mentalCost;if(o.optionalEncounter)o.encounterChance*=B.november.optionalEncounterChance;}
             var cost=(B.eventCosts??new EventCost[0]).FirstOrDefault(c=>c.id==template.id);
             if(cost!=null)for(int i=0;i<destination.options.Length;i++)
             {
@@ -120,12 +119,11 @@ namespace Apocalypse
         }
         public bool PresentGeneralEvent(string templateId)
         {
-            if(S.avatar==null||S.phase!=Phase.Running||S.eventSlots>=3)return false;
+            if(S.avatar==null||S.phase!=Phase.Running||S.eventSlots>=Math.Max(3,S.eventTarget))return false;
             var template=EligibleEvents(S.goal).FirstOrDefault(e=>e.id==templateId);if(template==null)return false;
             var pending=new ChoiceEvent{id=Id(template.id)};ApplyTemplate(pending,template);
-            S.pending=pending;S.phase=Phase.Event;S.eventSlots++;
+            S.pending=pending;S.phase=Phase.Event;S.eventSlots++;AddFlag(S.plot.viewed,template.id);
             S.nextImportantHour=S.hours+(24-S.hours)/Math.Max(1,S.eventTarget-S.eventSlots+1);
-            if(template.divinityEvent)S.divineEventDay=S.day;
             SavePoint();if(S.controlLocked)Resolve(pending.id,AutomaticChoice(pending));return true;
         }
         void ShowGeneralEvent()
@@ -145,6 +143,12 @@ namespace Apocalypse
         public bool CanChoose(ChoiceEvent e,int index,out string reason)
         {
             reason="";
+            if(IsTransit(e))
+            {
+                if(index<0||index>1){reason="선택할 수 없습니다.";return false;}
+                double required=index==0?AreaRules.TravelHours[S.exploration.destination]:2;
+                if(required>24-S.hours){reason="남은 시간 부족";return false;}return true;
+            }
             if(e==null||e.choices==null||index<0||index>=e.choices.Length||S.avatar==null){reason="선택할 수 없습니다.";return false;}
             if(e.options==null||e.options.Length!=e.choices.Length)return true;
             var o=e.options[index];
@@ -154,80 +158,92 @@ namespace Apocalypse
             if(S.syringes<o.syringes){reason="정신 회복 주사기 "+o.syringes+"개 필요";return false;}
             if((o.normal>0||o.special>0||o.boss)&&S.day==S.avatar.selectedDay){reason="계약 첫날에는 전투하지 않습니다.";return false;}
             if(o.boss&&(S.goal!=Goal.Rift||S.activeRift<0||!CanReachDemon((Sin)S.activeRift))){reason="균열 공략과 진행도 50점이 필요합니다.";return false;}
-            if(!string.IsNullOrEmpty(o.rareNpcId)&&S.candidates.Count+1>=Rules.MaxNpc){reason="활성 인원에 빈자리가 없습니다.";return false;}
+            if((o.recruit||!string.IsNullOrEmpty(o.rareNpcId))&&S.candidates.Count+1>=Rules.MaxNpc){reason="활성 인원에 빈자리가 없습니다.";return false;}
             return true;
         }
         public int AutomaticChoice(ChoiceEvent e)
         {
-            var available=Enumerable.Range(0,e.choices.Length).Where(i=>CanChoose(e,i,out _)).ToList();if(available.Count==0)return -1;
-            var a=S.avatar;
-            if(a.health<a.MaxHealth*.4||a.hunger<30||a.sanity<30||a.personality==Temperament.Cautious)
+            if(e==null||e.choices==null||S.avatar==null)return -1;
+            var a=S.avatar;int best=-1;double bestScore=double.NegativeInfinity;
+            for(int i=0;i<e.choices.Length;i++)
             {
-                int safe=available.LastOrDefault(i=>e.options==null||e.options[i].normal==0&&e.options[i].special==0&&!e.options[i].boss);
-                if(available.Contains(safe))return safe;
+                if(!CanChoose(e,i,out _))continue;
+                if(IsTransit(e)||e.options==null||e.options.Length!=e.choices.Length)return i;
+                var o=e.options[i];double reward=0,risk=0;
+                bool fight=o.normal>0||o.special>0||o.boss;
+                if(o.relicId!=null&&o.relicId.Length>0)reward+=80;
+                if(o.rareNpcId!=null&&o.rareNpcId.Length>0)reward+=60;
+                if(o.recruit)reward+=35;if(o.divinity&&S.divineEventDay!=S.day)reward+=8;
+                if(o.discoverFood)reward+=S.food<80?30:8;if(o.medicalLoot)reward+=8;
+                if(o.completes)reward+=12;if(o.flags!=null)reward+=o.flags.Length*3;
+                if(o.chance=="recruit")reward*=Math.Min(1,B.scoutSuccess+(a.Has("cleopatra")?B.cleopatraScout:0));
+                if(o.chance=="food")reward*=FoodDiscoveryChance;
+                if(fight)
+                {
+                    Sin sin=S.activeRift>=0?(Sin)S.activeRift:Sin.Wrath;
+                    var normal=GetEnemyStats(EnemyKind.Normal,null,sin);var special=GetEnemyStats(EnemyKind.Special,null,sin);var demon=GetEnemyStats(EnemyKind.Demon,null,sin);
+                    double hp=o.boss?demon.health:o.normal*normal.health+o.special*special.health;
+                    double attack=o.boss?demon.attack:o.normal*normal.attack+o.special*special.attack;
+                    risk=hp/Math.Max(1,a.Attack+S.equipment)*attack*.5/a.MaxHealth*100*o.encounterChance;
+                    reward+=o.boss?100:o.special*15+o.normal;
+                }
+                double score;
+                if(a.personality==Temperament.Defiant)score=-i;
+                else if(a.personality==Temperament.Fearful)score=-(fight?1000:0)-(o.injury?200:0)-o.sanity*5-o.hours;
+                else if(a.personality==Temperament.Cautious||a.health<a.MaxHealth*.2||a.hunger<30||a.sanity<30)
+                    score=-(fight?500:0)-(o.injury?100:0)-o.sanity*3-o.hours;
+                else if(a.personality==Temperament.Aggressive)score=(fight?500:0)+reward-o.hours;
+                else if(a.personality==Temperament.Cold)score=reward-risk-o.hours*2-o.sanity-(o.injury?B.november.injuryChance*B.november.injuryHp:0);
+                else score=reward-risk*.5-o.hours-o.sanity;
+                if(score>bestScore||score==bestScore&&i>best){best=i;bestScore=score;}
             }
-            return a.personality==Temperament.Curious?available[Rng.Int(0,available.Count)]:available[0];
+            return best;
         }
         public bool Resolve(string eventId,int choice)
         {
             var e=S.pending;
-            if(S.phase!=Phase.Event||e==null||e.id!=eventId||S.resolvedEvents.Contains(e.id)||choice<0||choice>=e.choices.Length)return false;
+            if(S.phase!=Phase.Event||e==null||e.id!=eventId||S.resolvedEvents.Contains(e.id))return false;
             LockControl();
-            if(!S.controlLocked&&!CanChoose(e,choice,out _))return false;
-            if(string.IsNullOrEmpty(e.constellationId))
+            if(S.controlLocked)choice=AutomaticChoice(e);
+            if(!CanChoose(e,choice,out _))
             {
-                if(S.controlLocked)choice=AutomaticChoice(e);
-                else if(choice>=0&&choice<e.choices.Length&&S.avatar.personality==Temperament.Defiant&&Rng.Next()<B.refusalChance)
-                {Log("화신체가 제안을 거부하고 스스로 판단한다.");choice=AutomaticChoice(e);}
+                if(IsTransit(e)&&S.controlLocked)ReturnToShelter();
+                return false;
             }
+            if(IsTransit(e))return ResolveTransit(choice);
+            if(string.IsNullOrEmpty(e.constellationId)&&!S.controlLocked&&S.avatar.personality==Temperament.Defiant&&Rng.Next()<B.refusalChance)
+                choice=AutomaticChoice(e);
             if(!CanChoose(e,choice,out _))return false;
             S.resolvedEvents.Add(e.id);S.pending=null;S.phase=Phase.Running;
             if(!string.IsNullOrEmpty(e.constellationId))
             {
-                if(!S.permanent.unlocked.Contains(e.constellationId))S.permanent.unlocked.Add(e.constellationId);
-                var definition=Content.Find(e.constellationId);
-                if(!S.permanent.completedStories.Contains(definition.eventId))S.permanent.completedStories.Add(definition.eventId);
-                if(!S.permanent.stories.Any(x=>x.constellationId==e.constellationId))S.permanent.stories.Add(new AcquiredStory{constellationId=e.constellationId,title=e.title??definition.title,body=e.body??definition.story,day=S.day});
+                AddFlag(S.permanent.unlocked,e.constellationId);
+                var definition=Content.Find(e.constellationId);AddFlag(S.permanent.completedStories,definition.eventId);
+                if(!S.permanent.stories.Any(x=>x.constellationId==e.constellationId))
+                    S.permanent.stories.Add(new AcquiredStory{constellationId=e.constellationId,title=e.title??definition.title,body=e.body??definition.story,day=S.day});
                 Log(definition.name+" · 성좌 영구 해금");
-                if(B.constellationStoryHours>0&&!SpendTime(Activity.Rest,B.constellationStoryHours))return true;
             }
             else
             {
-                Log(e.title+" · "+e.choices[choice]);
-                var option=e.options!=null&&e.options.Length==e.choices.Length?e.options[choice]:new EventOption();
-                // Rechecked above before making the one-time transaction.
-                S.food-=option.food;S.medicine-=option.kits;S.syringes-=option.syringes;
-                // Listed event costs are the complete event cost, not a hidden Search hunger surcharge.
-                S.hours+=option.hours;
-                if(option.hunger>0){S.avatar.hunger=Rules.Clamp(S.avatar.hunger-option.hunger);LockControl();if(CheckDeath(false,null))return true;AutoEat();}
-                if(option.sanity>0){Stress(option.sanity,e.tags,true);if(CheckDeath(false,null))return true;}
-                bool success=true;
+                var o=e.options[choice];Log(e.title+" · "+o.text);
+                S.food-=o.food;S.medicine-=o.kits;S.syringes-=o.syringes;S.hours+=o.hours;
+                if(o.hunger>0){S.avatar.hunger=Rules.Clamp(S.avatar.hunger-o.hunger);LockControl();if(CheckDeath(false,null))return true;AutoEat();}
+                if(o.sanity>0){Stress(o.sanity,e.tags,true);if(CheckDeath(false,null))return true;}
+                bool won=true;
                 string previousScene=combatScene,previousTitle=combatEventTitle;
-                combatScene=e.scene??Content.activityEvents.FirstOrDefault(t=>t.id==e.templateId)?.scene;combatEventTitle=e.title;
+                combatScene=e.scene;combatEventTitle=e.title;battleSource=InteractiveCombat?e:null;battleChoice=choice;
                 try
                 {
-                    if(option.boss)success=Battle(EnemyKind.Demon,1,(Sin)S.activeRift);
-                    else if(option.normal>0||option.special>0)success=BattleFormation(option.normal,option.special,S.activeRift>=0?(Sin)S.activeRift:Sin.Wrath,true);
-                }
-                finally{combatScene=previousScene;combatEventTitle=previousTitle;}
-                if(S.avatar==null||S.phase==Phase.Death)return true;
-                if(!string.IsNullOrEmpty(option.chance))
-                {double chance=option.chance=="recruit"?B.scoutSuccess+(S.avatar.Has("cleopatra")?B.cleopatraScout:0):option.chance=="food"?B.foodDiscoveryChance:B.divineSuccessChance;success&=Rng.Next()<chance;}
-                if(success)
-                {
-                    if(option.discoverFood)GrantFoundFood();
-                    if(option.divinity){int amount=Rng.Int(3,11);Reward(e.id+":divinity",amount);Log("위험을 견딘 기도 · 신위 +"+amount);}
-                    if(option.recruit)Recruit();
-                    rewardRelicId=option.relicId;rewardRareId=option.rareNpcId;
-                    try
+                    if(o.boss)won=Battle(EnemyKind.Demon,1,(Sin)S.activeRift);
+                    else if(o.normal>0||o.special>0)
                     {
-                        if(!string.IsNullOrEmpty(option.rareNpcId))RecruitRare(option.rareNpcId);
-                        if(!string.IsNullOrEmpty(option.relicId))AcquireRelic(option.relicId);
+                        if(o.encounterChance>=1||Rng.Next()<o.encounterChance)won=BattleFormation(o.normal,o.special,S.activeRift>=0?(Sin)S.activeRift:Sin.Wrath,true);
+                        else{Log("적을 마주치지 않고 조사를 마쳤다.");if(o.noEncounterSanity>0)Stress(o.noEncounterSanity,e.tags,true);}
                     }
-                    finally {rewardRelicId=null;rewardRareId=null;}
                 }
-                else Log("조건을 완수하지 못해 이벤트 보상은 얻지 못했다.");
-                if(option.returnHome)S.returnRequested=true;
+                finally{combatScene=previousScene;combatEventTitle=previousTitle;battleSource=null;}
+                if(S.phase==Phase.Combat||S.avatar==null||CheckDeath(false,null))return true;
+                CompleteEventOption(e,choice,won);
             }
             if(S.returnRequested&&S.phase==Phase.Running)ContinueReturn();
             SavePoint();return true;
@@ -238,11 +254,11 @@ namespace Apocalypse
             int amount=RollFoundFoodAmount();if(S.avatar!=null&&S.avatar.Has("leonardo"))amount=Rules.Round(amount*(1+B.leonardoLoot));
             S.food+=amount;Log("물자 수색 · 식량 +"+amount);
         }
-        public void SearchFood(){if(Rng.Next()<B.foodDiscoveryChance)GrantFoundFood();else Log("물자 수색 · 식량을 발견하지 못했다.");}
+        public void SearchFood(){if(Rng.Next()<FoodDiscoveryChance)GrantFoundFood();else Log("물자 수색 · 식량을 발견하지 못했다.");}
         public Character CreateRare(string id)
         {
             var d=Content.rareNpcs.First(n=>n.id==id);
-            return new Character{id=Id("rare-"+id),name=d.name,species=d.species,baseHealth=d.health,baseAttack=d.attack,health=d.health,personality=(Temperament)Rng.Int(0,4)};
+            return new Character{id=Id("rare-"+id),name=d.name,species=d.species,baseHealth=d.health,baseAttack=d.attack,health=d.health,personality=(Temperament)Rng.Int(0,6)};
         }
         public bool RecruitRare(string id)
         {

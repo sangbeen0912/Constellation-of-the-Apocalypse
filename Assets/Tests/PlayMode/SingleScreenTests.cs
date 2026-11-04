@@ -13,7 +13,7 @@ public class SingleScreenTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"Watching-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Watching test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(872);app.Game.Select(app.Game.S.candidates[0].id);var s=app.Game.S;
+        app.BeginNew(872);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);var s=app.Game.S;
         s.phase=Phase.Running;s.scheduledConstellation="sejong";s.constellationMeetingHour=23;s.hours=3;
         app.Render();yield return null;
         Assert.IsTrue(app.OmenVisible);Assert.IsNotNull(root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Constellation watching scene"));
@@ -44,7 +44,7 @@ public class SingleScreenTests
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"ScreenFit-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Screen fit");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
         app.BeginNew(1231);yield return null;AssertInsideMain(root);
-        app.Game.Select(app.Game.S.candidates[0].id);
+        if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);
         foreach(string tab in ArtCatalog.FacilityNames.Append("쉘터").Append("전투준비"))
         {app.Navigate(tab);yield return null;AssertInsideMain(root);}
         app.Game.S.permanent.unlocked=app.Game.Content.constellations.Select(c=>c.id).ToList();
@@ -58,7 +58,9 @@ public class SingleScreenTests
         foreach(var template in app.Game.Content.activityEvents)
         {
             app.Game.S.phase=Phase.Running;app.Game.S.goal=template.location;app.Game.S.hours=0;app.Game.S.eventSlots=0;app.Game.S.divineEventDay=0;
-            Assert.IsTrue(app.Game.PresentGeneralEvent(template.id),template.id);app.Render();yield return null;AssertInsideMain(root);
+            app.Game.S.exploration.current=template.area;app.Game.S.plot.completed.AddRange(template.prerequisites);app.Game.S.plot.completed.AddRange(template.anyPrerequisites);app.Game.S.food=1000;app.Game.S.medicine=app.Game.S.syringes=100;
+            if(template.id.StartsWith("TRN-")){app.Game.S.exploration.current=Area.Subway;Assert.IsTrue(app.Game.OfferTransit());}
+            else Assert.IsTrue(app.Game.PresentGeneralEvent(template.id),template.id);app.Game.S.pending.context="이전에 남긴 기록을 보존한 채 다시 조사합니다.";app.Render();yield return null;AssertInsideMain(root);
             app.Game.S.pending=null;
         }
         app.Game.S.phase=Phase.Morning;

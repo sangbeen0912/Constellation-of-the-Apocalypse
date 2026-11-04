@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 namespace Apocalypse
 {
-    public enum CombatMomentKind { AvatarAttack, GroupAttack, Recovery }
+    public enum CombatMomentKind { AvatarAttack, GroupAttack, Recovery, EnemyAttack, Summon, Absorb, Blocked, Reflect }
     public sealed class CombatEnemyView
     {
         public string name;
         public EnemyKind kind;
         public int health;
     }
-    public sealed class CombatMoment
+    [Serializable] public sealed class CombatMoment
     {
         public CombatMomentKind kind;
-        public int target, amount;
+        public int target, amount, actor=-1;
+        public string message;
         public double health;
     }
     // Transient observation data. It contains no Unity types and is never a second simulation.

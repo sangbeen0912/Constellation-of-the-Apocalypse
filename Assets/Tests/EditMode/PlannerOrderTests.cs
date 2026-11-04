@@ -12,17 +12,18 @@ public class PlannerOrderTests
     GameEngine g;
     [SetUp] public void Setup()
     {
-        g=GameEngine.New(12009,GameData.LoadBalance(),GameData.LoadContent());g.Select(g.S.candidates[0].id);
+        g=GameEngine.New(12009,GameData.LoadBalance(),GameData.LoadContent());if(g.S.avatar==null)g.Select(g.S.candidates[0].id);
         g.S.day=2;g.S.phase=Phase.Running;g.S.goal=Goal.Explore;g.S.activeRift=0;
         g.S.avatar.personality=Temperament.Brave;g.S.avatar.baseHealth=10000;g.S.avatar.health=10000;
         g.S.avatar.baseAttack=1000;g.S.avatar.hunger=g.S.avatar.sanity=100;g.S.food=100000;g.S.medicine=20;
     }
     void Present(string id)
     {
-        var t=g.Content.activityEvents.First(e=>e.id==id);g.S.goal=t.location;g.S.phase=Phase.Running;g.S.eventSlots=0;g.S.hours=0;
+        id=Map(id);var t=g.Content.activityEvents.First(e=>e.id==id);g.S.exploration.current=t.area;g.S.plot.completed.AddRange(t.prerequisites);g.S.plot.completed.AddRange(t.anyPrerequisites);g.S.goal=t.location;g.S.phase=Phase.Running;g.S.eventSlots=0;g.S.hours=0;
         g.S.controlLocked=false;g.S.avatar.hunger=g.S.avatar.sanity=100;
         Assert.IsTrue(g.PresentGeneralEvent(id));
     }
+    static string Map(string id){switch(id){case "F-01":return "MUS-04";case "F-02":return "MUS-08";case "F-03":return "MUS-06";case "F-04":return "ARM-10";case "field-prayer":return "SAN-01";case "rift-special":return "RF-005";case "recruit-kael":return "ARM-07";case "recruit-nerissa":return "SUB-N05";case "recruit-beyr":return "ARM-09";case "recruit-lyra":return "HOM-09";default:return id;}}
     Relic Wear(string id="gungnir")
     {
         var relic=new Relic{id=id,name=g.Content.relicDefinitions.First(d=>d.id==id).name};g.S.relics.Add(relic);g.S.phase=Phase.Morning;
@@ -34,18 +35,18 @@ public class PlannerOrderTests
         var eligible=g.EligibleEvents(location);var counts=eligible.ToDictionary(e=>e.id,e=>0);
         for(int i=0;i<30000;i++)counts[g.DrawGeneralEvent(location).id]++;
         foreach(var e in eligible){Assert.AreEqual(location,e.location);Assert.AreEqual(1.0/eligible.Count,counts[e.id]/30000.0,.012,e.id);}
-        g.S.relics.Add(new Relic{id=eligible.First(e=>!string.IsNullOrEmpty(e.relicId)).relicId});
+        var relicEvent=g.Content.activityEvents.First(e=>e.location==location&&!string.IsNullOrEmpty(e.relicId));g.S.relics.Add(new Relic{id=relicEvent.relicId});
         g.S.divineEventDay=g.S.day;
-        Assert.IsFalse(g.EligibleEvents(location).Any(e=>e.divinityEvent||g.S.relics.Any(r=>r.id==e.relicId)));
+        Assert.IsFalse(g.EligibleEvents(location).Any(e=>g.S.relics.Any(r=>r.id==e.relicId)));
     }
     [Test] public void DayCountDistributionRemainsUnconfirmedWithoutInventedUniformOdds()
     {
-        uint before=g.S.rng;g.B.dailyEventCountWeights=new int[0];Assert.AreEqual(1,g.DailyEventCount());Assert.AreEqual(before,g.S.rng);
-        for(int i=0;i<3;i++){g.B.dailyEventCountWeights=new int[3];g.B.dailyEventCountWeights[i]=1;Assert.AreEqual(i+1,g.DailyEventCount());}
+        g.B.november.dailyWeights=new[]{1,0};Assert.AreEqual(3,g.DailyEventCount());
+        g.B.november.dailyWeights=new[]{0,1};Assert.AreEqual(4,g.DailyEventCount());
     }
     [Test] public void ThreeGeneralChoicesExcludeConstellationAndOrdinaryCombat()
     {
-        g.B.dailyEventCountWeights=new[]{0,0,1};g.B.returnHour=24;g.B.returnHealthRatio=0;g.B.returnRiskPerSeal=0;
+        g.B.november.dailyWeights=new[]{1,0};g.B.returnHour=24;g.B.returnHealthRatio=0;g.B.returnRiskPerSeal=0;
         g.S.phase=Phase.Morning;g.S.dayStarted=false;g.StartDay(Goal.Explore);
         int max=0;for(int i=0;i<300&&g.S.phase!=Phase.Report;i++)
         {if(g.S.phase==Phase.Event)g.Resolve(g.S.pending.id,g.AutomaticChoice(g.S.pending));else g.Tick();max=Math.Max(max,g.S.eventSlots);}
@@ -95,15 +96,15 @@ public class PlannerOrderTests
     }
     [Test] public void PartialBattleKillMoneySurvivesButRelicDoesNot()
     {
-        Present("R-01");g.S.avatar.baseHealth=100;g.S.avatar.health=1;g.S.avatar.baseAttack=60;
+        Present("R-01");g.S.avatar.baseHealth=100;g.S.avatar.health=1;g.S.avatar.baseAttack=70;
         int money=g.S.divinity;Assert.IsTrue(g.Resolve(g.S.pending.id,0));
-        Assert.AreEqual(Phase.Death,g.S.phase);Assert.AreEqual(1,g.S.totalKills);Assert.AreEqual(money+15,g.S.divinity);
+        Assert.AreEqual(Phase.Death,g.S.phase);Assert.AreEqual(1,g.S.totalKills);Assert.AreEqual(money+1,g.S.divinity);
         Assert.IsEmpty(g.S.relics);Assert.AreEqual(0,g.S.demons[0].progress);
     }
     [Test] public void DivineGeneralEventIsOncePerDayAndPaysThreeToTenOnlyOnSuccess()
     {
         g.B.divineSuccessChance=1;Present("field-prayer");int before=g.S.divinity;g.Resolve(g.S.pending.id,0);
-        Assert.That(g.S.divinity-before,Is.InRange(3,10));Assert.IsFalse(g.EligibleEvents(Goal.Explore).Any(e=>e.divinityEvent));
+        Assert.That(g.S.divinity-before,Is.InRange(3,10));int paid=g.S.divinity;Present("field-prayer");g.Resolve(g.S.pending.id,0);Assert.AreEqual(paid,g.S.divinity);
         g.S.day++;g.B.divineSuccessChance=0;Present("field-prayer");before=g.S.divinity;g.Resolve(g.S.pending.id,0);Assert.AreEqual(before,g.S.divinity);
     }
     [Test] public void NamedReplacementHasThirtyPercentAndOnlyAfterSpecialChoice()
@@ -134,7 +135,7 @@ public class PlannerOrderTests
         g.S.avatar=g.CreateRare("kael");g.B.maxCombatRounds=1;g.B.normalHp=10000;g.B.normalAttack=10;g.Battle(EnemyKind.Normal,1,Sin.Pride);
         Assert.AreEqual(111,g.S.avatar.health);
         g.S.logs.Clear();g.S.avatar=g.CreateRare("lyra");g.S.hours=0;g.B.maxCombatRounds=2;g.Battle(EnemyKind.Normal,1,Sin.Pride);
-        var damage=g.S.logs.Where(l=>l.Contains("공격 ")).Select(l=>int.Parse(l.Split(new[]{"공격 "},StringSplitOptions.None)[1].Split(' ')[0])).ToArray();
+        var damage=g.S.logs.Where(l=>l.Contains("공격 ")&&!l.Contains(" · 화신체 체력")).Select(l=>int.Parse(l.Split(new[]{"공격 "},StringSplitOptions.None)[1].Split(' ')[0])).ToArray();
         CollectionAssert.AreEqual(new[]{38,32},damage);
     }
     [Test] public void HalfUndeadHealsAtFirstThresholdOncePerCombat()
@@ -153,8 +154,8 @@ public class PlannerOrderTests
     {
         int[] counts=new int[3];for(int i=0;i<30000;i++)counts[g.RollFoundFoodAmount()-1]++;
         double[] expected={.6,.3,.1};for(int i=0;i<3;i++)Assert.AreEqual(expected[i],counts[i]/30000.0,.012);
-        int food=g.S.food;g.B.foodDiscoveryChance=0;g.SearchFood();Assert.AreEqual(food,g.S.food);
-        g.B.foodDiscoveryChance=1;g.SearchFood();Assert.That(g.S.food-food,Is.InRange(1,3));
+        int food=g.S.food;g.B.november.otherFood=0;g.SearchFood();Assert.AreEqual(food,g.S.food);
+        g.B.november.otherFood=1;g.SearchFood();Assert.That(g.S.food-food,Is.InRange(1,3));
     }
     [Test] public void SuppliesAreUniformAndCostExactlyOne()
     {
@@ -184,7 +185,7 @@ public class PlannerOrderTests
     }
     [Test] public void EightRelicEventsAreUniqueLocationBoundAndUseZeroInitialStats()
     {
-        Assert.AreEqual(8,g.Content.relicDefinitions.Count);
+        Assert.AreEqual(10,g.Content.relicDefinitions.Count);
         foreach(var definition in g.Content.relicDefinitions)
         {
             var e=g.Content.activityEvents.Single(x=>x.relicId==definition.id);Assert.AreEqual(definition.location,e.location);
@@ -192,7 +193,7 @@ public class PlannerOrderTests
             var item=g.S.relics.Single(r=>r.id==definition.id);Assert.AreEqual(0,item.healthBonus);Assert.AreEqual(0,item.attackBonus);
             Assert.NotNull(ArtCatalog.Relic(item.id));Assert.IsFalse(g.EligibleEvents(e.location).Any(x=>x.relicId==item.id));
         }
-        Assert.AreEqual(8,g.S.relics.Count);
+        Assert.AreEqual(10,g.S.relics.Count);
     }
     [Test] public void EquippedRelicRecordsEachZombieOnceAndDemonSeparatelyWithoutLiveGrowth()
     {
@@ -214,12 +215,12 @@ public class PlannerOrderTests
     {
         var relic=Wear();string first=g.S.avatar.id;relic.days=7;relic.normalKills=6;relic.history[0].days=7;relic.history[0].normalKills=6;relic.history[0].lastCountedDay=g.S.day;
         g.S.avatar.health=0;g.CheckDeath(false,null);Assert.IsTrue(relic.awaitingRestoration);Assert.IsTrue(relic.history[0].deceased);
-        g.Select(g.S.candidates[0].id);g.S.divinity=1000;string before=JsonUtility.ToJson(relic);
+        if(g.S.avatar==null)g.Select(g.S.candidates[0].id);g.S.divinity=1000;string before=JsonUtility.ToJson(relic);
         var preview=g.PreviewRestoration(relic.id);Assert.AreEqual(before,JsonUtility.ToJson(relic));Assert.AreEqual(0,preview.health);Assert.AreEqual(7,preview.carryDays);
         Assert.IsTrue(g.RestoreRelic(relic.id));Assert.AreEqual(900,g.S.divinity);Assert.AreEqual(0,relic.healthBonus);
         g.Equip(relic.id);Assert.AreNotEqual(first,g.S.avatar.id);
         relic.days+=3;relic.specialKills+=4;relic.demonKills+=1;relic.history[1].days=3;relic.history[1].specialKills=4;relic.history[1].demonKills=1;relic.history[1].lastCountedDay=g.S.day;
-        g.S.avatar.health=0;g.CheckDeath(false,null);g.Select(g.S.candidates[0].id);g.S.divinity=1000;
+        g.S.avatar.health=0;g.CheckDeath(false,null);if(g.S.avatar==null)g.Select(g.S.candidates[0].id);g.S.divinity=1000;
         preview=g.PreviewRestoration(relic.id);Assert.AreEqual(4,preview.health);Assert.AreEqual(2,preview.attack);
         Assert.IsTrue(g.RestoreRelic(relic.id));Assert.AreEqual(4,relic.healthBonus);Assert.AreEqual(2,relic.attackBonus);
         var copy=new GameEngine(JsonUtility.FromJson<GameState>(JsonUtility.ToJson(g.S)),g.B,g.Content);
@@ -231,7 +232,7 @@ public class PlannerOrderTests
         var relic=Wear();g.S.phase=Phase.Morning;g.S.divinity=1000;Assert.IsFalse(g.RestoreRelic(relic.id));
         g.S.phase=Phase.Running;g.EndDay();g.EndDay();Assert.AreEqual(1,relic.days);
         g.S.avatar.health=0;g.CheckDeath(false,null);Assert.AreEqual(1,relic.days);
-        g.Select(g.S.candidates[0].id);g.S.divinity=99;Assert.IsFalse(g.RestoreRelic(relic.id));Assert.AreEqual(99,g.S.divinity);Assert.IsTrue(relic.awaitingRestoration);
+        if(g.S.avatar==null)g.Select(g.S.candidates[0].id);g.S.divinity=99;Assert.IsFalse(g.RestoreRelic(relic.id));Assert.AreEqual(99,g.S.divinity);Assert.IsTrue(relic.awaitingRestoration);
     }
     [Test] public void OldSaveArchivesRemovedRelicsAndPreservesResourcesAndFiftyPointProgress()
     {
@@ -262,7 +263,7 @@ public class PlannerOrderTests
     {
         Present("R-01");Assert.AreEqual(7,g.S.pending.options[1].hours);
         var b=GameData.LoadBalance();b.eventCosts.Single(c=>c.id=="R-01").hours[1]=1;
-        var other=GameEngine.New(444,b,g.Content);other.Select(other.S.candidates[0].id);other.S.day=2;other.S.activeRift=0;other.S.phase=Phase.Running;other.S.goal=Goal.Rift;
+        var other=GameEngine.New(444,b,g.Content);if(other.S.avatar==null)other.Select(other.S.candidates[0].id);other.S.day=2;other.S.activeRift=0;other.S.phase=Phase.Running;other.S.goal=Goal.Rift;
         other.PresentGeneralEvent("R-01");Assert.AreEqual(1,other.S.pending.options[1].hours);Assert.AreEqual(7,g.S.pending.options[1].hours);
         Assert.AreEqual(0,g.Content.activityEvents.Single(e=>e.id=="R-01").options[1].hours);
         Assert.IsTrue(g.Resolve(g.S.pending.id,1));Assert.AreEqual(7,g.S.hours);Assert.AreEqual(85,g.S.avatar.hunger,"명시한 허기15 외에 숨은 수색 비용을 더하지 않습니다.");

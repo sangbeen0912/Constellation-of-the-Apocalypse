@@ -13,7 +13,7 @@ public class PlannerScreenTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"PlannerUI-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Planner clinic");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(123);app.Game.Select(app.Game.S.candidates[0].id);var g=app.Game;
+        app.BeginNew(123);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);var g=app.Game;
         g.S.avatar.baseHealth=120;g.S.avatar.health=20;g.S.avatar.sanity=20;g.S.syringes=1;g.S.medicine=1;g.S.hours=18.5;
         app.Navigate("의무실");yield return null;
         Assert.IsFalse(Button(root,"체력 회복 실행").interactable);Assert.IsFalse(Button(root,"잠자기 실행").interactable);
@@ -34,7 +34,7 @@ public class PlannerScreenTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"PlannerRestore-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Planner restoration");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(124);app.Game.Select(app.Game.S.candidates[0].id);var g=app.Game;g.S.divinity=200;
+        app.BeginNew(124);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);var g=app.Game;g.S.divinity=200;
         var relic=new Relic{id="gungnir",name="궁니르",healthBonus=2,attackBonus=1,days=16,normalKills=21,demonKills=2,paidDays=10,paidZombies=10,paidDemons=1,awaitingRestoration=true};
         relic.history.Add(new RelicChapter{userId="a",name="서도윤",days=6,normalKills=6,deceased=true});
         relic.history.Add(new RelicChapter{userId="b",name="라이라",days=10,normalKills=15,demonKills=2,deceased=true});
@@ -55,7 +55,7 @@ public class PlannerScreenTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"PlannerRare-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Planner rare");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(125);app.Game.Select(app.Game.S.candidates[0].id);
+        app.BeginNew(125);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);
         foreach(var npc in app.Game.Content.rareNpcs)app.Game.S.candidates.Add(app.Game.CreateRare(npc.id));
         app.Navigate("인재관리실");yield return null;
         foreach(var npc in app.Game.S.candidates.Where(c=>c.species!=Species.Human))

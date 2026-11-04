@@ -12,6 +12,7 @@ namespace Apocalypse
         string Passive(Character c){return content.rareNpcs.FirstOrDefault(n=>n.species==c.species)?.passive??"";}
         string OptionCost(ChoiceEvent e,int index)
         {
+            if(Game.IsTransit(e))return index==0?AreaRules.TravelHours[Game.S.exploration.destination]+"시간":"2시간";
             if(e.options==null||index>=e.options.Length)return "";
             var o=e.options[index];var parts=new System.Collections.Generic.List<string>();
             if(o.hours>0)parts.Add(o.hours+"시간");if(o.food>0)parts.Add("식량 "+o.food);
@@ -30,7 +31,8 @@ namespace Apocalypse
                 Label(body,npc.name+" · "+SpeciesName(npc.species)+" · 체력 "+npc.health+" / 공격력 "+npc.attack,25,45,gold);
                 Label(body,npc.passive,23,75);return;
             }
-            Art(body,Game.S.goal==Goal.Rift?gate:city,215);
+            var frame=ScreenArea(body,"Area illustration",Vector2.zero,new Vector2(1,.58f));frame.gameObject.AddComponent<LayoutElement>().preferredHeight=300;
+            DrawAreaArt(frame,Game.S.exploration.current,Vector2.zero,Vector2.one);
         }
         void RelicCard(Transform body,Relic relic)
         {

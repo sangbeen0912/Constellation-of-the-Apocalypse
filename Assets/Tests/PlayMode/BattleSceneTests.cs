@@ -9,48 +9,51 @@ using UnityEngine.UI;
 public class BattleSceneTests
 {
     Button Find(GameObject root,string text){return root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text==text);}
+    void Prepare(GameApp app)
+    {
+        var g=app.Game;g.S.day=2;g.S.activeRift=0;g.S.phase=Phase.Running;g.S.goal=Goal.Rift;g.S.exploration.current=Area.Rift;
+        g.S.avatar.personality=Temperament.Brave;g.S.avatar.baseHealth=1000;g.S.avatar.health=1000;g.S.avatar.baseAttack=15;g.S.avatar.sanity=100;g.S.food=1000;g.S.medicine=g.S.syringes=100;
+    }
     void ResolveFight(GameObject root,GameApp app,string template)
     {
         Assert.IsTrue(app.Game.PresentGeneralEvent(template));app.Render();
         int index=Array.FindIndex(app.Game.S.pending.options,o=>o.normal>0||o.special>0);
         string text=app.Game.S.pending.choices[index];
-        root.GetComponentsInChildren<Button>().Single(b=>{string s=b.GetComponentInChildren<Text>().text;return s==text||s.StartsWith(text+"  · ");}).onClick.Invoke();
+        root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text==text||b.GetComponentInChildren<Text>().text.StartsWith(text+"  · ")).onClick.Invoke();
     }
-    [UnityTest] public IEnumerator ActualCombatAnimatesAndShakesOnlyTheWorldAndSkipCannotPayTwice()
+    [UnityTest] public IEnumerator ActualLiveCombatAnimatesAndCommandWaitPausesCoreEvenWhenSkipping()
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"BattleScene-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Battle scene test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(412);app.Game.Select(app.Game.S.candidates[0].id);var g=app.Game;
-        g.S.day=2;g.S.activeRift=0;g.S.phase=Phase.Running;g.S.goal=Goal.Rift;g.S.hours=0;g.S.food=1000;
-        g.S.avatar.personality=Temperament.Brave;g.S.avatar.baseHealth=1000;g.S.avatar.health=1000;g.S.avatar.baseAttack=15;g.S.avatar.sanity=100;
-        ResolveFight(root,app,"rift-special");Assert.IsTrue(app.BattleVisible);yield return null;
-        var snapshot=app.CurrentBattle;Assert.AreEqual(EnemyKind.Special,snapshot.enemies[0].kind);
-        var sprite=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Battle actor 0");Vector2 home=sprite.anchoredPosition;
+        app.BeginNew(412);Prepare(app);ResolveFight(root,app,"RF-005");yield return null;
+        Assert.IsTrue(app.BattleVisible);Assert.AreEqual(1,app.Game.S.combat.enemies.Count(e=>e.kind==EnemyKind.Special));
+        var hero=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Battle actor -1");
         var world=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Battle world");
-        var bar=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name.StartsWith("Combat bar "+snapshot.avatarName));Vector3 hud=bar.position;
-        double hours=g.S.hours;uint rng=g.S.rng;int money=g.S.divinity;bool moved=false,shook=false;
-        for(int i=0;i<150;i++){yield return null;moved|=Vector2.Distance(home,sprite.anchoredPosition)>20;shook|=world.anchoredPosition.sqrMagnitude>.1f;Assert.AreEqual(hud,bar.position);if(moved&&shook)break;}
-        Assert.IsTrue(moved,"공격할 때 캐릭터가 이동해야 합니다.");Assert.IsTrue(shook,"피격 시 전투 화면이 흔들려야 합니다.");
-        Assert.AreEqual(hours,g.S.hours);Assert.AreEqual(rng,g.S.rng);Assert.AreEqual(money,g.S.divinity);
-        Find(root,"전투 ×4").onClick.Invoke();Find(root,"전투 연출 건너뛰기").onClick.Invoke();
-        Assert.IsFalse(app.BattleVisible);Assert.AreEqual(hours,g.S.hours);Assert.AreEqual(money,g.S.divinity);Assert.AreEqual(rng,g.S.rng);
-        Assert.IsTrue(app.LoadGame());Assert.IsFalse(app.BattleVisible);Assert.AreEqual(money,app.Game.S.divinity);
-        Assert.IsFalse(Resources.FindObjectsOfTypeAll<Texture2D>().Any(t=>t.name=="battle-actors-v1"));
+        var bar=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Combat bar -1");
+        Vector2 home=hero.anchoredPosition;Vector3 hud=bar.position;bool moved=false,shook=false;float until=Time.realtimeSinceStartup+5;
+        while(Time.realtimeSinceStartup<until&&app.Game.S.combat!=null){yield return null;moved|=Vector2.Distance(home,hero.anchoredPosition)>20;shook|=world.anchoredPosition.sqrMagnitude>.1f;Assert.AreEqual(hud,bar.position);if(moved&&shook)break;}
+        Assert.IsTrue(moved);Assert.IsTrue(shook);
+        app.Game.S.combat.waiting=true;app.Game.S.combat.prompt="검증용 위기";yield return new WaitForSecondsRealtime(.8f);
+        Assert.IsNotNull(root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Emergency commands"));
+        double hours=app.Game.S.hours;uint rng=app.Game.S.rng;int money=app.Game.S.divinity;
+        Find(root,"연출 건너뛰기 · 명령에서 정지").onClick.Invoke();yield return new WaitForSecondsRealtime(.15f);
+        Assert.AreEqual(hours,app.Game.S.hours);Assert.AreEqual(rng,app.Game.S.rng);Assert.AreEqual(money,app.Game.S.divinity);Assert.IsTrue(app.Game.S.combat.waiting);
+        Assert.IsTrue(app.Saves.Write(app.Game.S));Assert.IsTrue(app.LoadGame());Assert.IsTrue(app.Game.S.combat.waiting);Assert.AreEqual(hours,app.Game.S.hours);
         UnityEngine.Object.Destroy(root);yield return null;System.IO.Directory.Delete(temp,true);
     }
-    [UnityTest] public IEnumerator InteriorEventShowsItsOwnBackdropAndClosesWithoutRecalculatingCombat()
+    [UnityTest] public IEnumerator InteriorBackdropFinishesRealCombatAndCannotPayAgainAfterReload()
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"BattleInterior-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Interior battle");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(413);app.Game.Select(app.Game.S.candidates[0].id);var g=app.Game;g.S.day=2;g.S.activeRift=0;g.S.phase=Phase.Running;g.S.goal=Goal.Rift;
-        g.S.avatar.personality=Temperament.Brave;g.S.avatar.baseAttack=1000;g.S.avatar.baseHealth=1000;g.S.avatar.health=1000;g.S.food=1000;g.S.medicine=1000;
-        ResolveFight(root,app,"R-04");yield return null;Assert.AreEqual("interior",app.CurrentBattle.scene);
+        app.BeginNew(413);Prepare(app);app.Game.S.avatar.baseAttack=1000;ResolveFight(root,app,"R-04");yield return null;
         Assert.IsTrue(root.GetComponentsInChildren<RawImage>().Any(i=>i.texture!=null&&i.texture.name=="battle-interior-v1"));
-        int kills=g.S.totalKills;uint rng=g.S.rng;double time=g.S.hours;
-        Find(root,"전투 ×4").onClick.Invoke();float until=Time.realtimeSinceStartup+5;
+        Find(root,"연출 건너뛰기 · 명령에서 정지").onClick.Invoke();float until=Time.realtimeSinceStartup+8;
         while(app.BattleVisible&&Time.realtimeSinceStartup<until)yield return null;
-        Assert.IsFalse(app.BattleVisible);Assert.AreEqual(kills,g.S.totalKills);Assert.AreEqual(rng,g.S.rng);Assert.AreEqual(time,g.S.hours);
-        Assert.IsFalse(Resources.FindObjectsOfTypeAll<Texture2D>().Any(t=>t.name=="battle-interior-v1"||t.name=="battle-actors-v1"));
+        Assert.IsFalse(app.BattleVisible);app.enabled=false;
+        Assert.IsTrue(app.Game.S.relics.Any(r=>r.id=="necronomicon"));int kills=app.Game.S.totalKills,money=app.Game.S.divinity;
+        Assert.IsTrue(app.Saves.Write(app.Game.S));Assert.IsTrue(app.LoadGame());Assert.IsNull(app.Game.S.combat);
+        Assert.AreEqual(kills,app.Game.S.totalKills);Assert.AreEqual(money,app.Game.S.divinity);Assert.AreEqual(1,app.Game.S.relics.Count(r=>r.id=="necronomicon"));
+        Assert.IsFalse(Resources.FindObjectsOfTypeAll<Texture2D>().Any(t=>t.name=="battle-interior-v1"||t.name=="legion-enemies-v2"));
         UnityEngine.Object.Destroy(root);yield return null;System.IO.Directory.Delete(temp,true);
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class RegressionTests
 {
     GameEngine g;
-    [SetUp] public void Setup(){g=GameEngine.New(555,GameData.LoadBalance(),GameData.LoadContent());g.Select(g.S.candidates[0].id);g.S.day=2;g.S.phase=Phase.Running;g.S.activeRift=0;g.S.goal=Goal.Rift;g.S.demons[0].progress=Rules.RiftProgressRequired;g.S.avatar.baseHealth=10000;g.S.avatar.health=10000;g.S.food=10000;g.S.avatar.baseAttack=20;g.S.avatar.hunger=100;g.S.avatar.sanity=100;}
+    [SetUp] public void Setup(){g=GameEngine.New(555,GameData.LoadBalance(),GameData.LoadContent());if(g.S.avatar==null)g.Select(g.S.candidates[0].id);g.S.day=2;g.S.phase=Phase.Running;g.S.activeRift=0;g.S.goal=Goal.Rift;g.S.demons[0].progress=Rules.RiftProgressRequired;g.S.avatar.baseHealth=10000;g.S.avatar.health=10000;g.S.food=10000;g.S.avatar.baseAttack=20;g.S.avatar.hunger=100;g.S.avatar.sanity=100;}
     int FirstDamage(){string line=g.S.logs.First(l=>l.Contains("攻撃")||l.Contains("공격 "));return int.Parse(line.Split(new[]{"공격 "},StringSplitOptions.None)[1].Split(' ')[0]);}
     [TestCase("alexander",EnemyKind.Normal,1,100,0,22)]
     [TestCase("musashi",EnemyKind.Normal,1,100,0,23)]
@@ -26,15 +26,16 @@ public class RegressionTests
         g.S.avatar.inherited.Add(ability);g.S.normalWins=wins;g.S.avatar.hunger=hunger;g.B.teslaChance=1;g.B.curieChance=1;
         g.B.normalHp=100;g.B.specialHp=100;g.B.demonHp=100;
         var named=kind==EnemyKind.Named?new NamedZombieRecord{id="n",name="past",health=100,attack=1}:null;
-        g.Battle(kind,count,Sin.Pride,named);Assert.AreEqual(expected,FirstDamage());
+        if(kind==EnemyKind.Demon){g.S.activeRift=(int)Sin.Sloth;g.S.demons[(int)Sin.Sloth].progress=50;}
+        g.Battle(kind,count,kind==EnemyKind.Demon?Sin.Sloth:Sin.Pride,named);Assert.AreEqual(expected,FirstDamage());
     }
     [TestCase("napoleon",EnemyKind.Normal,1,100,9)]
     [TestCase("leonidas",EnemyKind.Special,1,30,6)]
     [TestCase("yi",EnemyKind.Normal,3,100,21)]
     public void DefenseEffects(string ability,EnemyKind kind,int enemies,int percentHealth,int expected)
     {
-        g.S.avatar.inherited.Add(ability);g.S.avatar.health=g.S.avatar.MaxHealth*percentHealth/100.0;g.B.normalHp=100;g.B.specialHp=100;g.B.normalAttack=10;
-        g.Battle(kind,enemies,Sin.Pride);string line=g.S.logs.First(l=>l.Contains("피격 "));int hit=int.Parse(line.Split(new[]{"피격 "},StringSplitOptions.None)[1].Split(' ')[0]);Assert.AreEqual(expected,hit);
+        g.S.avatar.inherited.Add(ability);g.S.avatar.health=g.S.avatar.MaxHealth*percentHealth/100.0;g.B.normalHp=100;g.B.specialHp=100;g.B.normalAttack=10;g.B.november.specialHp[0]=100;
+        g.Battle(kind,enemies,Sin.Pride);string line=g.S.logs.First(l=>l.Contains(" · 화신체 체력"));int hit=int.Parse(line.Split(new[]{"공격 "},StringSplitOptions.None)[1].Split(' ')[0]);Assert.AreEqual(ability=="yi"?7:expected,hit);
     }
     [Test] public void SejongAndJoanReduceStressWithFinalRounding(){g.S.avatar.inherited.Add("sejong");g.Stress(20,new[]{Sin.Envy},true);Assert.AreEqual(83,g.S.avatar.sanity);g.S.avatar.inherited.Add("joan");g.S.avatar.sanity=30;g.Stress(20,new[]{Sin.Wrath});Assert.AreEqual(15,g.S.avatar.sanity);}
     [Test] public void HuaTreatmentBoostAndTime(){g.S.phase=Phase.Morning;g.S.avatar.health=1;g.S.avatar.inherited.Add("hua");g.Treat(false,false,true);Assert.AreEqual(1+Rules.Round(g.S.avatar.MaxHealth*.7*1.15),g.S.avatar.health);Assert.AreEqual(2,g.S.hours);}

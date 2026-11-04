@@ -26,7 +26,7 @@ public class NewGameWarningTests
     {
         string temp=Path.Combine(Path.GetTempPath(),"ResetUI-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Reset UI");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(511);app.Game.Select(app.Game.S.candidates[0].id);var old=app.Game;
+        app.BeginNew(511);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);var old=app.Game;
         old.S.permanent.unlocked.Add("sejong");old.S.permanent.completedStories.Add("story");old.S.permanent.stories.Add(new AcquiredStory{constellationId="sejong",body="old"});
         old.S.permanent.victories=3;old.S.permanent.named.Add(new NamedZombieRecord{id="old",name="old",health=99});
         old.S.permanent.deaths.Add(new DeathRecord{name="old"});old.S.relics.Add(new Relic{id="gungnir",name="궁니르"});
@@ -41,7 +41,7 @@ public class NewGameWarningTests
         Assert.AreNotSame(Find(root,"이어하기"),Top(Find(root,"이어하기")).GetComponentInParent<Button>(),"경고창 뒤의 시작/이어하기는 눌리지 않아야 합니다.");
         Click(Find(root,"취소"));yield return null;Assert.AreSame(old,app.Game);Assert.AreEqual(before,File.ReadAllText(app.Saves.PathName));
         Click(Find(root,"새로 시작"));yield return null;Click(Find(root,"모두 초기화하고 시작"));yield return null;
-        var s=app.Game.S;Assert.AreNotEqual(old.S.runId,s.runId);Assert.AreEqual(Phase.Selection,s.phase);Assert.AreEqual(1,s.day);Assert.AreEqual(3,s.candidates.Count);Assert.IsNull(s.avatar);
+        var s=app.Game.S;Assert.AreNotEqual(old.S.runId,s.runId);Assert.AreEqual(Phase.Morning,s.phase);Assert.AreEqual(1,s.day);Assert.IsEmpty(s.candidates);Assert.NotNull(s.avatar);Assert.AreEqual(Species.Human,s.avatar.species);
         Assert.AreEqual(0,s.permanent.unlocked.Count+s.permanent.completedStories.Count+s.permanent.stories.Count+s.permanent.deaths.Count+s.permanent.named.Count+s.permanent.victories);
         Assert.IsEmpty(s.relics);Assert.IsEmpty(s.recruitedRare);Assert.AreEqual(0,s.totalKills+s.totalSeals);
         var balance=GameData.LoadBalance();Assert.AreEqual(balance.initialDivinity,s.divinity);Assert.AreEqual(balance.initialFood,s.food);Assert.AreEqual(balance.initialMedicine,s.medicine);

@@ -13,7 +13,7 @@ public class ScreenTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"ApocalypsePrep-"+System.Guid.NewGuid().ToString("N"));
         var root=new GameObject("Preparation test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(321);app.Game.Select(app.Game.S.candidates[0].id);app.Game.S.avatar.personality=Temperament.Brave;app.Navigate("쉘터");yield return null;
+        app.BeginNew(321);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);app.Game.S.avatar.personality=Temperament.Brave;app.Navigate("쉘터");yield return null;
         var labels=root.GetComponentsInChildren<Button>().Select(b=>b.GetComponentInChildren<Text>().text).ToArray();
         CollectionAssert.AreEquivalent(ArtCatalog.FacilityNames.Select(n=>"시설 이용 · "+n),labels.Where(n=>n.StartsWith("시설 이용 · ")));
         Assert.IsFalse(labels.Contains("진행")||labels.Contains("탐사")||labels.Contains("공략"));
@@ -23,7 +23,8 @@ public class ScreenTests
         CollectionAssert.IsSubsetOf(new[]{"군단 봉쇄 돌파  23 / 50","악마 봉인  2 / 7","체력  200%","공격력  140%","현재 봉인 2명 기준"},texts);
         Assert.IsFalse(texts.Any(t=>t.Contains("일반 +1점")||t.Contains("50점 이후")));
         Assert.AreEqual(7,root.GetComponentsInChildren<SealGlyph>().Length);
-        Assert.IsTrue(root.GetComponentsInChildren<RawImage>().Any(i=>i.texture==ArtCatalog.Environment(5)));
+        Assert.IsTrue(root.GetComponentsInChildren<RawImage>().Any(i=>i.texture==ArtCatalog.Environment(4)));
+        Assert.IsTrue(root.GetComponentsInChildren<Button>().Any(b=>b.GetComponentInChildren<Text>().text=="침수된 지하철역"));
         var main=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Main");
         foreach(string label in new[]{"탐사","공략","진행"})
         {
@@ -45,7 +46,7 @@ public class ScreenTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"ApocalypseArt-"+System.Guid.NewGuid().ToString("N"));
         var root=new GameObject("Illustration test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(95);app.Game.Select(app.Game.S.candidates[0].id);
+        app.BeginNew(95);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);
         foreach(string id in ArtCatalog.ConstellationIds)
         {
             var definition=app.Game.Content.Find(id);
@@ -87,7 +88,7 @@ public class ScreenTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"ApocalypseCodex-"+System.Guid.NewGuid().ToString("N"));
         var root=new GameObject("Codex test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(77);app.Game.Select(app.Game.S.candidates[0].id);app.Game.S.permanent.unlocked.Add("sejong");app.Navigate("성좌 도감");yield return null;
+        app.BeginNew(77);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);app.Game.S.permanent.unlocked.Add("sejong");app.Navigate("성좌 도감");yield return null;
         var texts=root.GetComponentsInChildren<Text>().Select(x=>x.text).ToArray();
         Assert.IsFalse(texts.Any(x=>x.Contains("매일 독립")||x.Contains("40%")||x.Contains("제우스")));
         string label=CodexIndex.DisplayName(app.Game.Content.Find("sejong"));
@@ -112,7 +113,7 @@ public class ScreenTests
     [UnityTest] public IEnumerator PersonnelHasStableIconsStatsAndFacilitiesHaveBackgrounds()
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"ApocalypsePersonnel-"+System.Guid.NewGuid().ToString("N"));
-        var root=new GameObject("Personnel test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;app.BeginNew(67);app.Game.Select(app.Game.S.candidates[0].id);
+        var root=new GameObject("Personnel test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;app.BeginNew(67);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);
         foreach(string tab in ArtCatalog.FacilityNames)
         {
             app.Navigate(tab);yield return null;Assert.IsTrue(root.GetComponentsInChildren<RawImage>().Any(x=>x.texture==ArtCatalog.Environment(System.Array.IndexOf(ArtCatalog.FacilityNames,tab))));
@@ -139,8 +140,8 @@ public class ScreenTests
         Assert.IsTrue(root.GetComponentsInChildren<Button>().Any(x=>x.GetComponentInChildren<Text>().text=="새로 시작"));
         // A distinct test save location is used by persistence tests; avoid writing a user's slot here.
         app.BeginNew(321);yield return null;
-        Assert.AreEqual(3,app.Game.S.candidates.Count);
-        var select=root.GetComponentsInChildren<Button>().First(x=>x.GetComponentInChildren<Text>().text=="계약한다");select.onClick.Invoke();yield return null;
+        Assert.IsEmpty(app.Game.S.candidates);Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(x=>x.GetComponentInChildren<Text>().text=="계약한다"));
+        Assert.AreEqual(Species.Human,app.Game.S.avatar.species);yield return null;
         Assert.NotNull(app.Game.S.avatar);Assert.AreEqual(Phase.Morning,app.Game.S.phase);
         Canvas.ForceUpdateCanvases();
         var footer=root.GetComponentsInChildren<RectTransform>().First(x=>x.name=="Footer");

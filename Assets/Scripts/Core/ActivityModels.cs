@@ -10,7 +10,11 @@ namespace Apocalypse
     }
     [Serializable] public sealed class EventOption
     {
-        public string text, relicId, rareNpcId, chance;
+        public string text, relicId, rareNpcId, chance, outcome, uniqueNpcId;
+        public string[] flags = new string[0], partialFlags = new string[0];
+        public bool completes, injury, medicalLoot, defaultHours, mentalRisk, optionalEncounter;
+        public EventOption Copy(){return (EventOption)MemberwiseClone();}
+        public double damage, encounterChance=1, noEncounterSanity;
         public double hours, hunger, sanity;
         public int food, kits, syringes, normal, special;
         public bool recruit, discoverFood, divinity, returnHome, boss;
@@ -19,6 +23,10 @@ namespace Apocalypse
     {
         public string id, title, body, relicId, rareNpcId, scene;
         public Goal location;
+        public Area area;
+        public bool repeat=true, supplemental;
+        public string[] prerequisites=new string[0], anyPrerequisites=new string[0];
+        public string rawNotes;
         public bool divinityEvent;
         public EventOption[] options;
         public Sin[] tags;

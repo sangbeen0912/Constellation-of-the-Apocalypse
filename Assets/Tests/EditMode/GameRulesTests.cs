@@ -9,9 +9,9 @@ public class GameRulesTests
 {
     GameEngine g;
     [SetUp] public void Setup() { g=GameEngine.New(1729,GameData.LoadBalance(),GameData.LoadContent()); }
-    void Select() { Assert.IsTrue(g.Select(g.S.candidates[0].id)); }
+    void Select() { Assert.NotNull(g.S.avatar);Assert.AreEqual(Phase.Morning,g.S.phase); }
     void Veteran() { Select();g.S.day=2;g.S.activeRift=(int)Sin.Pride;g.S.phase=Phase.Running;g.S.goal=Goal.Rift;g.S.demons[0].progress=Rules.RiftProgressRequired; }
-    [Test] public void ThreeCandidatesAndSelection() { Assert.AreEqual(3,g.S.candidates.Count);Select();Assert.AreEqual(2,g.S.candidates.Count);Assert.AreEqual(Phase.Morning,g.S.phase);Assert.IsFalse(g.Select(g.S.candidates[0].id)); }
+    [Test] public void OneRandomHumanStartsAutomatically() { Assert.AreEqual(0,g.S.candidates.Count);Select();Assert.AreEqual(Species.Human,g.S.avatar.species);Assert.IsFalse(g.S.avatar.mutant);Assert.IsFalse(g.Select(g.S.avatar.id)); }
     [Test] public void ContentContainsTwentyUniqueCompleteStories()
     {
         var c=g.Content.constellations;Assert.AreEqual(20,c.Count);Assert.AreEqual(20,c.Select(x=>x.id).Distinct().Count());Assert.AreEqual(20,c.Select(x=>x.eventId).Distinct().Count());
@@ -34,7 +34,7 @@ public class GameRulesTests
     [Test] public void CombatDeathOverridesStarvationAndClearsRift()
     { Veteran();g.S.avatar.hunger=0;g.CheckDeath(true,Sin.Pride);Assert.AreEqual(Sin.Pride,g.S.permanent.named[0].legion);Assert.AreEqual(-1,g.S.activeRift);Assert.IsTrue(g.S.permanent.deaths[0].combat);Assert.IsNull(g.S.avatar);Assert.Greater(g.S.permanent.named[0].health,0); }
     [Test] public void TiedCauseTagsOnlyChooseEligibleLegions()
-    { var seen=new System.Collections.Generic.HashSet<Sin>();for(uint seed=1;seed<100;seed++){var x=GameEngine.New(seed,g.B,g.Content);x.Select(x.S.candidates[0].id);x.S.sanityCauses.AddRange(new[]{Sin.Greed,Sin.Envy});x.S.avatar.sanity=0;x.CheckDeath(false,null);var sin=x.S.permanent.named[0].legion;Assert.Contains(sin,new[]{Sin.Greed,Sin.Envy});seen.Add(sin);}Assert.AreEqual(2,seen.Count); }
+    { var seen=new System.Collections.Generic.HashSet<Sin>();for(uint seed=1;seed<100;seed++){var x=GameEngine.New(seed,g.B,g.Content);if(x.S.avatar==null)x.Select(x.S.candidates[0].id);x.S.sanityCauses.AddRange(new[]{Sin.Greed,Sin.Envy});x.S.avatar.sanity=0;x.CheckDeath(false,null);var sin=x.S.permanent.named[0].legion;Assert.Contains(sin,new[]{Sin.Greed,Sin.Envy});seen.Add(sin);}Assert.AreEqual(2,seen.Count); }
     [Test] public void NoRiftDeathGovernmentAndReplacementSafeDay()
     { Select();g.S.candidates.Clear();g.S.avatar.health=0;g.CheckDeath(false,null);Assert.AreEqual(1,g.S.candidates.Count);Assert.IsFalse(g.S.candidates[0].mutant);SelectReplacement();Assert.IsFalse(g.Battle(EnemyKind.Normal,1,Sin.Wrath));Assert.AreEqual(-1,g.S.activeRift);g.S.phase=Phase.Running;g.EndDay();g.NextDay();Assert.GreaterOrEqual(g.S.activeRift,0); }
     void SelectReplacement(){Assert.IsTrue(g.Select(g.S.candidates[0].id));}
@@ -83,12 +83,12 @@ public class GameRulesTests
             g.S.hours=0;g.S.eventSlots=0;g.S.goal=d.location;g.S.phase=Phase.Running;
             g.S.controlLocked=false;g.S.avatar.hunger=g.S.avatar.sanity=100;
             Assert.IsFalse(g.AcquireRelic(d.id),"성유물은 직접 생성할 수 없습니다.");
-            var e=g.Content.activityEvents.Single(x=>x.relicId==d.id);Assert.IsTrue(g.PresentGeneralEvent(e.id));
+            var e=g.Content.activityEvents.Single(x=>x.relicId==d.id);g.S.exploration.current=e.area;g.S.plot.completed.AddRange(e.prerequisites);g.S.plot.completed.AddRange(e.anyPrerequisites);Assert.IsTrue(g.PresentGeneralEvent(e.id));
             Assert.IsTrue(g.Resolve(g.S.pending.id,0));var relic=g.S.relics.Single(r=>r.id==d.id);
             Assert.AreEqual(0,relic.healthBonus);Assert.AreEqual(0,relic.attackBonus);
             Assert.IsFalse(g.EligibleEvents(d.location).Any(x=>x.relicId==d.id));Assert.IsFalse(g.PresentGeneralEvent(e.id));
         }
-        Assert.AreEqual(8,g.S.relics.Count);
+        Assert.AreEqual(10,g.S.relics.Count);
     }
     [Test] public void KillAndRiftRewardsSeparateAndIdempotent()
     { Veteran();g.S.avatar.baseAttack=1000;g.S.avatar.hunger=100;int before=g.S.divinity;Assert.IsTrue(g.Battle(EnemyKind.Demon,1,Sin.Pride));Assert.AreEqual(before+400,g.S.divinity);Assert.IsFalse(g.Seal(Sin.Pride,"duplicate"));Assert.IsFalse(g.Reward(g.S.rewardLedger[0],100));Assert.AreEqual(before+400,g.S.divinity); }

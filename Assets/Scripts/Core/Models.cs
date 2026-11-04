@@ -5,12 +5,12 @@ using System.Linq;
 namespace Apocalypse
 {
     public enum Sin { Pride, Greed, Lust, Envy, Gluttony, Wrath, Sloth }
-    public enum Phase { Selection, Morning, Running, Event, Report, Death, Victory }
+    public enum Phase { Selection, Morning, Running, Event, Report, Death, Victory, Combat }
     // Keep persisted numeric IDs from v1. Removed goals 1/2 migrate to Explore.
     public enum Goal { Explore = 0, Rift = 3 }
     public enum EnemyKind { Normal, Special, Named, Demon }
     public enum Activity { Sleep, Rest, Travel, Search, Scout, Combat, Rift }
-    public enum Temperament { Brave, Cautious, Curious, Defiant }
+    public enum Temperament { Brave=0, Cautious=1, Cold=2, Defiant=3, Aggressive=4, Fearful=5 }
     public enum Stat { Health, Attack }
     public enum Species { Human, Machine, Fishfolk, HalfUndead, Beastkin }
 
@@ -21,8 +21,8 @@ namespace Apocalypse
         public int healthMin = 85, healthMax = 115, attackMin = 16, attackMax = 24;
         public double[] hungerRates = { 1, 2, 3, 4, 5, 7, 8 };
         public double combatRoundHours = .15, minBattleHours = .5;
-        public int maxCombatRounds = 200, normalHp = 28, specialHp = 55, demonHp = 220;
-        public int normalAttack = 4, specialAttack = 7, demonAttack = 13;
+        public int maxCombatRounds = 200, normalHp = 30, specialHp = 55, demonHp = 220;
+        public int normalAttack = 5, specialAttack = 7, demonAttack = 13;
         public double normalStress = 3, namedStress = 8, demonStress = 15;
         public double constellationStoryHours = 0;
         public double scoutSuccess = .60, mutantChance = .12, refusalChance = .18;
@@ -32,6 +32,7 @@ namespace Apocalypse
         public double foodDiscoveryChance = .6, divineSuccessChance = .6, constellationMeetDelay = 3;
         public double returnHealthRatio = .3, returnSanity = 35, returnHunger = 30, returnHour = 18, returnRiskPerSeal = .02;
         public double[] returnPersonalityOffsets = { -.05, .1, 0, -.1 };
+        public NovemberConfig november = new NovemberConfig();
         public EventCost[] eventCosts = new EventCost[0];
         public double sejongReduction = .15, joanReduction = .25, napoleonReduction = .10;
         public double zhugeTime = .10, leonardoLoot = .15, alexanderDamage = .12;
@@ -43,7 +44,7 @@ namespace Apocalypse
     }
     public static class Rules
     {
-        public const int SaveVersion = 1, RulesRevision = 3, MaxNpc = 10, SealDays = 100, EnhancedSealDays = 120, RelicCost = 100, SupplyCost = 1;
+        public const int SaveVersion = 1, RulesRevision = 4, MaxNpc = 10, SealDays = 100, EnhancedSealDays = 120, RelicCost = 100, SupplyCost = 1;
         public const int RiftProgressRequired = 50, NormalProgress = 1, SpecialProgress = 3, NamedProgress = 3;
         public const double NamedReplacementChance = .30;
         public const double HealthPerSeal = .5, AttackPerSeal = .2;
@@ -51,7 +52,7 @@ namespace Apocalypse
         public static readonly int[] GradeWeights = { 50, 35, 10, 5 };
         public static readonly int[] InheritCosts = { 30, 70, 150, 300 };
         public static readonly string[] Grades = { "위인급", "설화급", "신화급", "외신급" };
-        public static readonly string[] Sins = { "교만", "탐욕", "색욕", "질투", "폭식", "분노", "나태" };
+        public static readonly string[] Sins = { "오만", "탐욕", "색욕", "질투", "폭식", "분노", "나태" };
         public static int Round(double x) { return (int)Math.Round(x, MidpointRounding.AwayFromZero); }
         public static double Clamp(double x, double max = 100) { return Math.Max(0, Math.Min(max, x)); }
     }
@@ -80,7 +81,7 @@ namespace Apocalypse
         public string id, title, body, constellationId;
         public string[] choices;
         public Sin[] tags;
-        public string templateId, scene;
+        public string templateId, scene, context;
         public EventOption[] options;
     }
     [Serializable] public sealed class Demon
@@ -163,6 +164,10 @@ namespace Apocalypse
         public string report = "", lastDeath = "", lastBattle = "";
         public string lastNamedName;
         public int lastNamedDay;
+        public ExplorationState exploration = new ExplorationState();
+        public PlotState plot = new PlotState();
+        public List<string> uniqueRecruits = new List<string>();
+        public BattleState combat;
     }
     [Serializable] public sealed class Content
     {

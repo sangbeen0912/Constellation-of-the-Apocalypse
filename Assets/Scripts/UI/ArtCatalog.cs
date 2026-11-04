@@ -5,7 +5,7 @@ namespace Apocalypse
     // Stable name mapping also preserves the appearance of characters in existing saves.
     public static class ArtCatalog
     {
-        static readonly string[] RelicIds={"gungnir","grail","solomon","necronomicon","antikythera","nebra","dagger","bicorne"};
+        static readonly string[] RelicIds={"gungnir","grail","solomon","necronomicon","antikythera","nebra","dagger","bicorne","yata-mirror","green-dragon-blade"};
         public static string PortraitKey(string name)
         {
             switch(name){case "카엘":return "Art/Portraits/kael-v1";case "네리사":return "Art/Portraits/nerissa-v1";case "베이르":return "Art/Portraits/beyr-v1";case "라이라":return "Art/Portraits/lyra-v1";}

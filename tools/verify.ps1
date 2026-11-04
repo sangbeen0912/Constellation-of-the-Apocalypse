@@ -1,4 +1,4 @@
-param([string]$Unity = 'C:\Program Files\Unity\Hub\Editor\6000.3.23f1\Editor\Unity.exe', [switch]$SkipBuild)
+param([string]$Unity = 'C:\Program Files\Unity\Hub\Editor\6000.3.23f1\Editor\Unity.exe', [switch]$SkipBuild, [switch]$Optimize, [switch]$BuildQA)
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 New-Item -ItemType Directory -Path (Join-Path $taskRoot 'TestResults') -Force | Out-Null
@@ -26,13 +26,18 @@ function Invoke-UnityTask([string]$Name, [string]$Arguments) {
 }
 try {
     Invoke-UnityTask 'generate' '-quit -executeMethod ProjectBuilder.Generate'
+    if($Optimize){Invoke-UnityTask 'november-optimization' '-quit -executeMethod NovemberOptimization.Apply'}
     Invoke-UnityTask 'editmode' "-runTests -testPlatform EditMode -testResults `"$taskRoot\TestResults\editmode.xml`""
     Invoke-UnityTask 'playmode' "-runTests -testPlatform PlayMode -testResults `"$taskRoot\TestResults\playmode.xml`""
     foreach ($taskMode in @('editmode','playmode')) {
         [xml]$taskXml = Get-Content -LiteralPath (Join-Path $taskRoot "TestResults\$taskMode.xml") -Raw
         if ([int]$taskXml.'test-run'.total -lt 1 -or [int]$taskXml.'test-run'.failed -gt 0) { throw "$taskMode tests did not pass" }
     }
-    if (!$SkipBuild) { Invoke-UnityTask 'build' '-quit -executeMethod ProjectBuilder.BuildWindows' }
+    if (!$SkipBuild) {
+        Invoke-UnityTask 'build' '-quit -executeMethod ProjectBuilder.BuildWindows'
+        & (Join-Path $PSScriptRoot 'trim-symbols.ps1') -Build Windows
+        if($BuildQA){Invoke-UnityTask 'build-qa' '-quit -executeMethod ProjectBuilder.BuildWindowsQA'; & (Join-Path $PSScriptRoot 'trim-symbols.ps1') -Build QA}
+    }
 } finally {
     Remove-TaskAlias
 }

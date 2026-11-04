@@ -1,0 +1,462 @@
+{
+    "beforeTextureBytes": 122308480,
+    "afterTextureBytes": 39700352,
+    "textures": [
+        {
+            "path": "Assets/Resources/Art/Combat/battle-actors-v1.png",
+            "format": "BC7",
+            "width": 1024,
+            "height": 1024,
+            "before": 4195200,
+            "after": 1049472
+        },
+        {
+            "path": "Assets/Resources/Art/Combat/legion-enemies-v2.png",
+            "format": "BC7",
+            "width": 1024,
+            "height": 1024,
+            "before": 4195200,
+            "after": 1049472
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/alexander-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/artemis-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/arthur-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/cleopatra-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/curie-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/genghis-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/hades-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/heracles-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/hua-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/joan-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/leonardo-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/leonidas-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/musashi-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/napoleon-v1.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/sejong-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/tesla-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/yi-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/yog-v1.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/zeus-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Constellations/zhuge-v2.png",
+            "format": "BC7",
+            "width": 1536,
+            "height": 1024,
+            "before": 4719488,
+            "after": 1573760
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/battle-interior-v1.png",
+            "format": "BC7",
+            "width": 1024,
+            "height": 576,
+            "before": 1770368,
+            "after": 590720
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/chapel-v2.png",
+            "format": "BC7",
+            "width": 1024,
+            "height": 576,
+            "before": 1770368,
+            "after": 590720
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/city-v2.png",
+            "format": "BC7",
+            "width": 1024,
+            "height": 576,
+            "before": 1770368,
+            "after": 590720
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/clinic-v2.png",
+            "format": "BC7",
+            "width": 512,
+            "height": 288,
+            "before": 443264,
+            "after": 148352
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/constellation-omen-v1.png",
+            "format": "BC7",
+            "width": 1024,
+            "height": 576,
+            "before": 1770368,
+            "after": 590720
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/november-areas-v1.png",
+            "format": "BC7",
+            "width": 2048,
+            "height": 728,
+            "before": 4473728,
+            "after": 1491840
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/personnel-v2.png",
+            "format": "BC7",
+            "width": 512,
+            "height": 288,
+            "before": 443264,
+            "after": 148352
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/rift-v2.png",
+            "format": "BC7",
+            "width": 1024,
+            "height": 576,
+            "before": 1770368,
+            "after": 590720
+        },
+        {
+            "path": "Assets/Resources/Art/Environments/warehouse-v2.png",
+            "format": "BC7",
+            "width": 512,
+            "height": 288,
+            "before": 443264,
+            "after": 148352
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/beyr-v1.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/kael-v1.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/lyra-v1.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/nerissa-v1.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-00-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-01-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-02-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-03-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-04-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-05-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-06-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-07-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-08-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-09-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-10-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Portraits/survivor-11-v3.png",
+            "format": "BC7",
+            "width": 256,
+            "height": 256,
+            "before": 263040,
+            "after": 66432
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/antikythera-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/bicorne-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/dagger-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/grail-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/green-dragon-blade-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/gungnir-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/nebra-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/necronomicon-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/solomon-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        },
+        {
+            "path": "Assets/Resources/Art/Relics/yata-mirror-v1.png",
+            "format": "BC7",
+            "width": 128,
+            "height": 128,
+            "before": 66432,
+            "after": 17280
+        }
+    ]
+}

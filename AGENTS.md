@@ -1,6 +1,6 @@
 # 종말의 성좌 개발 규칙
 
-- 최신 통합 기획은 `GAME_DESIGN.md` (Unity 6 v5.6) 및 `docs/PLANNER_ORDER_2026-10-30.md`다. 기획자 통합 오더와 이후 사용자 확정 지시가 같은 기능의 이전 명령서/임시 구현보다 우선한다. 이전 변경 기록과 웹 v2.0은 이력으로 보존한다.
+- 최신 통합 기획은 `GAME_DESIGN.md` (Unity 6 v6.0) 및 `docs/PLANNER_ORDER_2026-11-04.md`다. 기획자 통합 오더와 이후 사용자 확정 지시가 같은 기능의 이전 명령서/임시 구현보다 우선한다. 이전 변경 기록과 웹 v2.0은 이력으로 보존한다.
 - 확정 규칙을 임의 변경하지 않는다. 미확정 값은 `Assets/Resources/balance.json`과 `DECISIONS.md`에 표시한다.
 - 핵심 로직은 Unity UI에 의존하지 않는 `Assets/Scripts/Core`에 둔다. 정적 콘텐츠와 회차 상태를 분리한다.
 - 기능 변경마다 관련 EditMode/PlayMode 테스트를 실행하고 실제 결과만 `TEST_REPORT.md`에 기록한다.

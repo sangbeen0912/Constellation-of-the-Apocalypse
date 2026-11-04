@@ -34,7 +34,7 @@ public class NavigationReadabilityTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"Navigation-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Navigation readability");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(471);app.Game.Select(app.Game.S.candidates[0].id);
+        app.BeginNew(471);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);
         Vector2? position=null;
         foreach(string tab in ArtCatalog.FacilityNames.Append("전투준비").Append("성좌 도감").Append("기록 보관소"))
         {

@@ -74,10 +74,13 @@ namespace Apocalypse
         }
         void Attach(GameEngine game)
         {
-            Game = game; Game.Checkpoint += Save; visibleLogs = Game.S.logs.Count; goal = Game.S.goal;
+            if(Game!=null)Game.Checkpoint-=Save;Game = game; Game.InteractiveCombat=true; Game.Checkpoint += Save; visibleLogs = Game.S.logs.Count; goal = Game.S.goal;
         }
-        void Save() { if (Game != null && !Saves.Write(Game.S)) notice = "저장 실패 · " + Saves.LastError; }
-        void Commit() { Save(); Render(); }
+        bool saveQueued;
+        void Save(){saveQueued=true;}
+        void FlushSave(){if(!saveQueued||Game==null)return;saveQueued=false;if(!Saves.Write(Game.S))notice="저장 실패 · "+Saves.LastError;}
+        void LateUpdate(){FlushSave();}
+        void Commit() { Save();FlushSave(); Render(); }
         void Act(Action action)
         {
             if (busy) return; busy = true;
@@ -97,15 +100,16 @@ namespace Apocalypse
             if(Game.S.phase==Phase.Event&&Game.S.controlLocked&&Game.S.pending!=null)
             {RecordBattles(()=>Game.Resolve(Game.S.pending.id,Game.AutomaticChoice(Game.S.pending)));Render();return;}
             if (visibleLogs < Game.S.logs.Count) { visibleLogs = speed == 2 ? Game.S.logs.Count : visibleLogs + 1; if(logBody!=null)RefreshLogRows(); return; }
-            if (Game.S.phase == Phase.Running) { RecordBattles(()=>Game.Tick()); Render(); }
+            if (Game.S.phase == Phase.Running) { var previous=Game.S.phase;Game.Tick(); if(Game.S.phase==previous&&Game.S.combat==null){visibleLogs=Math.Min(visibleLogs,Game.S.logs.Count);if(logBody!=null)RefreshLogRows();RefreshExplorationStatus();RefreshRunningHud();}else Render(); }
         }
-        void OnApplicationQuit() { if (Game != null) Save(); }
+        void OnApplicationQuit() { if (Game != null){Save();FlushSave();} }
         void OnDestroy()
         {
             DetachIllustration();
             constellationArt.Dispose();
             ReleaseOmen();
             ClearBattles();
+            if(areaAtlas!=null){Resources.UnloadAsset(areaAtlas);areaAtlas=null;}
             if (font != null) Destroy(font);
         }
         void DetachIllustration()
@@ -203,7 +207,7 @@ namespace Apocalypse
         }
         Texture2D Facility(int index)
         { if (!facilities.ContainsKey(index)) facilities[index] = ArtCatalog.Environment(index); return facilities[index]; }
-        string Personality(Character c) { return new[] { "용감함", "신중함", "호기심", "고집" }[(int)c.personality] + (c.species==Species.Human?(c.mutant?" · 돌연변이":""):" · "+SpeciesName(c.species)); }
+        string Personality(Character c) { return PersonalityNames[(int)c.personality] + (c.species==Species.Human?(c.mutant?" · 돌연변이":""):" · "+SpeciesName(c.species)); }
         void Meter(Transform parent, string name, double value, double max, Color color)
         {
             var row = Row(parent,30); var layout = row.GetComponent<HorizontalLayoutGroup>(); layout.childForceExpandWidth = false; layout.childForceExpandHeight = false; layout.childAlignment = TextAnchor.MiddleLeft;
@@ -212,12 +216,13 @@ namespace Apocalypse
             var textLayout = label.GetComponent<LayoutElement>(); textLayout.minWidth = 185; textLayout.preferredWidth = 185; textLayout.flexibleWidth = 1;
             var track = Box(row,"Meter",Vector2.zero,Vector2.one,new Color(.1f,.14f,.18f));
             var barLayout = track.gameObject.AddComponent<LayoutElement>(); barLayout.minWidth = 72; barLayout.preferredWidth = 72; barLayout.minHeight = 16; barLayout.preferredHeight = 16;
-            Box(track,"Fill",Vector2.zero,new Vector2((float)Math.Max(0,Math.Min(1,value/max)),1),color);
+            var fill=Box(track,"Fill",Vector2.zero,new Vector2((float)Math.Max(0,Math.Min(1,value/max)),1),color);
+            hudMeters.Add(new HudMeter{name=name,text=label,fill=fill});
         }
         public void Render()
         {
             if (canvas == null) return;
-            logBody=null;logRows.Clear();
+            logBody=null;logRows.Clear();hudMeters.Clear();explorationStatus=null;
             if (activeScroll != null && scrollKey != null) scrollPositions[scrollKey] = activeScroll.verticalNormalizedPosition;
             activeScroll = null;
             foreach (Transform child in canvas.transform) { if(child==battleLayer)continue;child.gameObject.SetActive(false); Destroy(child.gameObject); }
@@ -259,7 +264,7 @@ namespace Apocalypse
             else if (tab == "기록 보관소") RenderRecords(body);
             else if (tab == "하루 기록" || s.phase == Phase.Running) RenderLogs(body);
             else RenderFacilityScreen(main);
-            Positioned(root,string.IsNullOrEmpty(notice) ? "" + s.hours.ToString("0.0") + " / 24시간  ·  " + (s.activeRift < 0 ? "활성 균열 없음" : Rules.Sins[s.activeRift] + " 군단 활성") : notice,new Vector2(.025f,.025f),new Vector2(.19f,.12f),19,muted);
+            timeStatus=Positioned(root,string.IsNullOrEmpty(notice) ? "" + s.hours.ToString("0.0") + " / 24시간  ·  " + (s.activeRift < 0 ? "활성 균열 없음" : Rules.Sins[s.activeRift] + " 군단 활성") : notice,new Vector2(.025f,.025f),new Vector2(.19f,.12f),19,muted);
             var footer = Row(Box(root,"Footer",new Vector2(.44f,.045f),new Vector2(.985f,.095f),Color.clear),38);
             foreach (int n in new[] {0,1,2}) { int selected = n; MakeButton(footer,new[] { "일반 · 0.8초", "빠르게 · 0.2초", "즉시 표시" }[n],() => { speed = selected; Render(); },true,speed == n); }
             RenderBackNavigation(root);RenderOmen(root);RenderBattleScene();
@@ -277,7 +282,7 @@ namespace Apocalypse
             Label(right,"성좌의 관측소",34,80,gold); Label(right,"자동 행동 · 선택 · 생존 · 계승",23,65,muted);
             MakeButton(right,"이어하기",() => LoadGame(),Saves.Exists&&!confirmNew,true);
             MakeButton(right,"새로 시작",() => {confirmNew=true;Render();},!confirmNew);
-            Label(right,"처음에는 세 명의 후보 중 한 명을 고릅니다.\n쉘터에서 준비한 뒤 하루 목표를 정하고\n화신체의 자동 행동을 지켜보십시오.\n중요 이벤트에서만 운명에 개입합니다.",24,210);
+            Label(right,"무작위 생존자 한 명과 첫 계약을 맺습니다.\n쉘터에서 준비한 뒤 하루 목표를 정하고\n화신체의 자동 행동을 지켜보십시오.\n중요 이벤트에서만 운명에 개입합니다.",24,210);
             if (!string.IsNullOrEmpty(notice)) Label(right,notice,19,100,gold);
             if(confirmNew)RenderNewGameWarning(root);
         }
@@ -289,6 +294,7 @@ namespace Apocalypse
                 var reveal=Row(body,136);Art(reveal,ArtCatalog.Portrait(Game.S.lastNamedName),128,true);
                 Label(reveal,"네임드 좀비 · "+Game.S.lastNamedName+"\n과거 화신체가 악마군단의 적으로 돌아왔다.",25,120,gold);
             }
+            RenderExplorationControls(body);
             Label(body,"오늘의 관측 기록",36,65,gold);
             Label(body,Game.S.phase == Phase.Running ? "화신체가 자동으로 행동하고 있습니다." : "전투준비에서 오늘의 활동을 선택하고 진행합니다.",23,45,muted);
             logBody=body;RefreshLogRows();
@@ -338,7 +344,8 @@ namespace Apocalypse
             var current=s.activeRift>=0?s.demons[s.activeRift]:null;int progress=current==null?0:current.progress;
             Positioned(stage,"전투준비",new Vector2(0,.93f),new Vector2(.36f,1),32,gold);
             Positioned(stage,current==null?"활성 균열 없음":Rules.Sins[s.activeRift]+"의 군단",new Vector2(.36f,.93f),new Vector2(.685f,1),25,muted);
-            FixedArt(stage,current==null?city:gate,new Vector2(0,.34f),new Vector2(.685f,.915f));
+            DrawAreaArt(stage,goal==Goal.Rift?Area.Rift:s.exploration.selected,new Vector2(0,.42f),new Vector2(.685f,.915f));
+            if(s.phase==Phase.Morning){var locations=PrepCard(stage,"Field locations",new Vector2(0,.33f),new Vector2(.685f,.42f));var locationRow=Row(locations,38);foreach(var a in new[]{Area.Residence,Area.Subway}){var area=a;MakeButton(locationRow,AreaRules.Name(a),()=>Act(()=>Game.SelectExplorationArea(area)),goal==Goal.Explore,s.exploration.selected==a);}}
             var route=PrepCard(stage,"Rift progress",new Vector2(0,.17f),new Vector2(.685f,.32f));
             Label(route,"군단 봉쇄 돌파  "+progress+" / "+Rules.RiftProgressRequired,27,38,gold);
             var track=Box(route,"Progress track",Vector2.zero,Vector2.one,new Color(.10f,.12f,.14f));

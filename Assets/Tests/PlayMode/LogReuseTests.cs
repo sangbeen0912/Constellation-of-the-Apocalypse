@@ -13,7 +13,7 @@ public class LogReuseTests
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"LogReuse-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Log reuse");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(293);app.Game.Select(app.Game.S.candidates[0].id);
+        app.BeginNew(293);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);
         for(int i=0;i<120;i++)app.Game.S.logs.Add("최적화 관측 기록 "+i);
         app.Navigate("하루 기록");
         root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text=="즉시 표시").onClick.Invoke();yield return null;
