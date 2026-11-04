@@ -1,0 +1,22 @@
+# 전투 자산 v1
+
+제작 모드: 내장 image_gen. 원본은 생성 폴더에 그대로 보존하고 아래 게임 PNG는 바이트 그대로 복사했다. CLI/API fallback이나 별도 이미지 편집으로 재가공하지 않았다. 알파 범위/파일 메타데이터만 검사했고, 실제 장면에서는 Unity UV 영역으로 표시한다.
+
+|자산|게임 경로|해상도/형식|원본 PNG 바이트|SHA256|
+|---|---|---|---:|---|
+|9역할 스프라이트 아틀라스|Assets/Resources/Art/Combat/battle-actors-v1.png|1254×1254 RGBA|1,517,588|122a8290949498d9bacab812ed8bd4d4bbe745e2e6b95128c23e57228f315ff5|
+|폐건물 전투 홀|Assets/Resources/Art/Environments/battle-interior-v1.png|1672×941 RGB|2,475,572|d25d64149d349b42e6fa74250ba4020fd3fe51bcab09fed6d866c7268e8fc062|
+
+스프라이트 원본: C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-5e537ea1-a784-4891-a19c-da42a9ef4c10.png
+
+내부 배경 원본: C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-892ba7df-4481-40d9-938c-dd5366e3180b.png
+
+아틀라스 순서: 남성 생존자/여성 생존자/기계/어인/반시체/수인/일반 좀비/특수 좀비/악마. 무기의 그림이 별도 장비 보상이나 공격 수치를 추가하지 않는다.
+
+## 아틀라스 최종 프롬프트
+
+Use case: stylized-concept. Asset type: ONE game-ready transparent PIXEL ART CHARACTER SPRITE ATLAS, square 3 BY 3 equal-cell grid, exactly nine isolated full-body actors, no backgrounds, no labels, no grid lines. Every sprite entirely contained in its own cell with generous transparent margin 20 percent on every side; feet at 84 percent down each cell; camera side view, matching scale, consistent crisp pixel clusters and hard stepped edges. Each human about 64 logical pixels tall, designed to look manually clustered like detailed indie 2D pixel games, NO smooth painting, NO antialiasing or blurry outlines. Row 1 left-to-right: 1 rugged Korean male survivor short tousled brown hair olive jacket dark trousers black boots with a short steel machete, battle-ready stance facing RIGHT; 2 Korean female survivor short brown hair charcoal jacket blue trousers with short steel machete, facing RIGHT; 3 sentient bulky combat android humanoid in charcoal armor, teal small eye lights, facing RIGHT. Row 2: 4 slim upright fishfolk humanoid turquoise scales with gills in scavenged teal tunic holding short spear, legs and webbed feet, facing RIGHT; 5 half-undead survivor pale gray skin bandaged forearms torn brown coat and metal pipe, facing RIGHT; 6 agile purple-gray wolf-eared beastkin humanoid with tufted tail, fitted black survival clothes, claw gauntlets, facing RIGHT. Row 3: 7 ordinary zombie in ripped gray civilian clothes mottled gray-green skin, clawing combat stance facing LEFT; 8 larger special zombie with asymmetrical swollen armored right shoulder, deep red mutated skin and tattered trousers, facing LEFT, no exposed gore; 9 imposing horned infernal demon in black and crimson armor with small red runes and dark spear, facing LEFT, no wings beyond the cell. All feet visible, all weapons remain inside each cell, no cast shadows or floor or decoration. Uniform balanced soft ambient shading in 3-5 flat shades per material, compact dense pixels, individually readable silhouettes and small clean clusters. Actual TRANSPARENT alpha background across the full sheet outside the nine silhouettes. Exactly nine sprites, no extra elements, no text or typography. Atlas cells must be exactly equal thirds of width and height for runtime UV lookup.
+
+## 내부 배경 최종 프롬프트
+
+Use case: stylized-concept. Asset type: landscape 16:9 background for an original Korean post-apocalypse PIXEL ART RPG battle scene. An abandoned ruined civic building interior, broad cracked stone floor across lower third with a large CLEAR EMPTY combat stage; broken tall windows behind, overturned empty metal shelves and concrete columns along the far walls, collapsed plaster and a few weeds, dim cool daylight cutting through dusty windows, restrained dark slate and dirty warm concrete palette. Eye-level side-on game camera, horizontal room with good depth but low clear horizon, floor from left edge to right edge open for two groups of full-body sprites. Upper quarter fairly dark and quiet for separately rendered health HUD. True coherent hard-edged square PIXEL ART clusters, deliberate stair-step silhouettes, connected 3-5 shade ramps, old-school detailed pixel background; no smooth digital painting, no photorealistic noise, no soft blur, no fake pixel filter. Match the ruined city pixel-art family in a mature dark survival game. No people, no zombies, no objects blocking the foreground battle floor, no readable writing, no logos, no UI or frames. Draw the entire building environment; no interface. Landscape about1672x941 or1536x864.

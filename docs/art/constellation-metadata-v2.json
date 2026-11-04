@@ -1,0 +1,167 @@
+{
+  "count": 20,
+  "sourceBytes": 53006428,
+  "rgba32TexelsAllBytes": 125829120,
+  "assets": [
+    {
+      "file": "Assets/Resources/Art/Constellations/alexander-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2751749,
+      "sha256": "68930ecbd4d45c3db0d6993a300b3cff1ccde01b8afc94517ad5de20056b4a79"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/artemis-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2626141,
+      "sha256": "e94de3b34a8321dde724ecc90491e9c7ecb959fb8503885e91b7ece06e3e3bc1"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/arthur-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2732538,
+      "sha256": "3b3bff8763087dd67b8929d7bda60c7557107601490f2b63a89680d93023608b"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/cleopatra-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2490360,
+      "sha256": "e9583950b654c9761d30784a28bf611a5c825f0f483eea7136063f3223d7b48f"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/curie-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 1928233,
+      "sha256": "aff1640a088349921926efc54dd91cdbf8725f796e820b74923825f1b193f4af"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/genghis-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2644116,
+      "sha256": "86ce3b84c64c735d08272784249a0e81e01bae1cb1258367aaa2f8021a49e887"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/hades-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2802452,
+      "sha256": "dfcc849812f790d2e58109d3f5621bbccb5c5fa3079ea5d5e3ce9ae53d175ee1"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/heracles-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2774088,
+      "sha256": "72251676866c2a3a1dbafb0fd5fa65ab03b32b17a6c9013ebf396a6ebdc19d28"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/hua-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2496776,
+      "sha256": "725e4befab17ff5a787db4593e7f87013af1c370d015336b894c6702fd8947d4"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/joan-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2655663,
+      "sha256": "c73d3954a7bf71430d2ec5331ff24d0324a8e8e0d27bf15650eb56d89f90382f"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/leonardo-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2329977,
+      "sha256": "2d50a6b22cc5aef79608925fb8712e7a86712aeb7d324e2e05023a3b7d3a98cc"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/leonidas-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2598848,
+      "sha256": "5e855fb553aa0e76b73086a1eec87a5c27aa937a517e4486614a35ba9feb7626"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/musashi-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2234864,
+      "sha256": "703f9ad091d433ff86a8bae4d3f480249a3af0a3a1886ee6050fda11fce7d272"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/napoleon-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2600254,
+      "sha256": "f258833d152bd7766398ff2fc82b0189baae9c0ab142d2c5d112ca2c521fae56"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/sejong-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2687705,
+      "sha256": "19fd58f7c989082c224d3cb1ad070862a6030c0df6f013ea9da47aeada36a561"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/tesla-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 3185768,
+      "sha256": "8a9875be9379632325f4df182f0567e85bda669b98d3989d1d7e0c61a81c6275"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/yi-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2956452,
+      "sha256": "d99bd9a8cd20a2a961593d5429b9ad8301c57952fa9c79bf4a1cc39b8973a7e7"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/yog-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 3049955,
+      "sha256": "23f34bf0bb25186d25fdf4e92b8796867d8e86c3135a502dd27b9819256434c9"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/zeus-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2767498,
+      "sha256": "fefd379a94a5b607049bd4f7eae96b53de405e0b85a343cbbda0d4323ea4205c"
+    },
+    {
+      "file": "Assets/Resources/Art/Constellations/zhuge-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 2692991,
+      "sha256": "687e89af2777379e7fa3f9edec08f9d16f1beb1f69fa80473efccc4c4cb7e9e8"
+    }
+  ]
+}

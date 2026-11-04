@@ -1,0 +1,722 @@
+{
+  "initialFood": 220,
+  "initialDivinity": 80,
+  "initialMedicine": 4,
+  "healthMin": 85,
+  "healthMax": 115,
+  "attackMin": 16,
+  "attackMax": 24,
+  "hungerRates": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    8
+  ],
+  "combatRoundHours": 0.15,
+  "minBattleHours": 0.5,
+  "maxCombatRounds": 200,
+  "normalHp": 28,
+  "specialHp": 55,
+  "demonHp": 220,
+  "normalAttack": 4,
+  "specialAttack": 7,
+  "demonAttack": 13,
+  "normalStress": 3,
+  "namedStress": 8,
+  "demonStress": 15,
+  "constellationStoryHours": 0,
+  "scoutSuccess": 0.6,
+  "mutantChance": 0.12,
+  "refusalChance": 0.18,
+  "sejongReduction": 0.15,
+  "joanReduction": 0.25,
+  "napoleonReduction": 0.1,
+  "zhugeTime": 0.1,
+  "leonardoLoot": 0.15,
+  "alexanderDamage": 0.12,
+  "teslaChance": 0.1,
+  "teslaDamage": 0.3,
+  "huaHeal": 0.15,
+  "leonidasReduction": 0.15,
+  "musashiDamage": 0.15,
+  "curieChance": 0.1,
+  "curieDamage": 0.4,
+  "cleopatraScout": 0.15,
+  "yiReduction": 0.3,
+  "genghisDamage": 0.3,
+  "artemisDamage": 0.35,
+  "heraclesDamage": 0.4,
+  "arthurDamage": 0.35,
+  "zeusFirst": 2.5,
+  "hadesReward": 1,
+  "riftCombatWeight": 80,
+  "exploreCombatWeight": 8,
+  "dailyEventCountWeights": [],
+  "dailyEventCountFallback": 1,
+  "initialSyringes": 0,
+  "foodDiscoveryChance": 0.6,
+  "divineSuccessChance": 0.6,
+  "constellationMeetDelay": 3,
+  "returnHealthRatio": 0.3,
+  "returnSanity": 35,
+  "returnHunger": 30,
+  "returnHour": 18,
+  "returnRiskPerSeal": 0.02,
+  "returnPersonalityOffsets": [
+    -0.05,
+    0.1,
+    0,
+    -0.1
+  ],
+  "eventCosts": [
+    {
+      "id": "R-01",
+      "hours": [
+        0,
+        7,
+        0
+      ],
+      "hunger": [
+        0,
+        15,
+        0
+      ],
+      "sanity": [
+        0,
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        3,
+        0,
+        0
+      ],
+      "special": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "R-02",
+      "hours": [
+        0,
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0,
+        0
+      ],
+      "food": [
+        5,
+        0,
+        0
+      ],
+      "kits": [
+        1,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        2,
+        0
+      ],
+      "special": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "R-03",
+      "hours": [
+        8,
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0,
+        0
+      ],
+      "sanity": [
+        15,
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        3,
+        0
+      ],
+      "special": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "R-04",
+      "hours": [
+        4,
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0,
+        0
+      ],
+      "sanity": [
+        30,
+        15,
+        0
+      ],
+      "food": [
+        0,
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        4,
+        0
+      ],
+      "special": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "F-01",
+      "hours": [
+        7,
+        0,
+        0
+      ],
+      "hunger": [
+        15,
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        4,
+        0
+      ],
+      "special": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "F-02",
+      "hours": [
+        7,
+        0,
+        0
+      ],
+      "hunger": [
+        20,
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        3,
+        0
+      ],
+      "special": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "F-03",
+      "hours": [
+        6,
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0,
+        0
+      ],
+      "sanity": [
+        15,
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        4,
+        0
+      ],
+      "special": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "F-04",
+      "hours": [
+        4,
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0,
+        0
+      ],
+      "food": [
+        5,
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        3,
+        0
+      ],
+      "special": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "field-rescue",
+      "hours": [
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "field-cache",
+      "hours": [
+        2,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "field-prayer",
+      "hours": [
+        2,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        8,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "field-tower",
+      "hours": [
+        3,
+        0
+      ],
+      "hunger": [
+        8,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "rift-blockade",
+      "hours": [
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        3,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "rift-special",
+      "hours": [
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "rift-prayer",
+      "hours": [
+        2,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        8,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "recruit-kael",
+      "hours": [
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "recruit-nerissa",
+      "hours": [
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "recruit-beyr",
+      "hours": [
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "recruit-lyra",
+      "hours": [
+        0,
+        0
+      ],
+      "hunger": [
+        0,
+        0
+      ],
+      "sanity": [
+        0,
+        0
+      ],
+      "food": [
+        0,
+        0
+      ],
+      "kits": [
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        0
+      ],
+      "special": [
+        0,
+        0
+      ]
+    }
+  ],
+  "_provisionalNotes": "횟수 분포 미확정: 빈 배열이면 균등 추첨하지 않고 임시 최소1회. 귀환 임계/성격/위험 가중치, 발견·신위 성공률, 희귀 영입은 기존 scoutSuccess 사용, 사건 비용/적 편성은 전부 임시값. 성장/보상/봉인/30% 대체는 Rules의 확정값."
+}

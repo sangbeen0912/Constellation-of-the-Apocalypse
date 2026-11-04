@@ -1,0 +1,175 @@
+{
+  "count": 12,
+  "sourceBytes": 14485428,
+  "runtimeRGBA32TexelBytes": 1572864,
+  "assets": [
+    {
+      "id": "kael",
+      "file": "Assets/Resources/Art/Portraits/kael-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 1275291,
+      "sha256": "86b6b877aae36c466b332bf298e98728bec13446ac3eea87a3e21f4c94f39d51",
+      "runtimeMax": 256
+    },
+    {
+      "id": "nerissa",
+      "file": "Assets/Resources/Art/Portraits/nerissa-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 1346319,
+      "sha256": "7d7992e44e0d7f7b2588ed2d131813c11ac454e2387f6f42d1bf9cf957bd4299",
+      "runtimeMax": 256
+    },
+    {
+      "id": "beyr",
+      "file": "Assets/Resources/Art/Portraits/beyr-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 1254198,
+      "sha256": "d412222a16098e7ec8cc0cc3bd49807030138e207c077c907cd3746bba5b27ae",
+      "runtimeMax": 256
+    },
+    {
+      "id": "lyra",
+      "file": "Assets/Resources/Art/Portraits/lyra-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 1383400,
+      "sha256": "64e6b3b6a2e261a38baf2f427f82c9201553705534951221192109d3bb10796b",
+      "runtimeMax": 256
+    },
+    {
+      "id": "gungnir",
+      "file": "Assets/Resources/Art/Relics/gungnir-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 393562,
+      "sha256": "f482812d77d2b667e3a12f77ce9ac7e58146c6156870382a4abecda17c78f23d",
+      "runtimeMax": 128
+    },
+    {
+      "id": "grail",
+      "file": "Assets/Resources/Art/Relics/grail-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 918072,
+      "sha256": "f377a0e0a6f5498c20232d7f8807e8296d4fc98a704a089d0e561ba6e0641f34",
+      "runtimeMax": 128
+    },
+    {
+      "id": "solomon",
+      "file": "Assets/Resources/Art/Relics/solomon-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 1121070,
+      "sha256": "ae422e1cc0a47c6189b7564b2cf16606e5ae4b870993f5ec96c927388508244f",
+      "runtimeMax": 128
+    },
+    {
+      "id": "necronomicon",
+      "file": "Assets/Resources/Art/Relics/necronomicon-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 1760698,
+      "sha256": "21228232a8f0f49cf513c09be8a9edc89a8227ca52b19f241daed1ce916eb5c4",
+      "runtimeMax": 128
+    },
+    {
+      "id": "antikythera",
+      "file": "Assets/Resources/Art/Relics/antikythera-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 1850132,
+      "sha256": "43f9accb184e392efe5bed653e9c8d5b16e604ecb0a4f929986ed04f62b2dcc1",
+      "runtimeMax": 128
+    },
+    {
+      "id": "nebra",
+      "file": "Assets/Resources/Art/Relics/nebra-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 1818779,
+      "sha256": "2529c7c8c5716f506effe01608eade175fd7492c35bbe6ef07538bd5b483ef22",
+      "runtimeMax": 128
+    },
+    {
+      "id": "dagger",
+      "file": "Assets/Resources/Art/Relics/dagger-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 632829,
+      "sha256": "c5827ea72a47f911159cd386ff3e87784cbf7b084849ee643f2871252de8a3df",
+      "runtimeMax": 128
+    },
+    {
+      "id": "bicorne",
+      "file": "Assets/Resources/Art/Relics/bicorne-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bytes": 731078,
+      "sha256": "af0f275d3d6fe39785689d9e0a20bcb116a91763fdfb8c18ec6c4d53e884bc04",
+      "runtimeMax": 128
+    }
+  ]
+}

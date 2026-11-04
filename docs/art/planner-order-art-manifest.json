@@ -1,0 +1,94 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-30",
+  "jobs": [
+    {
+      "id": "kael",
+      "name": "카엘",
+      "prompt": "Generate one original front-facing transparent-background PIXEL ART bust portrait for the Korean game Apocalypse Constellation. Reference is STYLE AND PIXEL CLUSTER DENSITY only, NOT identity: matching handcrafted chunky pixels, stepped contours, 3-5 tone connected shading, dark selective outlines and strong readable facial planes. Face, gaze and shoulders directly FORWARD, head-and-shoulders centred, entire head and shoulders within frame, no UI/text/border/background. Visible crisp square pixel grid, no smooth illustration, no gradients or noisy detail. Subject: adult male biomechanical combat machine: human face with visible matte steel temple plates, one amber artificial eye, short ash-black hair, reinforced graphite exoskeleton shoulders, calm disciplined expression. Clearly an engineered survivor rather than medieval knight.",
+      "reference": "C:/프로젝트모음/Constellation of the Apocalypse/종말의 성좌/Assets/Resources/Art/Portraits/survivor-01-v3.png",
+      "destination": "Assets/Resources/Art/Portraits/kael-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-ad813a7a-db07-4e06-9d4c-99f3df11c648.png"
+    },
+    {
+      "id": "nerissa",
+      "name": "네리사",
+      "prompt": "Generate one original front-facing transparent-background PIXEL ART bust portrait for the Korean game Apocalypse Constellation. Reference is STYLE AND PIXEL CLUSTER DENSITY only, NOT identity: matching handcrafted chunky pixels, stepped contours, 3-5 tone connected shading, dark selective outlines and strong readable facial planes. Face, gaze and shoulders directly FORWARD, head-and-shoulders centred, entire head and shoulders within frame, no UI/text/border/background. Visible crisp square pixel grid, no smooth illustration, no gradients or noisy detail. Subject: adult fish-woman survivor: teal-blue skin, subtle face scales, fin-shaped ears and small head crest, dark sea-green hair, bright cyan eyes, practical fully opaque slate survival jacket. Alert warm expression; no mermaid tail in this bust, no sexualised clothing.",
+      "reference": "C:/프로젝트모음/Constellation of the Apocalypse/종말의 성좌/Assets/Resources/Art/Portraits/survivor-01-v3.png",
+      "destination": "Assets/Resources/Art/Portraits/nerissa-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-21e00d5d-8e65-448b-96c1-2bac3d728269.png"
+    },
+    {
+      "id": "beyr",
+      "name": "베이르",
+      "prompt": "Generate one original front-facing transparent-background PIXEL ART bust portrait for the Korean game Apocalypse Constellation. Reference is STYLE AND PIXEL CLUSTER DENSITY only, NOT identity: matching handcrafted chunky pixels, stepped contours, 3-5 tone connected shading, dark selective outlines and strong readable facial planes. Face, gaze and shoulders directly FORWARD, head-and-shoulders centred, entire head and shoulders within frame, no UI/text/border/background. Visible crisp square pixel grid, no smooth illustration, no gradients or noisy detail. Subject: adult male half-undead survivor: pale grey skin, asymmetrical healed facial stitches and subtle dark veins, one clouded eye and one clear eye, black cropped hair, heavy weathered brown coat. Dignified tired human expression, no gore, no exposed organs, no skeleton face.",
+      "reference": "C:/프로젝트모음/Constellation of the Apocalypse/종말의 성좌/Assets/Resources/Art/Portraits/survivor-01-v3.png",
+      "destination": "Assets/Resources/Art/Portraits/beyr-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-d3587372-f453-4c8c-ad35-1bb1609226f8.png"
+    },
+    {
+      "id": "lyra",
+      "name": "라이라",
+      "prompt": "Generate one original front-facing transparent-background PIXEL ART bust portrait for the Korean game Apocalypse Constellation. Reference is STYLE AND PIXEL CLUSTER DENSITY only, NOT identity: matching handcrafted chunky pixels, stepped contours, 3-5 tone connected shading, dark selective outlines and strong readable facial planes. Face, gaze and shoulders directly FORWARD, head-and-shoulders centred, entire head and shoulders within frame, no UI/text/border/background. Visible crisp square pixel grid, no smooth illustration, no gradients or noisy detail. Subject: adult female lynx beastkin survivor: tawny feline ears, short auburn hair, small dark feline nose, golden eyes and faint cheek spots, olive rugged scout jacket. Focused confident expression, mostly humanoid face with readable feline features; fully opaque practical clothing.",
+      "reference": "C:/프로젝트모음/Constellation of the Apocalypse/종말의 성좌/Assets/Resources/Art/Portraits/survivor-01-v3.png",
+      "destination": "Assets/Resources/Art/Portraits/lyra-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-a2889634-4115-422b-ad69-2409800a8835.png"
+    },
+    {
+      "id": "gungnir",
+      "name": "궁니르",
+      "prompt": "Asset: single inventory item illustration for a readable pixel-art game, transparent background, square frame. Original hand-drawn crisp chunky PIXEL ART with visible square clusters, stepped silhouette and connected 3-5 tone shading per material, selective dark outline, strong recognisable object at 64-128px display. Centred object occupies about 80% of canvas with clear margins, complete object uncut. Not a UI card. No text, title, stats, rarity border, glow cloud, scenery or drop shadow; no smooth painting or tiny noise. Subject: Odin's long ash-wood spear with a narrow leaf-shaped iron head, simple gold binding and geometric engraved marks, angled across frame; no readable runic letters.",
+      "destination": "Assets/Resources/Art/Relics/gungnir-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-438bb64e-b07e-497f-ba67-262df5d65317.png"
+    },
+    {
+      "id": "grail",
+      "name": "성배",
+      "prompt": "Asset: single inventory item illustration for a readable pixel-art game, transparent background, square frame. Original hand-drawn crisp chunky PIXEL ART with visible square clusters, stepped silhouette and connected 3-5 tone shading per material, selective dark outline, strong recognisable object at 64-128px display. Centred object occupies about 80% of canvas with clear margins, complete object uncut. Not a UI card. No text, title, stats, rarity border, glow cloud, scenery or drop shadow; no smooth painting or tiny noise. Subject: a single ancient golden chalice with a deep bowl, slim stem and broad foot, restrained engraved ornament, warm worn metal",
+      "destination": "Assets/Resources/Art/Relics/grail-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-3f54e246-bfac-401d-9049-eb491ce5b3e6.png"
+    },
+    {
+      "id": "solomon",
+      "name": "솔로몬의 반지",
+      "prompt": "Asset: single inventory item illustration for a readable pixel-art game, transparent background, square frame. Original hand-drawn crisp chunky PIXEL ART with visible square clusters, stepped silhouette and connected 3-5 tone shading per material, selective dark outline, strong recognisable object at 64-128px display. Centred object occupies about 80% of canvas with clear margins, complete object uncut. Not a UI card. No text, title, stats, rarity border, glow cloud, scenery or drop shadow; no smooth painting or tiny noise. Subject: one old gold signet ring with a clearly visible six-point seal motif on the flat bezel, three-quarter view, restrained antique craft",
+      "destination": "Assets/Resources/Art/Relics/solomon-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-54e0a2ad-6ff4-4ec3-a4f1-c4a324e48309.png"
+    },
+    {
+      "id": "necronomicon",
+      "name": "네크로노미콘",
+      "prompt": "Asset: single inventory item illustration for a readable pixel-art game, transparent background, square frame. Original hand-drawn crisp chunky PIXEL ART with visible square clusters, stepped silhouette and connected 3-5 tone shading per material, selective dark outline, strong recognisable object at 64-128px display. Centred object occupies about 80% of canvas with clear margins, complete object uncut. Not a UI card. No text, title, stats, rarity border, glow cloud, scenery or drop shadow; no smooth painting or tiny noise. Subject: an ominous fictional ancient leather-bound closed book, weathered dark green-brown cover, abstract circular arcane embossing and metal clasps; no readable title, no human skin or gore",
+      "destination": "Assets/Resources/Art/Relics/necronomicon-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-f601dee6-2618-4a9a-885a-91661d2bac9d.png"
+    },
+    {
+      "id": "antikythera",
+      "name": "안티키테라 기계",
+      "prompt": "Asset: single inventory item illustration for a readable pixel-art game, transparent background, square frame. Original hand-drawn crisp chunky PIXEL ART with visible square clusters, stepped silhouette and connected 3-5 tone shading per material, selective dark outline, strong recognisable object at 64-128px display. Centred object occupies about 80% of canvas with clear margins, complete object uncut. Not a UI card. No text, title, stats, rarity border, glow cloud, scenery or drop shadow; no smooth painting or tiny noise. Subject: a corroded ancient bronze astronomical mechanism fragment: irregular rock-like green patina matrix with several readable nested bronze gears, museum-object silhouette, no modern clock housing",
+      "destination": "Assets/Resources/Art/Relics/antikythera-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-e456296e-06c4-4a7e-9086-48a0d99f342f.png"
+    },
+    {
+      "id": "nebra",
+      "name": "네브라 하늘 원반",
+      "prompt": "Asset: single inventory item illustration for a readable pixel-art game, transparent background, square frame. Original hand-drawn crisp chunky PIXEL ART with visible square clusters, stepped silhouette and connected 3-5 tone shading per material, selective dark outline, strong recognisable object at 64-128px display. Centred object occupies about 80% of canvas with clear margins, complete object uncut. Not a UI card. No text, title, stats, rarity border, glow cloud, scenery or drop shadow; no smooth painting or tiny noise. Subject: the Nebra sky disk: round dark green bronze disc, gold full-circle sun and crescent moon, gold star dots and horizon arcs; weathered ancient metal, front nearly circular view",
+      "destination": "Assets/Resources/Art/Relics/nebra-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-99747668-23f6-4649-8f93-1e8ffd4c64d8.png"
+    },
+    {
+      "id": "dagger",
+      "name": "투탕카멘의 운석 단검",
+      "prompt": "Asset: single inventory item illustration for a readable pixel-art game, transparent background, square frame. Original hand-drawn crisp chunky PIXEL ART with visible square clusters, stepped silhouette and connected 3-5 tone shading per material, selective dark outline, strong recognisable object at 64-128px display. Centred object occupies about 80% of canvas with clear margins, complete object uncut. Not a UI card. No text, title, stats, rarity border, glow cloud, scenery or drop shadow; no smooth painting or tiny noise. Subject: Tutankhamun-inspired ancient Egyptian iron dagger, straight dark meteoritic iron blade and richly patterned gold handle with small round pommel, diagonal silhouette, no label",
+      "destination": "Assets/Resources/Art/Relics/dagger-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-7579c9c2-27a8-450f-bd79-8ee08c290a5e.png"
+    },
+    {
+      "id": "bicorne",
+      "name": "나폴레옹의 이각모",
+      "prompt": "Asset: single inventory item illustration for a readable pixel-art game, transparent background, square frame. Original hand-drawn crisp chunky PIXEL ART with visible square clusters, stepped silhouette and connected 3-5 tone shading per material, selective dark outline, strong recognisable object at 64-128px display. Centred object occupies about 80% of canvas with clear margins, complete object uncut. Not a UI card. No text, title, stats, rarity border, glow cloud, scenery or drop shadow; no smooth painting or tiny noise. Subject: Napoleon-inspired black felt bicorne hat, iconic broad two-point sideways silhouette, small tricolour cockade and restrained gold fastening, no face/person",
+      "destination": "Assets/Resources/Art/Relics/bicorne-v1.png",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-bcf994ea-7727-4b39-a9f9-ed4cc1ab7739.png"
+    }
+  ]
+}

@@ -1,0 +1,536 @@
+{
+  "activityEvents": [
+    {
+      "id": "R-01",
+      "scene": "rift",
+      "title": "무너진 전장의 주인",
+      "body": "무너진 전장의 중앙에 거대한 창이 꽂혀 있다. 움직이는 시체들을 지나 창을 회수해야 한다.",
+      "location": 3,
+      "relicId": "gungnir",
+      "tags": [
+        0,
+        6
+      ],
+      "options": [
+        {
+          "text": "주변 적을 처치하고 창을 회수한다",
+          "relicId": "gungnir"
+        },
+        {
+          "text": "우회로로 접근한다",
+          "relicId": "gungnir"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ]
+    },
+    {
+      "id": "R-02",
+      "scene": "chapel",
+      "title": "침묵의 제단",
+      "body": "무너진 성당 제단에서 부상당한 생존자와 황금빛 성배를 발견한다.",
+      "location": 3,
+      "relicId": "grail",
+      "tags": [
+        0,
+        6
+      ],
+      "options": [
+        {
+          "text": "생존자에게 필요한 물자를 제공한다",
+          "relicId": "grail"
+        },
+        {
+          "text": "위협하는 적을 처치한다",
+          "relicId": "grail"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ]
+    },
+    {
+      "id": "R-03",
+      "scene": "interior",
+      "title": "일곱 봉인의 방",
+      "body": "일곱 문양이 새겨진 봉인실 안에서 오래된 인장을 지닌 반지를 발견한다.",
+      "location": 3,
+      "relicId": "solomon",
+      "tags": [
+        0,
+        6
+      ],
+      "options": [
+        {
+          "text": "봉인 문양을 해독한다",
+          "relicId": "solomon"
+        },
+        {
+          "text": "봉인실을 강제로 연다",
+          "relicId": "solomon"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ]
+    },
+    {
+      "id": "R-04",
+      "scene": "interior",
+      "title": "읽혀서는 안 되는 기록",
+      "body": "균열 지하 서고에서 이해할 수 없는 글자로 가득한 금단의 책을 발견한다.",
+      "location": 3,
+      "relicId": "necronomicon",
+      "tags": [
+        0,
+        6
+      ],
+      "options": [
+        {
+          "text": "책을 직접 회수한다",
+          "relicId": "necronomicon"
+        },
+        {
+          "text": "서고의 적을 처리한다",
+          "relicId": "necronomicon"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ]
+    },
+    {
+      "id": "F-01",
+      "scene": "interior",
+      "title": "멈춰버린 천문관",
+      "body": "폐허가 된 천문관에서 맞물린 청동 기어로 이루어진 오래된 천문 계산 장치를 발견한다.",
+      "location": 0,
+      "relicId": "antikythera",
+      "tags": [
+        0,
+        6
+      ],
+      "options": [
+        {
+          "text": "장치를 조심스럽게 분리한다",
+          "relicId": "antikythera"
+        },
+        {
+          "text": "강제로 회수한다",
+          "relicId": "antikythera"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ]
+    },
+    {
+      "id": "F-02",
+      "scene": "interior",
+      "title": "별이 남은 전시실",
+      "body": "무너진 박물관 전시실에 금빛 별무늬가 새겨진 청동 원반이 남아 있다.",
+      "location": 0,
+      "relicId": "nebra",
+      "tags": [
+        0,
+        6
+      ],
+      "options": [
+        {
+          "text": "무너진 잔해를 제거한다",
+          "relicId": "nebra"
+        },
+        {
+          "text": "강제로 진열대를 연다",
+          "relicId": "nebra"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ]
+    },
+    {
+      "id": "F-03",
+      "scene": "interior",
+      "title": "봉인된 왕의 유품",
+      "body": "박물관 특별 전시실에서 검은 철제 칼날과 황금 손잡이의 단검을 발견한다.",
+      "location": 0,
+      "relicId": "dagger",
+      "tags": [
+        0,
+        6
+      ],
+      "options": [
+        {
+          "text": "좀비가 멀어질 때까지 잠복한다",
+          "relicId": "dagger"
+        },
+        {
+          "text": "주변 좀비를 처치한다",
+          "relicId": "dagger"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ]
+    },
+    {
+      "id": "F-04",
+      "scene": "interior",
+      "title": "마지막 지휘관의 유품",
+      "body": "무너진 전쟁기념관에서 나폴레옹의 이각모를 발견한다.",
+      "location": 0,
+      "relicId": "bicorne",
+      "tags": [
+        0,
+        6
+      ],
+      "options": [
+        {
+          "text": "식량으로 좀비를 유인한다",
+          "relicId": "bicorne"
+        },
+        {
+          "text": "주변 좀비를 처치한다",
+          "relicId": "bicorne"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ]
+    },
+    {
+      "id": "field-rescue",
+      "scene": "ruins",
+      "title": "잔해 속 구조 신호",
+      "body": "무너진 골목에서 생존자가 도움을 청한다. 주변을 살피고 구조를 시도할 수 있다.",
+      "location": 0,
+      "options": [
+        {
+          "text": "구조를 시도한다",
+          "recruit": true
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ]
+    },
+    {
+      "id": "field-cache",
+      "scene": "interior",
+      "title": "폐허의 보급 상자",
+      "body": "부서진 창고 깊숙이 작은 보급 상자가 남아 있다. 접근에는 시간이 필요하다.",
+      "location": 0,
+      "options": [
+        {
+          "text": "시간을 들여 물자를 찾는다",
+          "discoverFood": true,
+          "chance": "food"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ]
+    },
+    {
+      "id": "field-prayer",
+      "scene": "chapel",
+      "title": "낯선 기도",
+      "body": "벽에 남은 이름들과 무너진 제단 앞에서 잠시 발걸음이 멈춘다.",
+      "location": 0,
+      "options": [
+        {
+          "text": "위험을 감수하고 제단을 조사한다",
+          "divinity": true,
+          "chance": "divinity"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ],
+      "divinityEvent": true
+    },
+    {
+      "id": "field-tower",
+      "scene": "interior",
+      "title": "무너진 감시탑",
+      "body": "신호 장치가 남은 감시탑의 계단이 위태롭다. 접근할지 결정한다.",
+      "location": 0,
+      "options": [
+        {
+          "text": "감시탑을 조사한다",
+          "discoverFood": true
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ]
+    },
+    {
+      "id": "rift-blockade",
+      "scene": "rift",
+      "title": "군단의 봉쇄선",
+      "body": "균열로 향하는 길을 망자들이 가로막고 있다. 전선을 밀어내야 악마에게 도달할 수 있다.",
+      "location": 3,
+      "options": [
+        {
+          "text": "군단의 봉쇄선을 돌파한다"
+        },
+        {
+          "text": "안전한 길을 살핀다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ]
+    },
+    {
+      "id": "rift-special",
+      "scene": "rift",
+      "title": "균열의 특수 좀비",
+      "body": "덩치 큰 특수 좀비 한 마리가 통로를 가로막는다. 전투할지 결정한다.",
+      "location": 3,
+      "options": [
+        {
+          "text": "특수 좀비와 전투한다"
+        },
+        {
+          "text": "위험을 피해 우회한다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ]
+    },
+    {
+      "id": "rift-prayer",
+      "scene": "chapel",
+      "title": "별빛이 남은 제단",
+      "body": "군단의 시선이 미치지 않는 작은 제단에 남겨진 기록을 발견한다.",
+      "location": 3,
+      "options": [
+        {
+          "text": "시간을 들여 제단을 지킨다",
+          "divinity": true,
+          "chance": "divinity"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ],
+      "divinityEvent": true
+    },
+    {
+      "id": "recruit-kael",
+      "scene": "ruins",
+      "title": "카엘의 생존 신호",
+      "body": "폐허에서 카엘를 만났다. 쉘터의 빈자리가 있다면 함께 돌아갈 것을 제안할 수 있다.",
+      "location": 0,
+      "options": [
+        {
+          "text": "쉘터로 영입을 제안한다",
+          "rareNpcId": "kael",
+          "chance": "recruit"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ],
+      "rareNpcId": "kael"
+    },
+    {
+      "id": "recruit-nerissa",
+      "scene": "ruins",
+      "title": "네리사의 생존 신호",
+      "body": "폐허에서 네리사를 만났다. 쉘터의 빈자리가 있다면 함께 돌아갈 것을 제안할 수 있다.",
+      "location": 0,
+      "options": [
+        {
+          "text": "쉘터로 영입을 제안한다",
+          "rareNpcId": "nerissa",
+          "chance": "recruit"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ],
+      "rareNpcId": "nerissa"
+    },
+    {
+      "id": "recruit-beyr",
+      "scene": "ruins",
+      "title": "베이르의 생존 신호",
+      "body": "폐허에서 베이르를 만났다. 쉘터의 빈자리가 있다면 함께 돌아갈 것을 제안할 수 있다.",
+      "location": 0,
+      "options": [
+        {
+          "text": "쉘터로 영입을 제안한다",
+          "rareNpcId": "beyr",
+          "chance": "recruit"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ],
+      "rareNpcId": "beyr"
+    },
+    {
+      "id": "recruit-lyra",
+      "scene": "ruins",
+      "title": "라이라의 생존 신호",
+      "body": "폐허에서 라이라를 만났다. 쉘터의 빈자리가 있다면 함께 돌아갈 것을 제안할 수 있다.",
+      "location": 0,
+      "options": [
+        {
+          "text": "쉘터로 영입을 제안한다",
+          "rareNpcId": "lyra",
+          "chance": "recruit"
+        },
+        {
+          "text": "위험을 피하고 지나간다"
+        }
+      ],
+      "tags": [
+        3,
+        5
+      ],
+      "rareNpcId": "lyra"
+    }
+  ],
+  "relicDefinitions": [
+    {
+      "id": "gungnir",
+      "name": "궁니르",
+      "location": 3,
+      "description": "북유럽 신화에서 오딘을 상징하는 창. 이 성유물의 힘은 사용자의 전승 업적으로만 성장한다."
+    },
+    {
+      "id": "grail",
+      "name": "성배",
+      "location": 3,
+      "description": "아서왕 전승의 성배에서 모티프를 얻은 유물. 최초 능력치는 0이며 역대 사용자의 업적을 기록한다."
+    },
+    {
+      "id": "solomon",
+      "name": "솔로몬의 반지",
+      "location": 3,
+      "description": "솔로몬의 인장에 관한 후대 전승에서 모티프를 얻은 반지. 별도 전투 특수능력은 없다."
+    },
+    {
+      "id": "necronomicon",
+      "name": "네크로노미콘",
+      "location": 3,
+      "description": "러브크래프트 문학의 가공 서적에서 가져온 성유물. 외신 등급이나 고유 능력 없이 동일한 전승 공식을 적용한다."
+    },
+    {
+      "id": "antikythera",
+      "name": "안티키테라 기계",
+      "location": 0,
+      "description": "고대 그리스의 천문 계산 장치에서 모티프를 얻은 유물. 정교한 기어와 사용자의 역사가 남아 있다."
+    },
+    {
+      "id": "nebra",
+      "name": "네브라 하늘 원반",
+      "location": 0,
+      "description": "청동 원반 위의 금빛 천체 표현을 모티프로 삼았다. 성유물 능력은 전승 기록으로만 성장한다."
+    },
+    {
+      "id": "dagger",
+      "name": "투탕카멘의 운석 단검",
+      "location": 0,
+      "description": "투탕카멘 무덤의 운석 철제 단검에서 모티프를 얻었다. 최초의 체력·공격 보너스는 0이다."
+    },
+    {
+      "id": "bicorne",
+      "name": "나폴레옹의 이각모",
+      "location": 0,
+      "description": "나폴레옹을 상징하는 검은 이각모. 장비 등급 대신 역대 화신체의 기록이 가치를 만든다."
+    }
+  ],
+  "rareNpcs": [
+    {
+      "id": "kael",
+      "name": "카엘",
+      "species": 1,
+      "health": 120,
+      "attack": 28,
+      "passive": "강화 외골격 · 받는 피해 10% 감소"
+    },
+    {
+      "id": "nerissa",
+      "name": "네리사",
+      "species": 2,
+      "health": 105,
+      "attack": 26,
+      "passive": "유연한 움직임 · 공격 회피 확률 12%"
+    },
+    {
+      "id": "beyr",
+      "name": "베이르",
+      "species": 3,
+      "health": 140,
+      "attack": 20,
+      "passive": "불완전한 생명 · 전투 중 체력30% 이하 첫 순간에 최대 체력10% 회복 · 전투당1회"
+    },
+    {
+      "id": "lyra",
+      "name": "라이라",
+      "species": 4,
+      "health": 95,
+      "attack": 32,
+      "passive": "야수의 본능 · 전투 첫 공격 피해 20% 증가"
+    }
+  ],
+  "supplies": [
+    {
+      "id": "food",
+      "name": "식량",
+      "amount": 5
+    },
+    {
+      "id": "kit",
+      "name": "응급 의료 키트",
+      "amount": 1
+    },
+    {
+      "id": "syringe",
+      "name": "정신 회복 주사기",
+      "amount": 1
+    }
+  ]
+}

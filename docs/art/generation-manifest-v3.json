@@ -1,0 +1,137 @@
+{
+  "created": "2026-10-30",
+  "mode": "built-in image_gen",
+  "portraitEditPrompt": "Use case: identity-preserve. Asset type: transparent pixel-art NPC portrait for the same apocalypse game. Edit the attached existing portrait. REQUIRED CHANGE: rotate/reconstruct this exact person's HEAD AND SHOULDERS into a perfectly STRAIGHT-ON FRONTAL portrait facing the camera, with both eyes looking directly at the viewer, nose centered vertically, neither cheek in profile, shoulders square. Not a three-quarter view, not just a change of gaze. Preserve recognizable character identity: same age, gender, face structure, hair color and haircut, scars/freckles/glasses/bandana/braid where present, clothing colors and accessories. Preserve the approved chunky pixel-art medium, deliberately connected color clusters, hard stepped contours, selective dark outlines and crisp graphic shading; no smooth painting, airbrush, blur, photo noise or new decorative details. Keep natural facial asymmetries, do not create a mechanical mirror copy. Square canvas, head/shoulders to upper chest, all hair in frame with a little headroom, shoulders fill lower corners. Actual transparent background, no checkerboard drawing, no scene, no text, no frame or UI. Face must clearly be frontal. Do not change the person's costume or identity. Output one character only.",
+  "assets": [
+    {
+      "key": "survivor-00-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-00-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-c90c8bf7-d19f-4b16-802d-3820a37c4254.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-968fa5e9-79fe-441b-a944-2bd49ced7961.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-01-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-01-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-a0066e53-3ffe-4d0d-8980-c2a36f354922.png",
+      "inputArchive": "C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-d00854d4-e172-4e14-acf0-71adb9c86c0c.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-02-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-02-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-ee912cd8-5a6b-42f6-b6e8-1671247ee849.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-16a154b8-e3b0-446d-b04d-4b37afc20672.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-03-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-03-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-444a54fb-84a4-48e4-947b-d3a683bc5031.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-464e7bdf-c861-45c9-a8f4-c92cd1091880.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-04-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-04-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-d34ef514-675e-4626-b5ae-085b360c5d15.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-496ebb4a-be3f-4020-ba76-a1ee28463647.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-05-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-05-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-3393001c-79b0-4367-90aa-66eadda91b8f.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-d30ab7f5-a4ff-469b-bb12-8245e98742f0.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-06-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-06-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-3334a302-64c4-4350-a689-a13b39757b29.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-a81df3df-7149-4eab-92f5-a3340a6ec9ef.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-07-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-07-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-5ffab97f-d868-412e-a3a7-a306d173acb9.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-d0116e2c-6617-40c3-8bdb-ddfb15752e72.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-08-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-08-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-99800957-bd6c-4186-85bf-e9d4cd1b403b.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-fc8043c5-8928-4989-af18-652f2a9da858.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-09-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-09-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-590f6208-e067-4f79-a40d-ca9c8fbf0ced.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-4c511e41-eb48-4e99-a0c4-33562f811618.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-10-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-10-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-362bfbef-bbec-47f4-a715-133d854c98e8.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-eea5c29c-a37b-42ff-832b-574a51115d40.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "survivor-11-v3",
+      "destination": "Assets/Resources/Art/Portraits/survivor-11-v3.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-a7bef99e-d5e8-4da0-aa85-e6d91b2d5fab.png",
+      "inputArchive": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-c60a6322-4669-4299-82db-cf3902c388fe.png",
+      "promptRef": "portraitEditPrompt"
+    },
+    {
+      "key": "clinic-v2",
+      "destination": "Assets/Resources/Art/Environments/clinic-v2.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-0493b0c9-96c9-452e-b4b7-df615f964d74.png",
+      "inputReference": "C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-ba436b3d-e9b2-4174-bf5e-eedb3273581e.png",
+      "prompt": "Use case: stylized-concept. Asset type: standalone environment background for a Korean post-apocalypse pixel-art RPG. Reference image is a UI mockup: use ONLY its pixel-art environment language and restrained charcoal/slate/stone colors with warm practical lights. Output ONLY the painted environment, absolutely NO interface, letters, numbers, readable signage, frames or HUD. Crisp deliberately authored pixel art, coherent connected color clusters, stepped contours, large readable silhouettes and hard shaded planes, no smooth photoreal painting, no texture noise or fake pixel filter. Wide landscape composition roughly 16:9. Strong foreground/midground/background separation, expressive material shapes, suitable behind readable game controls (controls will be added separately). Match a mature Korean apocalypse with functioning survivor shelter. No characters or monsters, no logos or copied game assets. Scene: Inside a survivor shelter medical infirmary: two clean improvised hospital beds separated by pale worn curtains, stocked medicine cabinet, wash basin, examination lamp, a battered medical trolley, bandages and orderly supplies. Concrete and dark tiles, warm muted ivory lights, desaturated sage linen, restrained rust accents. Caring and functional, no gore. Eye-level interior wide shot with believable depth."
+    },
+    {
+      "key": "chapel-v2",
+      "destination": "Assets/Resources/Art/Environments/chapel-v2.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-9eb9fbc6-2835-40d7-bdea-42fe4f5a0312.png",
+      "inputReference": "C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-ba436b3d-e9b2-4174-bf5e-eedb3273581e.png",
+      "prompt": "Use case: stylized-concept. Asset type: standalone environment background for a Korean post-apocalypse pixel-art RPG. Reference image is a UI mockup: use ONLY its pixel-art environment language and restrained charcoal/slate/stone colors with warm practical lights. Output ONLY the painted environment, absolutely NO interface, letters, numbers, readable signage, frames or HUD. Crisp deliberately authored pixel art, coherent connected color clusters, stepped contours, large readable silhouettes and hard shaded planes, no smooth photoreal painting, no texture noise or fake pixel filter. Wide landscape composition roughly 16:9. Strong foreground/midground/background separation, expressive material shapes, suitable behind readable game controls (controls will be added separately). Match a mature Korean apocalypse with functioning survivor shelter. No characters or monsters, no logos or copied game assets. Scene: Inside a small survivor shelter prayer room: modest stone altar with a simple abstract star emblem (no text), short rows of wooden benches, a few candles and small offering objects, narrow damaged stained-glass window casting subdued amber light, reclaimed concrete walls. Quiet human hope among ruins; solemn but unostentatious. No fantasy gold filigree or readable scripture. Wide interior shot."
+    },
+    {
+      "key": "warehouse-v2",
+      "destination": "Assets/Resources/Art/Environments/warehouse-v2.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-40a48e9f-d40a-4f38-930c-ce0bc1309e1e.png",
+      "inputReference": "C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-ba436b3d-e9b2-4174-bf5e-eedb3273581e.png",
+      "prompt": "Use case: stylized-concept. Asset type: standalone environment background for a Korean post-apocalypse pixel-art RPG. Reference image is a UI mockup: use ONLY its pixel-art environment language and restrained charcoal/slate/stone colors with warm practical lights. Output ONLY the painted environment, absolutely NO interface, letters, numbers, readable signage, frames or HUD. Crisp deliberately authored pixel art, coherent connected color clusters, stepped contours, large readable silhouettes and hard shaded planes, no smooth photoreal painting, no texture noise or fake pixel filter. Wide landscape composition roughly 16:9. Strong foreground/midground/background separation, expressive material shapes, suitable behind readable game controls (controls will be added separately). Match a mature Korean apocalypse with functioning survivor shelter. No characters or monsters, no logos or copied game assets. Scene: Inside the shelter supply warehouse: heavy steel racks with tightly stacked wooden crates, food tins, folded blankets, labelled-looking blank tags with no writing, a small workbench and tool board, sacks and an inventory desk. Organized practical storage, olive canvas, muted ochre cardboard and charcoal metal under warm hanging lamps. Wide interior shot with layered shelves."
+    },
+    {
+      "key": "personnel-v2",
+      "destination": "Assets/Resources/Art/Environments/personnel-v2.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-3ae1eb05-6a4d-441c-a013-318b3505d688.png",
+      "inputReference": "C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-ba436b3d-e9b2-4174-bf5e-eedb3273581e.png",
+      "prompt": "Use case: stylized-concept. Asset type: standalone environment background for a Korean post-apocalypse pixel-art RPG. Reference image is a UI mockup: use ONLY its pixel-art environment language and restrained charcoal/slate/stone colors with warm practical lights. Output ONLY the painted environment, absolutely NO interface, letters, numbers, readable signage, frames or HUD. Crisp deliberately authored pixel art, coherent connected color clusters, stepped contours, large readable silhouettes and hard shaded planes, no smooth photoreal painting, no texture noise or fake pixel filter. Wide landscape composition roughly 16:9. Strong foreground/midground/background separation, expressive material shapes, suitable behind readable game controls (controls will be added separately). Match a mature Korean apocalypse with functioning survivor shelter. No characters or monsters, no logos or copied game assets. Scene: Inside the survivor shelter personnel management office: a large bulletin board covered with blank portrait-sized paper rectangles and simple string connections, two modest desks with old computer terminals, file cabinets, chairs and a city map without text on the wall. Administrative headquarters in a repurposed concrete room, slate walls, warm desk lamp light, restrained worn wood. Clear readable furnishing silhouettes."
+    },
+    {
+      "key": "city-v2",
+      "destination": "Assets/Resources/Art/Environments/city-v2.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-e26ac666-9624-4930-9214-0af81a8a54c3.png",
+      "inputReference": "C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-ba436b3d-e9b2-4174-bf5e-eedb3273581e.png",
+      "prompt": "Use case: stylized-concept. Asset type: standalone environment background for a Korean post-apocalypse pixel-art RPG. Reference image is a UI mockup: use ONLY its pixel-art environment language and restrained charcoal/slate/stone colors with warm practical lights. Output ONLY the painted environment, absolutely NO interface, letters, numbers, readable signage, frames or HUD. Crisp deliberately authored pixel art, coherent connected color clusters, stepped contours, large readable silhouettes and hard shaded planes, no smooth photoreal painting, no texture noise or fake pixel filter. Wide landscape composition roughly 16:9. Strong foreground/midground/background separation, expressive material shapes, suitable behind readable game controls (controls will be added separately). Match a mature Korean apocalypse with functioning survivor shelter. No characters or monsters, no logos or copied game assets. Scene: A ruined Korean city street just before dawn: cracked avenue, shuttered shopfront silhouettes with absolutely no writing, a stalled bus, a broken elevated road in the distance, scattered rubble and hardy weeds, warm shelter window light on one side. Deep perspective into a pale dusty sky, melancholy survival atmosphere. No dimensional portal, no people/zombies. Main title/exploration environment, striking wide composition."
+    },
+    {
+      "key": "rift-v2",
+      "destination": "Assets/Resources/Art/Environments/rift-v2.png",
+      "generated": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-dfe0ea44-a140-4514-b545-db4dcf7fb505.png",
+      "inputReference": "C:/Users/USER/.codex/generated_images/01a186b2-189c-7d13-bb45-c6e9acc73b7a/exec-ba436b3d-e9b2-4174-bf5e-eedb3273581e.png",
+      "prompt": "Use case: stylized-concept. Asset type: standalone environment background for a Korean post-apocalypse pixel-art RPG. Reference image is a UI mockup: use ONLY its pixel-art environment language and restrained charcoal/slate/stone colors with warm practical lights. Output ONLY the painted environment, absolutely NO interface, letters, numbers, readable signage, frames or HUD. Crisp deliberately authored pixel art, coherent connected color clusters, stepped contours, large readable silhouettes and hard shaded planes, no smooth photoreal painting, no texture noise or fake pixel filter. Wide landscape composition roughly 16:9. Strong foreground/midground/background separation, expressive material shapes, suitable behind readable game controls (controls will be added separately). Match a mature Korean apocalypse with functioning survivor shelter. No characters or monsters, no logos or copied game assets. Scene: A ruined Korean urban avenue facing a vast jagged vertical dimensional fissure behind broken elevated roads and collapsed buildings. The split in reality has a dark empty core and restrained pale amber/crimson-violet stepped light, with fractured stone floating nearby; foreground cracked asphalt, a stalled bus and scattered rubble. Imposing distant unknown, not a round cartoon portal. No demon body or creature shown, no people/zombies, no text. Dramatic but controlled pixel-art scene for the combat preparation screen."
+    }
+  ],
+  "preservedConstellations": [
+    "napoleon-v1",
+    "yog-v1"
+  ]
+}

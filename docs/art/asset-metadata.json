@@ -1,0 +1,178 @@
+[
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-00-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "b3979f29cf0a41091932f079f60d926fc2e9b078348fe499cfda83e71dea7010"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-01-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "8e987564263193472f8fe979be3b5aa9deb32826387cfd3e55872183099144ac"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-02-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "d8e6f4724913c0a3315d426c6397df4bc0c7d27bbf6902eeeb35b33748602810"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-03-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "5d3136a0b976e9d34cb6f90a2927350d8ea633927b6b80d020aaddeb31c07ef2"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-04-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "9811616670244bd4159bd087483e5f9f0035f1e02a4964777891d583c6895aaf"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-05-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "21e280181713608785c3a346ca9b6a1f0debf7c112b31573edee2a404e84cf37"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-06-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "a37ffbb7941ab7e2d6aabf05456637199b5e6f9387a152b3c9618c42148202e7"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-07-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "f272d33f0534755429fc99b33a45ae0b1b642202fb2dda22df7d896e0d8dd837"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-08-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "327209de6582010c667713f7181e0f8c7ac12aae499995f3db9123d7b2a4f367"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-09-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "b0a2ec27e61e3e1fcf86b491dc9e7508a386b4bf8a6cafdd99ede6694be8b567"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-10-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "c9633061b81c4868469c23e4f18a1559c2a4dfc983a35e30863211cb23d7a8c4"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-11-v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "197211fb15bd6cab374defa73ed93d422832bcbeb72dc2c5cc0f4766d5444724"
+  },
+  {
+    "file": "Assets/Resources/Art/Constellations/napoleon-v1.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "f258833d152bd7766398ff2fc82b0189baae9c0ab142d2c5d112ca2c521fae56"
+  },
+  {
+    "file": "Assets/Resources/Art/Constellations/yog-v1.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "23f34bf0bb25186d25fdf4e92b8796867d8e86c3135a502dd27b9819256434c9"
+  }
+]

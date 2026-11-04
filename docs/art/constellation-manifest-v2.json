@@ -1,0 +1,236 @@
+{
+  "date": "2026-10-30",
+  "mode": "built-in image_gen",
+  "policy": "18 new individually composed scenes; keep approved napoleon-v1 and yog-v1. Rejected uniform compositions are excluded from Resources/build. Generated originals preserved.",
+  "jobs": [
+    {
+      "id": "sejong",
+      "name": "세종대왕",
+      "key": "sejong-v2",
+      "scene": "Elevated diagonal view across a broad Joseon manuscript table. Sejong sits on the LOWER LEFT, leaning forward writing with a brush, red gonryongpo and black ikseongwan, his hands and the spread pages are the focal point. Books, inkstones, an astronomical instrument and latticed palace windows recede to the upper right. Convey authority through the act of creating knowledge, warm morning light. No frontal standing portrait or throne pose.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Elevated diagonal view across a broad Joseon manuscript table. Sejong sits on the LOWER LEFT, leaning forward writing with a brush, red gonryongpo and black ikseongwan, his hands and the spread pages are the focal point. Books, inkstones, an astronomical instrument and latticed palace windows recede to the upper right. Convey authority through the act of creating knowledge, warm morning light. No frontal standing portrait or throne pose.",
+      "sourceUrl": "https://www.hangeul.go.kr/en/exhi/dailyExhibition.do",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-1fadd1c7-a65a-4159-9816-4a22d839583b.png",
+      "projectPath": "Assets/Resources/Art/Constellations/sejong-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "joan",
+      "name": "잔다르크",
+      "key": "joan-v2",
+      "scene": "Low camera beside a white horse galloping UP a diagonal toward the right during the relief of Orleans. Joan, a young woman in practical fifteenth-century plate armour with short dark hair, twists in the saddle to rally distant troops. Her raised white banner with gold lily ornaments sweeps across the upper left sky. Medieval French walls in the distance, wind and bold movement. No banner lettering. Face looks toward her followers, not at viewer.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Low camera beside a white horse galloping UP a diagonal toward the right during the relief of Orleans. Joan, a young woman in practical fifteenth-century plate armour with short dark hair, twists in the saddle to rally distant troops. Her raised white banner with gold lily ornaments sweeps across the upper left sky. Medieval French walls in the distance, wind and bold movement. No banner lettering. Face looks toward her followers, not at viewer.",
+      "sourceUrl": "https://www.orleans.fr/fileadmin/orleans/MEDIA/presse/Dossier_de_presse_A4_JdA_2024_vDEF.pdf",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-8b60ddea-af5c-4bcd-9d03-a367ecc187b4.png",
+      "projectPath": "Assets/Resources/Art/Constellations/joan-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "zhuge",
+      "name": "제갈량",
+      "key": "zhuge-v2",
+      "scene": "VERY WIDE high-angle night panorama. A relatively small Zhuge Liang stands in profile at the UPPER RIGHT edge of a mountain observation pavilion, feather fan behind his back, scholar cap and flowing robes. Below him, organised army torch formations wind through a broad misty valley; star patterns echo his strategy. Empty sky and terrain dominate, command through foresight and scale. Do not enlarge or centre the character.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: VERY WIDE high-angle night panorama. A relatively small Zhuge Liang stands in profile at the UPPER RIGHT edge of a mountain observation pavilion, feather fan behind his back, scholar cap and flowing robes. Below him, organised army torch formations wind through a broad misty valley; star patterns echo his strategy. Empty sky and terrain dominate, command through foresight and scale. Do not enlarge or centre the character.",
+      "sourceUrl": "https://www.museum.go.kr/JPN/contents/E0403000000.do?relicId=5760&schM=view&searchId=search",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-bfbbf3d3-61fe-419a-b96b-5da3165f2477.png",
+      "projectPath": "Assets/Resources/Art/Constellations/zhuge-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "leonardo",
+      "name": "레오나르도 다빈치",
+      "key": "leonardo-v2",
+      "scene": "Look through enormous wooden gears in the FOREGROUND at Leonardo working at a drafting table on the LEFT. Older bearded Renaissance inventor leans over a mechanical drawing with dividers in his hand. A huge unfinished wooden flying wing spans the upper right, workshop depth with pulleys and sketches. Hand-work and invention dominate, warm ochre daylight, dramatic near/far silhouettes. No posed front-facing man holding a prop.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Look through enormous wooden gears in the FOREGROUND at Leonardo working at a drafting table on the LEFT. Older bearded Renaissance inventor leans over a mechanical drawing with dividers in his hand. A huge unfinished wooden flying wing spans the upper right, workshop depth with pulleys and sketches. Hand-work and invention dominate, warm ochre daylight, dramatic near/far silhouettes. No posed front-facing man holding a prop.",
+      "sourceUrl": "https://www.rct.uk/collection/stories/leonardo-in-the-royal-collection",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-16ba8748-89c8-4749-a513-63d005d8fc50.png",
+      "projectPath": "Assets/Resources/Art/Constellations/leonardo-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "alexander",
+      "name": "알렉산드로스",
+      "key": "alexander-v2",
+      "scene": "A black warhorse and Alexander surge toward the LOWER LEFT, seen from a low frontal three-quarter angle, horse forelegs lifting over a rocky ridge. Young beardless Macedonian commander with anastole hair, bronze and linen armour, purple cloak, thrusts his long spear forward with a focused sideways gaze. Deep diagonal ranks of spears trail into the upper right dusty battlefield. Kinetic imperial ambition. No lion pelt, no static king pose.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: A black warhorse and Alexander surge toward the LOWER LEFT, seen from a low frontal three-quarter angle, horse forelegs lifting over a rocky ridge. Young beardless Macedonian commander with anastole hair, bronze and linen armour, purple cloak, thrusts his long spear forward with a focused sideways gaze. Deep diagonal ranks of spears trail into the upper right dusty battlefield. Kinetic imperial ambition. No lion pelt, no static king pose.",
+      "sourceUrl": "https://www.clevelandart.org/art/1927.209",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-67a64f8e-f3d1-441d-8e50-89e1d23700d7.png",
+      "projectPath": "Assets/Resources/Art/Constellations/alexander-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "tesla",
+      "name": "니콜라 테슬라",
+      "key": "tesla-v2",
+      "scene": "A monumental high-voltage laboratory hall fills almost the entire image. Huge coils and angular blue-white electrical arcs form a cathedral-like dome. A SMALL Tesla sits calmly reading at the LOWER LEFT beside a modest desk, dark suit and slim moustache, profile lit by the apparatus. Strong size contrast, cool violet shadows and amber wood. This is symbolic fantasy inspired by historic staged laboratory imagery, not a safe real experiment. No large central portrait.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: A monumental high-voltage laboratory hall fills almost the entire image. Huge coils and angular blue-white electrical arcs form a cathedral-like dome. A SMALL Tesla sits calmly reading at the LOWER LEFT beside a modest desk, dark suit and slim moustache, profile lit by the apparatus. Strong size contrast, cool violet shadows and amber wood. This is symbolic fantasy inspired by historic staged laboratory imagery, not a safe real experiment. No large central portrait.",
+      "sourceUrl": "https://tesla-museum.org/en/qr-en/exhibit-025/",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-d5ebfdf5-f070-410d-b6ad-be50730dffb8.png",
+      "projectPath": "Assets/Resources/Art/Constellations/tesla-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "hua",
+      "name": "화타",
+      "key": "hua-v2",
+      "scene": "An intimate diagonal bedside scene in a traditional Chinese medical pavilion. Elderly Hua Tuo KNEELS on the RIGHT, bending with quiet concentration to examine the wrist pulse of a reclining adult patient on the LEFT. Physician's hands and open wooden herbal case in the foreground are the focal point. Opaque historical robes, calm garden view, jade and warm linen palette. Authority through compassion, no gore, no magic-healer standing pose.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: An intimate diagonal bedside scene in a traditional Chinese medical pavilion. Elderly Hua Tuo KNEELS on the RIGHT, bending with quiet concentration to examine the wrist pulse of a reclining adult patient on the LEFT. Physician's hands and open wooden herbal case in the foreground are the focal point. Opaque historical robes, calm garden view, jade and warm linen palette. Authority through compassion, no gore, no magic-healer standing pose.",
+      "sourceUrl": "https://wellcomecollection.org/works/pct7xu6a",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-9de989e6-84ef-4583-b6c6-1d242a8353dc.png",
+      "projectPath": "Assets/Resources/Art/Constellations/hua-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "leonidas",
+      "name": "레오니다스",
+      "key": "leonidas-v2",
+      "scene": "Ground-level camera at a narrow rocky pass. A huge battered round bronze shield occupies the LOWER LEFT foreground. Leonidas is braced in a deep crouch behind it on the left third, one knee bent, spear projected diagonally toward upper right. Bronze hoplite armour and helmet, red cloak, grounded defensive posture; distant shield line compressed between cliffs. Harsh gold dust and slate rock. No film-actor likeness or bare-chested bodybuilding.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Ground-level camera at a narrow rocky pass. A huge battered round bronze shield occupies the LOWER LEFT foreground. Leonidas is braced in a deep crouch behind it on the left third, one knee bent, spear projected diagonally toward upper right. Bronze hoplite armour and helmet, red cloak, grounded defensive posture; distant shield line compressed between cliffs. Harsh gold dust and slate rock. No film-actor likeness or bare-chested bodybuilding.",
+      "sourceUrl": "https://collections.louvre.fr/en/ark%3A/53355/cl010065425",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-d320b6db-8fed-4039-93ac-b16e3704e1a6.png",
+      "projectPath": "Assets/Resources/Art/Constellations/leonidas-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "musashi",
+      "name": "미야모토 무사시",
+      "key": "musashi-v2",
+      "scene": "A taut two-sword duel practice instant: Musashi on the LEFT THIRD, body rotating sideways in a low grounded stance, long and short blades describing two clean diagonals. Worn indigo kimono and hakama, tied-back hair, focused profile, no armour. Sparse bamboo grove and drifting leaves on the right provide large quiet negative space. Strong ink-dark silhouette and pale dawn. No frontal symmetrical swordsman portrait.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: A taut two-sword duel practice instant: Musashi on the LEFT THIRD, body rotating sideways in a low grounded stance, long and short blades describing two clean diagonals. Worn indigo kimono and hakama, tied-back hair, focused profile, no armour. Sparse bamboo grove and drifting leaves on the right provide large quiet negative space. Strong ink-dark silhouette and pale dawn. No frontal symmetrical swordsman portrait.",
+      "sourceUrl": "https://www.britishmuseum.org/collection/term/BIOG3948",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-44a1fcd1-1770-4267-83d7-d47ec73f8ce9.png",
+      "projectPath": "Assets/Resources/Art/Constellations/musashi-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "curie",
+      "name": "마리 퀴리",
+      "key": "curie-v2",
+      "scene": "Oblique over-the-shoulder close view across a laboratory bench. Marie Curie leans in from the UPPER RIGHT, dark high-neck dress and pinned hair, studying an electrometer and a small mineral specimen. Her precise hands and delicate instruments occupy the lower centre and are the focus; books and glassware recede left. Subtle pale spectral glints symbolise invisible radiation, not a neon green cauldron. Quiet intellectual power. No headshot or standing scientist.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Oblique over-the-shoulder close view across a laboratory bench. Marie Curie leans in from the UPPER RIGHT, dark high-neck dress and pinned hair, studying an electrometer and a small mineral specimen. Her precise hands and delicate instruments occupy the lower centre and are the focus; books and glassware recede left. Subtle pale spectral glints symbolise invisible radiation, not a neon green cauldron. Quiet intellectual power. No headshot or standing scientist.",
+      "sourceUrl": "https://www.nobelprize.org/womenwhochangedscience/stories/marie-curie.",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-bad7a759-02f0-4f94-8c83-59adffacfbc1.png",
+      "projectPath": "Assets/Resources/Art/Constellations/curie-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "cleopatra",
+      "name": "클레오파트라",
+      "key": "cleopatra-v2",
+      "scene": "Wide Nile river panorama seen from the shaded royal barge. Cleopatra sits in PROFILE at the FAR RIGHT beneath a canopy, composed and attentive to a fleet and palace terraces across the water. Restrained Hellenistic diadem, braided bun, opaque ivory robe and emerald mantle; one hand rests on the barge rail. River reflections and sail silhouettes dominate the left two thirds. Political authority, not a pin-up, no Nefertiti crown.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Wide Nile river panorama seen from the shaded royal barge. Cleopatra sits in PROFILE at the FAR RIGHT beneath a canopy, composed and attentive to a fleet and palace terraces across the water. Restrained Hellenistic diadem, braided bun, opaque ivory robe and emerald mantle; one hand rests on the barge rail. River reflections and sail silhouettes dominate the left two thirds. Political authority, not a pin-up, no Nefertiti crown.",
+      "sourceUrl": "https://www.britishmuseum.org/collection/object/C_EH-p691-1-CleAnt",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-168d4f9c-1952-4717-b31a-76b1d355684f.png",
+      "projectPath": "Assets/Resources/Art/Constellations/cleopatra-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "yi",
+      "name": "이순신",
+      "key": "yi-v2",
+      "scene": "OVER-THE-SHOULDER naval command view from a Joseon warship deck. Admiral Yi Sun-sin stands at the RIGHT EDGE in three-quarter rear profile, Korean helmet, lamellar armour and red command garment; one arm directs the fleet through a narrow turbulent tidal strait. Foreground ropes and command drum lead into an S-shaped channel where thirteen small panokseon silhouettes confront a distant larger fleet. Steel blue sea, wind and determined command. No turtle ship, no Japanese armour, no frontal portrait.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: OVER-THE-SHOULDER naval command view from a Joseon warship deck. Admiral Yi Sun-sin stands at the RIGHT EDGE in three-quarter rear profile, Korean helmet, lamellar armour and red command garment; one arm directs the fleet through a narrow turbulent tidal strait. Foreground ropes and command drum lead into an S-shaped channel where thirteen small panokseon silhouettes confront a distant larger fleet. Steel blue sea, wind and determined command. No turtle ship, no Japanese armour, no frontal portrait.",
+      "sourceUrl": "https://www.kh.or.kr/visit/en/road/8/view.do?key=2408010008",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-ae79ef04-905d-4eca-b076-0f3454d69aaf.png",
+      "projectPath": "Assets/Resources/Art/Constellations/yi-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "genghis",
+      "name": "칭기즈칸",
+      "key": "genghis-v2",
+      "scene": "VERY WIDE steppe panorama from behind a ridge. Genghis Khan is a modest-sized mounted silhouette on the FAR LEFT, seen three-quarter REAR, fur-trimmed Mongol cap and lamellar coat. White horsehair standards bend in the wind. Organised cavalry columns curve toward the vast sunlit horizon on the right; grasses and broad sky express the scale of conquest. No charging horse close-up, no Viking horns, no centred portrait.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: VERY WIDE steppe panorama from behind a ridge. Genghis Khan is a modest-sized mounted silhouette on the FAR LEFT, seen three-quarter REAR, fur-trimmed Mongol cap and lamellar coat. White horsehair standards bend in the wind. Organised cavalry columns curve toward the vast sunlit horizon on the right; grasses and broad sky express the scale of conquest. No charging horse close-up, no Viking horns, no centred portrait.",
+      "sourceUrl": "https://chinggismuseum.com/en/visit",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-c69e074f-488a-4ba0-a802-bbdbe056ed25.png",
+      "projectPath": "Assets/Resources/Art/Constellations/genghis-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "artemis",
+      "name": "아르테미스",
+      "key": "artemis-v2",
+      "scene": "Artemis CROUCHES on a high thick branch on the UPPER LEFT, drawing a bow toward the lower right. Athletic balanced hunting posture, practical opaque short tunic and boots, crescent moon and tree branches form an asymmetric triangle. Small stag visible below in the far forest. Silver moonlight through deep pine silhouettes, poised alert wilderness authority. No sexualised armour, no standing centred goddess portrait.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Artemis CROUCHES on a high thick branch on the UPPER LEFT, drawing a bow toward the lower right. Athletic balanced hunting posture, practical opaque short tunic and boots, crescent moon and tree branches form an asymmetric triangle. Small stag visible below in the far forest. Silver moonlight through deep pine silhouettes, poised alert wilderness authority. No sexualised armour, no standing centred goddess portrait.",
+      "sourceUrl": "https://www.metmuseum.org/art/collection/search/255695",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-1555b274-7f71-43a7-ad28-ae099f999a70.png",
+      "projectPath": "Assets/Resources/Art/Constellations/artemis-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "heracles",
+      "name": "헤라클레스",
+      "key": "heracles-v2",
+      "scene": "A vast curved CELESTIAL VAULT bears down from above. Heracles stoops beneath its weight at the LOWER CENTRE, knees bent and back bowed, both arms supporting the heavens in the labour involving Atlas. The Nemean lion pelt hangs from his shoulder; a gnarled club lies discarded on the ground at one side. Mountain silhouettes and stars accent impossible scale. Heroic burden rather than a bodybuilder pose, bronze earth against cosmic blue. No standing club display.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: A vast curved CELESTIAL VAULT bears down from above. Heracles stoops beneath its weight at the LOWER CENTRE, knees bent and back bowed, both arms supporting the heavens in the labour involving Atlas. The Nemean lion pelt hangs from his shoulder; a gnarled club lies discarded on the ground at one side. Mountain silhouettes and stars accent impossible scale. Heroic burden rather than a bodybuilder pose, bronze earth against cosmic blue. No standing club display.",
+      "sourceUrl": "https://gulbenkian.pt/museu/en/olympic-gods-in-the-gulbenkian-collection/herakles/",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-475fe09b-4f6a-4064-b2b1-cad7caa26487.png",
+      "projectPath": "Assets/Resources/Art/Constellations/heracles-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": [],
+      "additionalSource": "https://static.perseus.tufts.edu/Herakles/apples.html"
+    },
+    {
+      "id": "arthur",
+      "name": "아서왕",
+      "key": "arthur-v2",
+      "scene": "Steep oblique overhead view of the sword-in-the-stone moment. Young Arthur leans forward with one knee braced against rough stone, both hands drawing a luminous sword upward at a diagonal. Sword and hands are central; Arthur's face is seen in profile at lower right, witnesses and old church pillars recede to the left. Deep forest-green cloak, restrained early-medieval-inspired fantasy mail. Authority revealed through action. Do not depict a king posing with a sword or conflate this scene with the Lady of the Lake.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Steep oblique overhead view of the sword-in-the-stone moment. Young Arthur leans forward with one knee braced against rough stone, both hands drawing a luminous sword upward at a diagonal. Sword and hands are central; Arthur's face is seen in profile at lower right, witnesses and old church pillars recede to the left. Deep forest-green cloak, restrained early-medieval-inspired fantasy mail. Authority revealed through action. Do not depict a king posing with a sword or conflate this scene with the Lady of the Lake.",
+      "sourceUrl": "https://cdn.essentiels.bnf.fr/uploads/media/attachment/20221123153439000000_fiche_2.pdf",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-5ddd6430-3f51-4f57-8738-4d160b609d54.png",
+      "projectPath": "Assets/Resources/Art/Constellations/arthur-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "zeus",
+      "name": "제우스",
+      "key": "zeus-v2",
+      "scene": "Extreme LOW ANGLE from a tiny temple forecourt. A gigantic Zeus emerges across the upper storm clouds, muscular bearded body twisting sideways in the act of HURLING a lightning bolt diagonally to lower right. His body partly dissolves into layered cloud shapes, an eagle wing cuts the near left foreground. Tiny columns establish divine scale. Gold-white thunder, violet slate clouds. No throne, no frontal standing full-body king, no hammer.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: Extreme LOW ANGLE from a tiny temple forecourt. A gigantic Zeus emerges across the upper storm clouds, muscular bearded body twisting sideways in the act of HURLING a lightning bolt diagonally to lower right. His body partly dissolves into layered cloud shapes, an eagle wing cuts the near left foreground. Tiny columns establish divine scale. Gold-white thunder, violet slate clouds. No throne, no frontal standing full-body king, no hammer.",
+      "sourceUrl": "https://www.getty.edu/art/collection/object/1GCAQ6",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-7301d454-9c97-48f4-aaff-3a97593c6019.png",
+      "projectPath": "Assets/Resources/Art/Constellations/zeus-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    },
+    {
+      "id": "hades",
+      "name": "하데스",
+      "key": "hades-v2",
+      "scene": "A deep underworld court: Hades sits STILL in three-quarter profile on a tall basalt throne at the FAR RIGHT, composed bearded ruler with a dark crown and long sceptre. A large three-headed Cerberus rests at the LOWER LEFT foreground; the river Styx and a solemn procession guide the eye between them into distant gates. Vast architectural negative space, black stone, restrained violet and cold gold. Custodian and judge, no red devil, no fire-breathing monster or centred standing portrait.",
+      "prompt": "Use case: stylized-concept. Asset: one finished constellation event and codex illustration for a Korean pixel-art game, landscape 3:2, approximately 1536x1024. Original scene, not a portrait card. Medium: deliberately handcrafted premium 2D PIXEL ART, comparable clarity and clustered shading to Dave the Diver's pixel illustrations, but original character and world. Visible crisp square pixels, consistent coarse pixel grid, deliberate connected colour clusters and selective dark outlines, stepped edges, economical 3-5 tone shading per material, detailed readable silhouettes. Preserve pixel structure in foreground and background. NO smooth brush painting, 3D, airbrush, photographic textures, automatic pixelation filter or tiny noisy speckling. Authority should come from the subject's own characteristic action and world. No text, logos, watermark, border, UI or inset panels. Full-bleed single scene. SCENE AND COMPOSITION: A deep underworld court: Hades sits STILL in three-quarter profile on a tall basalt throne at the FAR RIGHT, composed bearded ruler with a dark crown and long sceptre. A large three-headed Cerberus rests at the LOWER LEFT foreground; the river Styx and a solemn procession guide the eye between them into distant gates. Vast architectural negative space, black stone, restrained violet and cold gold. Custodian and judge, no red devil, no fire-breathing monster or centred standing portrait.",
+      "sourceUrl": "https://www.getty.edu/publications/terracottas/catalogue/60/",
+      "generatedSource": "C:\\Users\\USER\\.codex\\generated_images\\01a186b2-189c-7d13-bb45-c6e9acc73b7a\\exec-4a1c79bc-80dc-4c75-8f79-66a3a92ca777.png",
+      "projectPath": "Assets/Resources/Art/Constellations/hades-v2.png",
+      "mode": "built-in image_gen",
+      "referenceImages": []
+    }
+  ],
+  "retained": [
+    {
+      "id": "napoleon",
+      "projectPath": "Assets/Resources/Art/Constellations/napoleon-v1.png",
+      "record": "generation-manifest.json"
+    },
+    {
+      "id": "yog",
+      "projectPath": "Assets/Resources/Art/Constellations/yog-v1.png",
+      "record": "generation-manifest.json"
+    }
+  ]
+}

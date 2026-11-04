@@ -1,0 +1,258 @@
+[
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-00-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1124747,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "517a5e98eb297dbf89db9cc1f5aab1a01ee474eee843173acf151bb6d04c84e0"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-01-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1208942,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "b44e3a6913c02126d9bb9cc6e3251e07af788a3bfe9986d64c6ca4f8be2853d2"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-02-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1186170,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "e7629f7c7345c257213e2699fdf7cc5350de0131eb416183764ebc2ffb8adb93"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-03-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1261657,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "43611d223e40729b2759aa62e48e51e72f067266cd517ad2c194683a664bc561"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-04-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1326866,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "859e27644fc4cefa02cfcbf7493283741a679336a2fde2b6dd166b16c0cdb74d"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-05-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1319924,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "53bf9e09da0b3707493e89387e1a8260c92cef71202acb859abfb2619b28e8dc"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-06-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1279167,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "6b49a249242d09bb13ab38f23be84aa587e7d13fc42e4c1b93dfca5ac20303cf"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-07-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1417152,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "6ef7fd669accc2e779bf90b4014e0a482a5042df58a17ac6a32f2a94d6a1deb0"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-08-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1315316,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "5fd985f699bd2fad1a18b52ad36bafab42612760d13776d068373c3175cb70c9"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-09-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1331484,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "9865584cc5ebf0dc5cc4b6cbad1cd8164b496e2546b4c715d027be60999af421"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-10-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1358032,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "5284fc35c767c6a892b6ffad58787540734f36e8c9b4e4360d73921920e5239a"
+  },
+  {
+    "file": "Assets/Resources/Art/Portraits/survivor-11-v3.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "bytes": 1288921,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "sha256": "a7248ab3314a109c8798879466ea9385080728659258403130c4bcc9d88c9c2c"
+  },
+  {
+    "file": "Assets/Resources/Art/Environments/chapel-v2.png",
+    "size": [
+      1672,
+      941
+    ],
+    "bytes": 2376274,
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "82fc00e2396565d34a4da2371ed8f992b4d390b4609866b82a1a8597327b652c"
+  },
+  {
+    "file": "Assets/Resources/Art/Environments/city-v2.png",
+    "size": [
+      1672,
+      941
+    ],
+    "bytes": 2958204,
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "c7738ad36b49cfd65dc668adf18db8dce16bebb93bc001e71693fd948e4d709b"
+  },
+  {
+    "file": "Assets/Resources/Art/Environments/clinic-v2.png",
+    "size": [
+      1672,
+      941
+    ],
+    "bytes": 2497090,
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "a285612f284730846ae0a1f304073bc3502005254493f18d182729a3f6e5b72c"
+  },
+  {
+    "file": "Assets/Resources/Art/Environments/personnel-v2.png",
+    "size": [
+      1672,
+      941
+    ],
+    "bytes": 2464207,
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "355f5c21b5275af36dad4ca449a1f61cd0198205797e6d28dec32a957ee22366"
+  },
+  {
+    "file": "Assets/Resources/Art/Environments/rift-v2.png",
+    "size": [
+      1672,
+      941
+    ],
+    "bytes": 3040361,
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "c48fa9bf8d167c37e4779a4a060b61909a9cbab1abdfd108d5dd2793e3c331af"
+  },
+  {
+    "file": "Assets/Resources/Art/Environments/warehouse-v2.png",
+    "size": [
+      1672,
+      941
+    ],
+    "bytes": 2471760,
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "7835aad102a49eb74614c1af0e8f3d83fcf684e2031974338cd33aab90c3e5dd"
+  },
+  {
+    "file": "Assets/Resources/Art/Constellations/napoleon-v1.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "bytes": 2600254,
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "f258833d152bd7766398ff2fc82b0189baae9c0ab142d2c5d112ca2c521fae56"
+  },
+  {
+    "file": "Assets/Resources/Art/Constellations/yog-v1.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "bytes": 3049955,
+    "mode": "RGB",
+    "alphaRange": null,
+    "sha256": "23f34bf0bb25186d25fdf4e92b8796867d8e86c3135a502dd27b9819256434c9"
+  }
+]
