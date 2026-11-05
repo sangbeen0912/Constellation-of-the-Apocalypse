@@ -101,7 +101,7 @@ namespace Apocalypse
             if(Game.S.phase==Phase.Event&&Game.S.controlLocked&&Game.S.pending!=null)
             {ResolveEventChoice(Game.S.pending.id,Game.AutomaticChoice(Game.S.pending));return;}
             if (visibleLogs < Game.S.logs.Count) { visibleLogs = speed == 2 ? Game.S.logs.Count : visibleLogs + 1; if(logBody!=null)RefreshLogRows(); return; }
-            if (Game.S.phase == Phase.Running) { var previous=Game.S.phase;Game.Tick(); if(Game.S.phase==previous&&Game.S.combat==null){visibleLogs=Math.Min(visibleLogs,Game.S.logs.Count);if(logBody!=null)RefreshLogRows();RefreshExplorationStatus();RefreshRunningHud();}else Render(); }
+            if (Game.S.phase == Phase.Running) { Game.Tick(); if(IsFieldPhase&&fieldMain!=null)RefreshEncounter();else Render(); }
         }
         void OnApplicationQuit() { if (Game != null){Save();FlushSave();} }
         void OnDestroy()
@@ -110,6 +110,7 @@ namespace Apocalypse
             constellationArt.Dispose();
             ReleaseOmen();
             ClearBattles();
+            if(battleInterior!=null){Resources.UnloadAsset(battleInterior);battleInterior=null;}
             if(areaAtlas!=null){Resources.UnloadAsset(areaAtlas);areaAtlas=null;}
             if (font != null) Destroy(font);
         }
@@ -223,6 +224,8 @@ namespace Apocalypse
         public void Render()
         {
             if (canvas == null) return;
+            if(!title&&fieldMain!=null&&IsFieldPhase&&!OmenVisible&&omenTexture==null){RefreshEncounter();if(transitWalking)RenderTransitWalk(fieldMain);return;}
+            fieldMain=null;fieldContentKey=fieldArtKey=null;
             logBody=null;logRows.Clear();hudMeters.Clear();explorationStatus=null;
             if (activeScroll != null && scrollKey != null) scrollPositions[scrollKey] = activeScroll.verticalNormalizedPosition;
             activeScroll = null;
@@ -255,11 +258,11 @@ namespace Apocalypse
             Plate(main,panel);
             bool preparation=tab=="전투준비"&&s.phase!=Phase.Selection&&s.phase!=Phase.Death&&s.phase!=Phase.Event&&s.phase!=Phase.Victory&&s.phase!=Phase.Report;
             bool runningLog=s.phase==Phase.Running&&tab!="성좌 도감"&&tab!="기록 보관소"&&!preparation;
-            bool historyScreen=(s.phase==Phase.Morning||s.phase==Phase.Running)&&(tab=="하루 기록"||tab=="기록 보관소"||s.phase==Phase.Running);
+            bool historyScreen=!IsFieldPhase&&(s.phase==Phase.Morning||s.phase==Phase.Running)&&(tab=="하루 기록"||tab=="기록 보관소"||s.phase==Phase.Running);
             var body = historyScreen ? Scroller(main) : main;
             if(runningLog&&body!=main)body.parent.GetComponent<RectTransform>().offsetMin=new Vector2(0,90);
             if (s.phase == Phase.Selection || s.phase == Phase.Death) RenderSelectionScreen(main);
-            else if (s.phase == Phase.Event) RenderEventScreen(main);
+            else if (IsFieldPhase) RenderEncounter(main);
             else if (s.phase == Phase.Victory) RenderVictory(Stack(main));
             else if (s.phase == Phase.Report) { tab="쉘터"; RenderFacilityScreen(main); }
             else if (tab == "성좌 도감") RenderCodexScreen(main);
@@ -267,10 +270,10 @@ namespace Apocalypse
             else if (tab == "기록 보관소") RenderRecords(body);
             else if (tab == "하루 기록" || s.phase == Phase.Running) RenderLogs(body);
             else RenderFacilityScreen(main);
-            timeStatus=Positioned(root,string.IsNullOrEmpty(notice) ? "" + s.hours.ToString("0.0") + " / 24시간  ·  " + (s.activeRift < 0 ? "활성 균열 없음" : Rules.Sins[s.activeRift] + " 군단 활성") : notice,new Vector2(.025f,.025f),new Vector2(.19f,.12f),19,muted);
+            timeStatus=Positioned(root,string.IsNullOrEmpty(notice)?Rules.Clock(s.hours)+" · 남은 "+Math.Max(0,Rules.DayHours-s.hours).ToString("0.0")+"시간":notice,new Vector2(.025f,.025f),new Vector2(.19f,.12f),21,gold);
             var footer = Row(Box(root,"Footer",new Vector2(.44f,.045f),new Vector2(.985f,.095f),Color.clear),38);
             foreach (int n in new[] {0,1,2}) { int selected = n; MakeButton(footer,new[] { "일반 · 0.8초", "빠르게 · 0.2초", "즉시 표시" }[n],() => { speed = selected; Render(); },true,speed == n); }
-            if(runningLog)RenderFieldActions(main);
+            if(IsFieldPhase)RefreshEncounter();
             RenderBackNavigation(root);RenderOmen(root);RenderBattleScene();RenderTransitWalk(root);
             Canvas.ForceUpdateCanvases();
             if (activeScroll != null) activeScroll.verticalNormalizedPosition = scrollPositions.ContainsKey(scrollKey) ? scrollPositions[scrollKey] : 1;

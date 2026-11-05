@@ -12,7 +12,7 @@ namespace Apocalypse
         string Passive(Character c){return content.rareNpcs.FirstOrDefault(n=>n.species==c.species)?.passive??"";}
         string OptionCost(ChoiceEvent e,int index)
         {
-            if(Game.IsTransit(e))return index==0?AreaRules.TravelHours[Game.S.exploration.destination]+"시간":"2시간";
+            if(Game.IsTransit(e))return index==0?AreaRules.TravelHours[Game.S.exploration.destination]+"시간":"1시간";
             if(e.options==null||index>=e.options.Length)return "";
             var o=e.options[index];var parts=new System.Collections.Generic.List<string>();
             if(o.hours>0)parts.Add(o.hours+"시간");if(o.food>0)parts.Add("식량 "+o.food);

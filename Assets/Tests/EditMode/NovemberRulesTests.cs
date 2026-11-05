@@ -6,6 +6,36 @@ using NUnit.Framework;
 using UnityEngine;
 public class NovemberRulesTests
 {
+    [TestCase(0.15,0)] [TestCase(.5,0)] [TestCase(1,.5)] [TestCase(2,1)] [TestCase(6,5)] [TestCase(10,9)]
+    public void AllActionCostsFollowApprovedReduction(double original,double expected){Assert.AreEqual(expected,Rules.ActionHours(original));}
+    [Test] public void WorkdayAndOldSaveMigrationPreserveResourcesAndStrength()
+    {
+        var g=Veteran();g.S.rulesRevision=4;g.S.hours=18;g.S.avatar.attackInvestment=257;string saved=JsonUtility.ToJson(g.S);int money=g.S.divinity;
+        g=new GameEngine(JsonUtility.FromJson<GameState>(saved),g.B,g.Content);Assert.AreEqual(15,g.S.hours);Assert.AreEqual(257,g.S.avatar.attackInvestment);Assert.AreEqual(money,g.S.divinity);
+        Assert.AreEqual("09:00",Rules.Clock(0));Assert.AreEqual("23:30",Rules.Clock(14.5));Assert.AreEqual("24:00",Rules.Clock(15));
+        g.Tick();Assert.AreEqual(Phase.Report,g.S.phase);g.NextDay();Assert.AreEqual(0,g.S.hours);g.Validate();
+    }
+    [Test] public void UpgradeCostsRisePerStatAndBulkBudgetCannotBypassTier()
+    {
+        var g=Veteran();g.S.phase=Phase.Morning;int money=g.S.divinity;
+        Assert.IsTrue(g.Invest(Stat.Attack,100));Assert.AreEqual(10,g.UpgradeCount(Stat.Attack));Assert.AreEqual(20,g.UpgradeCost(Stat.Attack));Assert.AreEqual(money-100,g.S.divinity);
+        Assert.AreEqual(10,g.UpgradeCost(Stat.Health));Assert.IsFalse(g.Invest(Stat.Attack,19));Assert.IsTrue(g.Invest(Stat.Attack,200));
+        Assert.AreEqual(20,g.UpgradeCount(Stat.Attack));Assert.AreEqual(30,g.UpgradeCost(Stat.Attack));Assert.AreEqual(money-300,g.S.divinity);
+        g=new GameEngine(JsonUtility.FromJson<GameState>(JsonUtility.ToJson(g.S)),g.B,g.Content);Assert.AreEqual(30,g.UpgradeCost(Stat.Attack));
+    }
+    [Test] public void VeryOldPendingEventCostIsReducedOnceAcrossBothMigrationsAndReload()
+    {
+        var g=Veteran();Assert.IsTrue(g.PresentGeneralEvent("R-01"));g.S.rulesRevision=2;g.S.pending.options[1].hours=7;
+        g=new GameEngine(JsonUtility.FromJson<GameState>(JsonUtility.ToJson(g.S)),g.B,g.Content);Assert.AreEqual(6,g.S.pending.options[1].hours);
+        g=new GameEngine(JsonUtility.FromJson<GameState>(JsonUtility.ToJson(g.S)),g.B,g.Content);Assert.AreEqual(6,g.S.pending.options[1].hours);
+    }
+    [Test] public void ResidenceDivinityFailureKeepsDailyChanceAndSuccessIsSharedWithOtherRegions()
+    {
+        var g=Veteran();g.S.goal=Goal.Explore;g.S.exploration.current=Area.Residence;g.S.eventTarget=4;g.B.divineSuccessChance=0;
+        int money=g.S.divinity;Assert.IsTrue(g.PresentGeneralEvent("HOM-D01"));g.Resolve(g.S.pending.id,0);Assert.AreEqual(1,g.S.hours);Assert.AreEqual(money,g.S.divinity);Assert.AreNotEqual(g.S.day,g.S.divineEventDay);
+        g.B.divineSuccessChance=1;Assert.IsTrue(g.PresentGeneralEvent("HOM-D02"));g.Resolve(g.S.pending.id,0);Assert.That(g.S.divinity-money,Is.InRange(3,10));Assert.AreEqual(g.S.day,g.S.divineEventDay);
+        money=g.S.divinity;g.S.exploration.current=Area.Sanctuary;Assert.IsTrue(g.PresentGeneralEvent("DV-001"));g.Resolve(g.S.pending.id,0);Assert.AreEqual(money,g.S.divinity);g.Validate();
+    }
     [Test] public void ResidenceFoodDiscoveryIsThirtyPercentAndFoodEventsHaveDoubleWeight()
     {
         var g=Veteran();g.S.goal=Goal.Explore;g.S.exploration.current=Area.Residence;
@@ -23,7 +53,7 @@ public class NovemberRulesTests
     {
         var g=Veteran();g.S.goal=Goal.Explore;g.S.exploration.current=Area.Subway;g.S.eventTarget=4;
         g.B.november.rerollEventChance=1;Assert.IsTrue(g.OfferTransit());int previous=g.S.exploration.destination;
-        Assert.IsTrue(g.Resolve(g.S.pending.id,1));Assert.AreEqual(2,g.S.hours);Assert.AreEqual(1,g.S.eventSlots);
+        Assert.IsTrue(g.Resolve(g.S.pending.id,1));Assert.AreEqual(1,g.S.hours);Assert.AreEqual(1,g.S.eventSlots);
         Assert.IsFalse(g.IsTransit(g.S.pending));Assert.IsTrue(g.S.exploration.resumeTransit);
         g=new GameEngine(JsonUtility.FromJson<GameState>(JsonUtility.ToJson(g.S)),g.B,g.Content);
         Assert.IsTrue(g.Resolve(g.S.pending.id,2));double after=g.S.hours;int slots=g.S.eventSlots;
@@ -88,8 +118,8 @@ public class NovemberRulesTests
     }
     [Test] public void CatalogHas174ApprovedAndFourPreservedRoutesWithNoDeletedOrDuplicateIds()
     {
-        var c=GameData.LoadContent();Assert.AreEqual(178,c.activityEvents.Count);Assert.AreEqual(174,c.activityEvents.Count(e=>!e.supplemental));
-        Assert.AreEqual(178,c.activityEvents.Select(e=>e.id).Distinct().Count());Assert.AreEqual(10,c.relicDefinitions.Count);
+        var c=GameData.LoadContent();Assert.AreEqual(181,c.activityEvents.Count);Assert.AreEqual(174,c.activityEvents.Count(e=>!e.supplemental));
+        Assert.AreEqual(181,c.activityEvents.Select(e=>e.id).Distinct().Count());Assert.AreEqual(10,c.relicDefinitions.Count);
         foreach(string id in new[]{"SP-008","SV-007","SV-010","SU-001","SU-002","SU-006","SU-007","SU-010"})Assert.IsFalse(c.activityEvents.Any(e=>e.id==id));
         Assert.AreEqual(4,c.activityEvents.Count(e=>e.supplemental&&e.area==Area.Rift&&!string.IsNullOrEmpty(e.relicId)));
         var special=c.activityEvents.Single(e=>e.id=="RF-005");Assert.AreEqual(1,special.options.Max(o=>o.special));Assert.AreEqual(2,special.options[0].normal);
@@ -118,16 +148,16 @@ public class NovemberRulesTests
         for(int i=0;i<8;i++)
         {
             var blocked=g.S.exploration.rejected.ToArray();int previous=g.S.exploration.destination;g.S.hours=0;
-            Assert.IsTrue(g.Resolve(g.S.pending.id,1));Assert.AreEqual(2,g.S.hours);
+            Assert.IsTrue(g.Resolve(g.S.pending.id,1));Assert.AreEqual(1,g.S.hours);
             Assert.AreNotEqual(previous,g.S.exploration.destination);Assert.IsFalse(g.S.exploration.rejected.Take(g.S.exploration.rejected.Count-1).Contains(g.S.exploration.destination));
             Assert.AreEqual(Math.Min(2,i+1),g.S.exploration.rejected.Count);Assert.AreEqual(0,g.S.eventSlots);
         }
     }
     [Test] public void TransitCannotTrapPlayerWhenBothPaidChoicesAreUnaffordable()
     {
-        var g=Veteran();g.S.goal=Goal.Explore;g.S.exploration.current=Area.Subway;g.OfferTransit();g.S.hours=23.5;
+        var g=Veteran();g.S.goal=Goal.Explore;g.S.exploration.current=Area.Subway;g.OfferTransit();g.S.hours=14.75;
         Assert.IsFalse(g.CanChoose(g.S.pending,0,out _));Assert.IsFalse(g.CanChoose(g.S.pending,1,out _));
-        Assert.IsTrue(g.ReturnToShelter());Assert.AreEqual(23.5,g.S.hours);Assert.AreEqual(Phase.Report,g.S.phase);Assert.AreEqual(Area.Shelter,g.S.exploration.current);
+        Assert.IsTrue(g.ReturnToShelter());Assert.AreEqual(14.75,g.S.hours);Assert.AreEqual(Phase.Report,g.S.phase);Assert.AreEqual(Area.Shelter,g.S.exploration.current);
     }
     [Test] public void DailyStoryDistributionIsThreeOrFourAndNewGameHasOneHuman()
     {
@@ -161,12 +191,12 @@ public class NovemberRulesTests
         double hp=g.S.avatar.health;g.StepCombat();Assert.AreEqual(hp-2,g.S.avatar.health);g.StepCombat();Assert.AreEqual(hp-4,g.S.avatar.health);
         g.StepCombat();g.StepCombat();Assert.IsFalse(g.S.combat.defending);g.StepCombat();Assert.AreEqual(hp-9,g.S.avatar.health);
     }
-    [Test] public void RejectedCommandCostsTenAndCannotBeAppliedTwice()
+    [Test] public void RejectedCommandCostsOneAndCannotBeAppliedTwice()
     {
         var g=Veteran();g.InteractiveCombat=true;g.Battle(EnemyKind.Normal,1,Sin.Pride);g.S.avatar.personality=Temperament.Fearful;g.S.combat.waiting=true;
         for(uint seed=1;seed<1000000;seed++){g.S.rng=seed;double roll=g.Rng.Next();if(roll>=.45){g.S.rng=seed;break;}}
-        int before=g.S.divinity;Assert.IsTrue(g.IssueCombatCommand(BattleCommand.Attack,0));Assert.AreEqual(before-10,g.S.divinity);Assert.AreEqual(-1,g.S.combat.lockedTarget);
-        Assert.IsFalse(g.IssueCombatCommand(BattleCommand.Attack,0));Assert.AreEqual(before-10,g.S.divinity);
+        int before=g.S.divinity;Assert.IsTrue(g.IssueCombatCommand(BattleCommand.Attack,0));Assert.AreEqual(before-1,g.S.divinity);Assert.AreEqual(-1,g.S.combat.lockedTarget);
+        Assert.IsFalse(g.IssueCombatCommand(BattleCommand.Attack,0));Assert.AreEqual(before-1,g.S.divinity);
     }
     [Test] public void YataMirrorRequiresVictoryAndRetreatCannotGiveIt()
     {

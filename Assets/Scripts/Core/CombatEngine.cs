@@ -90,12 +90,12 @@ namespace Apocalypse
             var b=S.combat;
             if(b==null||!b.waiting||S.avatar==null||(int)command<0||(int)command>2)return false;
             LockControl();
-            if(S.controlLocked||S.divinity<10)return false;
+            if(S.controlLocked||S.divinity<1)return false;
             if(command==BattleCommand.Attack&&(target<0||target>=b.enemies.Count||b.enemies[target].hp<=0))return false;
             double acceptance=CommandAcceptance(command,target);
-            S.divinity-=10;b.waiting=false;b.prompt=null;
-            if(Rng.Next()>=acceptance){Log("전투 명령 거부 · 신위 10 소모");SavePoint();return true;}
-            Log("전투 명령 수락 · "+command+" · 신위 10 소모");
+            S.divinity-=1;b.waiting=false;b.prompt=null;
+            if(Rng.Next()>=acceptance){Log("전투 명령 거부 · 신위 1 소모");SavePoint();return true;}
+            Log("전투 명령 수락 · "+command+" · 신위 1 소모");
             if(command==BattleCommand.Attack)b.lockedTarget=target;
             else if(command==BattleCommand.Defend)b.defending=true;
             else
@@ -173,7 +173,7 @@ namespace Apocalypse
             if(b.lastMoment!=null&&b.lastMoment.kind==CombatMomentKind.Recovery){SavePoint();return true;}
             if(b.enemyIndex<0)
             {
-                if(S.hours>=24||b.turn>=B.maxCombatRounds){FinishCombat(b,false,"시간 부족 · 전투 철수");return true;}
+                if(S.hours>=Rules.DayHours||b.turn>=B.maxCombatRounds){FinishCombat(b,false,"시간 부족 · 전투 철수");return true;}
                 b.defending=false;
                 int target=b.lockedTarget>=0&&b.lockedTarget<b.enemies.Count&&b.enemies[b.lockedTarget].hp>0?b.lockedTarget:AutoTarget(b);
                 if(target<0){FinishCombat(b,true,"전투 승리");return true;}
@@ -182,7 +182,7 @@ namespace Apocalypse
                 if(sloth&&b.avatarActions%4==0){Moment(b,CombatMomentKind.Blocked,0,S.avatar.health,message:"나태 · 행동 봉쇄");Log("나태의 속박 · 화신체 행동 1회 봉쇄");}
                 else {b.lockedTarget=-1;AvatarStrike(b,target);}
                 if(S.avatar==null){FinishCombat(b,false,"화신체 사망");return true;}
-                if(!SpendTime(S.goal==Goal.Rift?Activity.Rift:Activity.Combat,B.combatRoundHours,true,b.legion)){FinishCombat(b,false,"화신체 사망");return true;}
+                if(!SpendTime(S.goal==Goal.Rift?Activity.Rift:Activity.Combat,Rules.ActionHours(B.combatRoundHours),true,b.legion)){FinishCombat(b,false,"화신체 사망");return true;}
                 if(AutoTarget(b)<0){FinishCombat(b,true,"전투 승리");return true;}
                 b.enemyIndex=0;PromptCombat();
             }

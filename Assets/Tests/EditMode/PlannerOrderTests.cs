@@ -74,19 +74,19 @@ public class PlannerOrderTests
     }
     [Test] public void EventTimeAndResourcesAreRecheckedBeforeCommit()
     {
-        Present("F-04");g.S.food=5;g.S.hours=20;var e=g.S.pending;
+        Present("F-04");g.S.food=5;g.S.hours=12;var e=g.S.pending;
         Assert.IsTrue(g.CanChoose(e,0,out _));g.S.food=4;
         Assert.IsFalse(g.Resolve(e.id,0));Assert.AreEqual(4,g.S.food);Assert.AreSame(e,g.S.pending);
-        g.S.food=5;g.S.hours=20.01;Assert.IsFalse(g.CanChoose(e,0,out string reason));StringAssert.Contains("부족",reason);
+        g.S.food=5;g.S.hours=12.01;Assert.IsFalse(g.CanChoose(e,0,out string reason));StringAssert.Contains("부족",reason);
         Assert.IsFalse(g.Resolve(e.id,0));Assert.IsEmpty(g.S.relics);
-        g.S.hours=20;Assert.IsTrue(g.Resolve(e.id,0));Assert.AreEqual(0,g.S.food);Assert.AreEqual(24,g.S.hours);
+        g.S.hours=12;Assert.IsTrue(g.Resolve(e.id,0));Assert.AreEqual(0,g.S.food);Assert.AreEqual(15,g.S.hours);
         Assert.AreEqual("bicorne",g.S.relics.Single().id);Assert.IsFalse(g.Resolve(e.id,0));
     }
     [Test] public void AutomaticChoiceExcludesUnaffordableOptions()
     {
-        Present("R-01");g.S.hours=18;g.S.avatar.personality=Temperament.Cautious;g.S.controlLocked=true;
+        Present("R-01");g.S.hours=10;g.S.avatar.personality=Temperament.Cautious;g.S.controlLocked=true;
         Assert.AreEqual(2,g.AutomaticChoice(g.S.pending));Assert.IsTrue(g.Resolve(g.S.pending.id,1));
-        Assert.IsEmpty(g.S.relics);Assert.AreEqual(18,g.S.hours);
+        Assert.IsEmpty(g.S.relics);Assert.AreEqual(10,g.S.hours);
     }
     [Test] public void EventDeathDoesNotGrantUnfinishedRelic()
     {
@@ -165,8 +165,8 @@ public class PlannerOrderTests
         int[] counts={(g.S.food-food)/5,g.S.medicine-kits,g.S.syringes-shots};
         foreach(int count in counts)Assert.AreEqual(1.0/3,count/30000.0,.015);
     }
-    [TestCase(false,false,false,6)] [TestCase(false,false,true,2)]
-    [TestCase(true,false,false,6)] [TestCase(true,false,true,2)] [TestCase(true,true,false,10)]
+    [TestCase(false,false,false,5)] [TestCase(false,false,true,1)]
+    [TestCase(true,false,false,5)] [TestCase(true,false,true,1)] [TestCase(true,true,false,9)]
     public void ClinicUsesMaximumSeventyPercentAndCorrectTime(bool mental,bool sleep,bool item,int hours)
     {
         g.S.phase=Phase.Morning;g.S.avatar.baseHealth=120;g.S.avatar.health=20;g.S.avatar.sanity=20;g.S.syringes=1;
@@ -179,8 +179,8 @@ public class PlannerOrderTests
     {
         g.S.phase=Phase.Morning;g.S.syringes=1;int kits=g.S.medicine;
         Assert.IsFalse(g.Treat(true,true,true));Assert.AreEqual(1,g.S.syringes);
-        g.S.hours=18;Assert.IsTrue(g.PreviewTreatment(false).available);g.S.hours=18.1;
-        Assert.IsFalse(g.Treat(false));Assert.AreEqual(kits,g.S.medicine);g.S.hours=22.1;
+        g.S.hours=10;Assert.IsTrue(g.PreviewTreatment(false).available);g.S.hours=10.1;
+        Assert.IsFalse(g.Treat(false));Assert.AreEqual(kits,g.S.medicine);g.S.hours=14.1;
         Assert.IsFalse(g.Treat(false,false,true));Assert.AreEqual(kits,g.S.medicine);
     }
     [Test] public void EightRelicEventsAreUniqueLocationBoundAndUseZeroInitialStats()
@@ -261,12 +261,12 @@ public class PlannerOrderTests
     }
     [Test] public void EventCostsAreLiteralAndSharedContentDoesNotMutateAnotherRun()
     {
-        Present("R-01");Assert.AreEqual(7,g.S.pending.options[1].hours);
+        Present("R-01");Assert.AreEqual(6,g.S.pending.options[1].hours);
         var b=GameData.LoadBalance();b.eventCosts.Single(c=>c.id=="R-01").hours[1]=1;
         var other=GameEngine.New(444,b,g.Content);if(other.S.avatar==null)other.Select(other.S.candidates[0].id);other.S.day=2;other.S.activeRift=0;other.S.phase=Phase.Running;other.S.goal=Goal.Rift;
-        other.PresentGeneralEvent("R-01");Assert.AreEqual(1,other.S.pending.options[1].hours);Assert.AreEqual(7,g.S.pending.options[1].hours);
+        other.PresentGeneralEvent("R-01");Assert.AreEqual(.5,other.S.pending.options[1].hours);Assert.AreEqual(6,g.S.pending.options[1].hours);
         Assert.AreEqual(0,g.Content.activityEvents.Single(e=>e.id=="R-01").options[1].hours);
-        Assert.IsTrue(g.Resolve(g.S.pending.id,1));Assert.AreEqual(7,g.S.hours);Assert.AreEqual(85,g.S.avatar.hunger,"명시한 허기15 외에 숨은 수색 비용을 더하지 않습니다.");
+        Assert.IsTrue(g.Resolve(g.S.pending.id,1));Assert.AreEqual(6,g.S.hours);Assert.AreEqual(85,g.S.avatar.hunger,"명시한 허기15 외에 숨은 수색 비용을 더하지 않습니다.");
     }
     [Test] public void FourthSupplyAutomaticallyGetsOneQuarterChanceAndIsStored()
     {

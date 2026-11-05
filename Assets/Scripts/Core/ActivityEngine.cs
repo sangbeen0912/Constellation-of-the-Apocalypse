@@ -5,6 +5,7 @@ namespace Apocalypse
 {
     public sealed partial class GameEngine
     {
+        bool pendingCostsUpdated;
         void MigrateCurrentRules()
         {
             if(S.legacyRelics==null)S.legacyRelics=new List<LegacyRelicRecord>();
@@ -42,12 +43,12 @@ namespace Apocalypse
         }
         public TreatmentPreview PreviewTreatment(bool mental,bool sleep=false,bool useItem=false)
         {
-            var p=new TreatmentPreview{hours=sleep?10:useItem?2:6};
+            var p=new TreatmentPreview{hours=Rules.ActionHours(sleep?10:useItem?2:6)};
             var a=S.avatar;
             if(a==null||S.phase!=Phase.Morning){p.reason="아침에 화신체가 있어야 합니다.";return p;}
             if(sleep&&useItem){p.reason="잠자기에는 아이템을 사용할 수 없습니다.";return p;}
             if(useItem&&(mental?S.syringes:S.medicine)<1){p.reason=mental?"정신 회복 주사기 부족":"응급 의료 키트 부족";return p;}
-            if(24-S.hours<p.hours){p.reason="시간 "+p.hours+"시간 필요 · "+(p.hours-(24-S.hours)).ToString("0.0")+"시간 부족";return p;}
+            if(Rules.DayHours-S.hours<p.hours){p.reason="시간 "+p.hours+"시간 필요 · "+(p.hours-(Rules.DayHours-S.hours)).ToString("0.0")+"시간 부족";return p;}
             p.healthAfter=sleep||!mental?Rules.Round(Math.Min(a.MaxHealth,a.health+a.MaxHealth*.7*(!sleep&&a.Has("hua")?1+B.huaHeal:1))):a.health;
             p.sanityAfter=sleep||mental?Rules.Round(Math.Min(100,a.sanity+70)):a.sanity;
             p.health=p.healthAfter-a.health;p.sanity=p.sanityAfter-a.sanity;p.available=true;return p;
@@ -58,7 +59,7 @@ namespace Apocalypse
             double personality=B.returnPersonalityOffsets!=null&&B.returnPersonalityOffsets.Length==6?B.returnPersonalityOffsets[(int)a.personality]:0;
             double risk=S.goal==Goal.Rift?ActiveSealCount*B.returnRiskPerSeal:0;
             return a.health/a.MaxHealth<=B.returnHealthRatio+personality+risk || a.hunger<B.returnHunger ||
-                a.sanity<B.returnSanity || 24-S.hours<B.minBattleHours;
+                a.sanity<B.returnSanity || Rules.DayHours-S.hours<Rules.ActionHours(B.minBattleHours);
         }
         public bool RequestReturn(string reason)
         {
@@ -122,6 +123,8 @@ namespace Apocalypse
                 if(cost.normal!=null&&i<cost.normal.Length)o.normal=cost.normal[i];
                 if(cost.special!=null&&i<cost.special.Length)o.special=cost.special[i];
             }
+            foreach(var o in destination.options)o.hours=Rules.ActionHours(o.hours);
+            if(ReferenceEquals(destination,S.pending))pendingCostsUpdated=true;
             destination.choices=destination.options.Select(o=>o.text).ToArray();destination.tags=template.tags;
         }
         public bool PresentGeneralEvent(string templateId)
@@ -130,7 +133,7 @@ namespace Apocalypse
             var template=EligibleEvents(S.goal).FirstOrDefault(e=>e.id==templateId);if(template==null)return false;
             var pending=new ChoiceEvent{id=Id(template.id)};ApplyTemplate(pending,template);
             S.pending=pending;S.phase=Phase.Event;S.eventSlots++;AddFlag(S.plot.viewed,template.id);
-            S.nextImportantHour=S.hours+(24-S.hours)/Math.Max(1,S.eventTarget-S.eventSlots+1);
+            S.nextImportantHour=S.hours+(Rules.DayHours-S.hours)/Math.Max(1,S.eventTarget-S.eventSlots+1);
             SavePoint();if(S.controlLocked)Resolve(pending.id,AutomaticChoice(pending));return true;
         }
         void ShowGeneralEvent()
@@ -153,13 +156,13 @@ namespace Apocalypse
             if(IsTransit(e))
             {
                 if(index<0||index>1){reason="선택할 수 없습니다.";return false;}
-                double required=index==0?AreaRules.TravelHours[S.exploration.destination]:2;
-                if(required>24-S.hours){reason="남은 시간 부족";return false;}return true;
+                double required=index==0?AreaRules.TravelHours[S.exploration.destination]:1;
+                if(required>Rules.DayHours-S.hours){reason="남은 시간 부족";return false;}return true;
             }
             if(e==null||e.choices==null||index<0||index>=e.choices.Length||S.avatar==null){reason="선택할 수 없습니다.";return false;}
             if(e.options==null||e.options.Length!=e.choices.Length)return true;
             var o=e.options[index];
-            if(o.hours>24-S.hours+.000001){reason="필요 "+o.hours+"시간 · "+(o.hours-(24-S.hours)).ToString("0.0")+"시간 부족";return false;}
+            if(o.hours>Rules.DayHours-S.hours+.000001){reason="필요 "+o.hours+"시간 · "+(o.hours-(Rules.DayHours-S.hours)).ToString("0.0")+"시간 부족";return false;}
             if(S.food<o.food){reason="식량 "+o.food+"개 필요 · "+(o.food-S.food)+"개 부족";return false;}
             if(S.medicine<o.kits){reason="응급 의료 키트 "+o.kits+"개 필요";return false;}
             if(S.syringes<o.syringes){reason="정신 회복 주사기 "+o.syringes+"개 필요";return false;}

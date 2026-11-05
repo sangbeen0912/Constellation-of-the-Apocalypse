@@ -38,7 +38,7 @@ public class RegressionTests
         g.Battle(kind,enemies,Sin.Pride);string line=g.S.logs.First(l=>l.Contains(" · 화신체 체력"));int hit=int.Parse(line.Split(new[]{"공격 "},StringSplitOptions.None)[1].Split(' ')[0]);Assert.AreEqual(ability=="yi"?7:expected,hit);
     }
     [Test] public void SejongAndJoanReduceStressWithFinalRounding(){g.S.avatar.inherited.Add("sejong");g.Stress(20,new[]{Sin.Envy},true);Assert.AreEqual(83,g.S.avatar.sanity);g.S.avatar.inherited.Add("joan");g.S.avatar.sanity=30;g.Stress(20,new[]{Sin.Wrath});Assert.AreEqual(15,g.S.avatar.sanity);}
-    [Test] public void HuaTreatmentBoostAndTime(){g.S.phase=Phase.Morning;g.S.avatar.health=1;g.S.avatar.inherited.Add("hua");g.Treat(false,false,true);Assert.AreEqual(1+Rules.Round(g.S.avatar.MaxHealth*.7*1.15),g.S.avatar.health);Assert.AreEqual(2,g.S.hours);}
+    [Test] public void HuaTreatmentBoostAndTime(){g.S.phase=Phase.Morning;g.S.avatar.health=1;g.S.avatar.inherited.Add("hua");g.Treat(false,false,true);Assert.AreEqual(1+Rules.Round(g.S.avatar.MaxHealth*.7*1.15),g.S.avatar.health);Assert.AreEqual(1,g.S.hours);}
     [Test] public void NamedAndSealedDemonCannotPayTwice(){var n=new NamedZombieRecord{id="unique",health=1,attack=1};g.Battle(EnemyKind.Named,1,Sin.Pride,n);int div=g.S.divinity;Assert.IsFalse(g.Battle(EnemyKind.Named,1,Sin.Pride,n));Assert.AreEqual(div,g.S.divinity);g.S.avatar.baseAttack=1000;g.Battle(EnemyKind.Demon,1,Sin.Pride);div=g.S.divinity;Assert.IsFalse(g.Battle(EnemyKind.Demon,1,Sin.Pride));Assert.AreEqual(div,g.S.divinity);}
     [Test] public void SavedPendingEventCannotBeAppliedTwice(){g.S.pending=new ChoiceEvent{id="one",constellationId="sejong",choices=new[]{"확인"}};g.S.phase=Phase.Event;var copy=new GameEngine(JsonUtility.FromJson<GameState>(JsonUtility.ToJson(g.S)),g.B,g.Content);Assert.IsTrue(copy.Resolve("one",0));Assert.IsFalse(copy.Resolve("one",0));Assert.AreEqual(1,copy.S.permanent.unlocked.Count);}
     [Test] public void CandidateCapacityRoutesOverflowToAdministration(){g.S.avatar.inherited.Add("cleopatra");g.B.scoutSuccess=1;int startingPopulation=g.S.candidates.Count+1;for(int i=0;i<20;i++)g.Recruit();Assert.AreEqual(9,g.S.candidates.Count);Assert.AreEqual(startingPopulation+20-Rules.MaxNpc,g.S.administrators);g.Validate();}
@@ -51,7 +51,7 @@ public class RegressionTests
             var baseline=new GameEngine(JsonUtility.FromJson<GameState>(saved),g.B,g.Content);
             var modified=new GameEngine(JsonUtility.FromJson<GameState>(saved),g.B,g.Content);modified.S.avatar.inherited.AddRange(new[]{"zhuge","leonardo"});
             baseline.Tick();modified.Tick();
-            if(baseline.S.logs.Any(l=>l.Contains("폐허 정찰"))){Assert.AreEqual(3,baseline.S.hours,.0001);Assert.AreEqual(2.7,modified.S.hours,.0001);scout=true;}
+            if(baseline.S.logs.Any(l=>l.Contains("폐허 정찰"))){Assert.AreEqual(2,baseline.S.hours,.0001);Assert.AreEqual(1.8,modified.S.hours,.0001);scout=true;}
             if(baseline.S.logs.Any(l=>l.Contains("물자 수색 · 식량 +"))){int loot=baseline.S.food-g.S.food;Assert.AreEqual(Rules.Round(loot*1.15),modified.S.food-g.S.food);search=true;}
         }
         Assert.IsTrue(scout&&search);

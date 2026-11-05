@@ -21,17 +21,17 @@ public class NavigationReadabilityTests
         {
             double before=g.S.hours;int slots=g.S.eventSlots;
             var reroll=root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text.StartsWith(g.S.pending.choices[1]));
-            VisibleClick(reroll);yield return null;Assert.IsTrue(app.TransitWalkVisible);Assert.AreEqual(before+2,g.S.hours);
+            VisibleClick(reroll);yield return null;Assert.IsTrue(app.TransitWalkVisible);Assert.AreEqual(before+1,g.S.hours);
             uint rng=g.S.rng;string id=g.S.pending.id;
             Canvas.ForceUpdateCanvases();
             // The newly drawn route is behind a modal shield until the walk ends.
             var underlying=root.GetComponentsInChildren<Button>().First(b=>b.GetComponentInChildren<Text>().text.StartsWith(g.S.pending.choices[0]));
             var rect=underlying.GetComponent<RectTransform>();var pointer=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,rect.TransformPoint(rect.rect.center))};
             var hits=new System.Collections.Generic.List<RaycastResult>();EventSystem.current.RaycastAll(pointer,hits);
-            Assert.IsFalse(hits[0].gameObject.GetComponentInParent<Button>()==underlying);
+            Assert.IsFalse(underlying.interactable&&hits[0].gameObject.GetComponentInParent<Button>()==underlying,"이동 중 새 선택지는 실행할 수 없습니다.");
             if(n==0){VisibleClick(Find(root,"넘기기"));yield return null;}
             else yield return new WaitForSecondsRealtime(2.6f);
-            Assert.IsFalse(app.TransitWalkVisible);Assert.AreEqual(before+2,g.S.hours);Assert.AreEqual(rng,g.S.rng);
+            Assert.IsFalse(app.TransitWalkVisible);Assert.AreEqual(before+1,g.S.hours);Assert.AreEqual(rng,g.S.rng);
             Assert.AreEqual(id,g.S.pending.id);Assert.AreEqual(slots,g.S.eventSlots);
         }
         Assert.IsTrue(app.Saves.Write(g.S));Assert.IsTrue(app.LoadGame());yield return null;

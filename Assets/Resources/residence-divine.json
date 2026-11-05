@@ -1,0 +1,93 @@
+{
+  "activityEvents": [
+    {
+      "id": "HOM-D01",
+      "title": "꺼지지 않은 기도소",
+      "body": "아파트 계단참의 작은 기도소에 촛농과 손때 묻은 기도문이 남아 있다. 흩어진 종이를 모으면 이곳에서 누군가 지키려 했던 약속을 되찾을 수 있을 것 같다.",
+      "location": 0,
+      "area": 1,
+      "scene": "ruins",
+      "repeat": true,
+      "supplemental": true,
+      "divinityEvent": true,
+      "options": [
+        {
+          "text": "기도문을 모아 기도소를 복구한다",
+          "hours": 2,
+          "chance": "divine",
+          "divinity": true,
+          "outcome": "흩어진 기도문을 복구해 남겨진 약속을 별에 전했다."
+        },
+        {
+          "text": "기도소의 위치만 기록한다",
+          "hours": 1,
+          "outcome": "다른 생존자가 찾을 수 있도록 위치를 기록했다. 신위 보상은 없다."
+        },
+        {
+          "text": "조용히 지나간다",
+          "outcome": "기도소를 그대로 두고 탐사를 이어간다."
+        }
+      ],
+      "tags": []
+    },
+    {
+      "id": "HOM-D02",
+      "title": "이름이 지워진 추모벽",
+      "body": "광장 벽면의 실종자 명단이 비에 씻겨 내려갔다. 우편함에서 찾은 주민 명부와 대조하면 지워진 이름을 다시 적을 수 있다. 곁에는 아직 주인을 기다리는 작은 꽃병이 놓여 있다.",
+      "location": 0,
+      "area": 1,
+      "scene": "ruins",
+      "repeat": true,
+      "supplemental": true,
+      "divinityEvent": true,
+      "options": [
+        {
+          "text": "명부를 대조해 지워진 이름을 복원한다",
+          "hours": 2,
+          "chance": "divine",
+          "divinity": true,
+          "outcome": "잊힌 이름을 추모벽에 되돌려 놓았다."
+        },
+        {
+          "text": "읽을 수 있는 이름만 기록한다",
+          "hours": 1,
+          "outcome": "남은 이름을 기록했다. 조사를 마치지 않아 신위 보상은 없다."
+        },
+        {
+          "text": "추모벽을 떠난다",
+          "outcome": "명단을 훼손하지 않고 떠났다."
+        }
+      ],
+      "tags": []
+    },
+    {
+      "id": "HOM-D03",
+      "title": "마지막 약속이 남은 집",
+      "body": "열린 현관 안에서 일반 좀비가 가족사진을 밟고 서 있다. 식탁의 마지막 편지에는 사진을 추모벽에 전해 달라는 부탁이 적혔다. 집 안에 들어가려면 좀비를 물리쳐야 한다.",
+      "location": 0,
+      "area": 1,
+      "scene": "interior",
+      "repeat": true,
+      "supplemental": true,
+      "divinityEvent": true,
+      "options": [
+        {
+          "text": "좀비를 물리치고 마지막 기록을 회수한다",
+          "normal": 1,
+          "divinity": true,
+          "outcome": "가족의 마지막 기록을 회수해 추모 장소로 옮겼다."
+        },
+        {
+          "text": "밖에서 집의 위치를 기록한다",
+          "hours": 1,
+          "outcome": "위험한 집의 위치를 기록했다. 기록은 회수하지 못했다."
+        },
+        {
+          "text": "접근을 포기한다",
+          "outcome": "전투를 피하고 다른 골목으로 향했다."
+        }
+      ],
+      "tags": []
+    }
+  ]
+}

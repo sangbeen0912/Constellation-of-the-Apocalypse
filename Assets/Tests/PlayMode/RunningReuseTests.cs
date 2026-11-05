@@ -8,6 +8,27 @@ using UnityEngine.TestTools;
 using UnityEngine.UI;
 public class RunningReuseTests
 {
+    [UnityTest] public IEnumerator EventsAndCombatKeepTheSameLocationAndLogPanelsAndLockOtherButtons()
+    {
+        string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"UnifiedField-"+Guid.NewGuid().ToString("N"));
+        var root=new GameObject("Unified field QA");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;app.BeginNew(542);app.enabled=false;
+        var g=app.Game;g.S.day=2;g.S.phase=Phase.Running;g.S.goal=Goal.Explore;g.S.activeRift=0;g.S.exploration.current=Area.Residence;
+        g.S.avatar.personality=Temperament.Brave;g.S.avatar.baseHealth=2000;g.S.avatar.health=2000;g.S.avatar.baseAttack=8;g.S.avatar.hunger=g.S.avatar.sanity=100;g.S.scheduledConstellation=null;
+        app.Navigate("하루 기록");yield return null;
+        int stage=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Location stage").GetInstanceID();
+        int logs=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Day observation").GetInstanceID();
+        Assert.IsTrue(g.PresentGeneralEvent("HOM-D01"));app.Render();yield return null;
+        var pane=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Event and command pane");
+        foreach(var b in root.GetComponentsInChildren<Button>().Where(b=>!b.transform.IsChildOf(pane)))Assert.IsFalse(b.interactable,b.name);
+        Assert.AreEqual(stage,root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Location stage").GetInstanceID());
+        g.Resolve(g.S.pending.id,2);app.Render();Assert.IsTrue(g.PresentGeneralEvent("HOM-D03"));app.Render();yield return null;
+        root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text.StartsWith(g.S.pending.choices[0])).onClick.Invoke();yield return null;
+        Assert.IsTrue(app.BattleVisible);Assert.AreEqual(stage,root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Location stage").GetInstanceID());
+        Assert.AreEqual(logs,root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Day observation").GetInstanceID());
+        Assert.IsFalse(root.GetComponentsInChildren<RectTransform>().Any(r=>r.name=="Battle actor -1"));
+        Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(t=>t.text.Contains("남은")&&t.text.Contains("시간")));
+        UnityEngine.Object.Destroy(root);yield return null;System.IO.Directory.Delete(temp,true);
+    }
     [UnityTest] public IEnumerator AutomaticActionsReuseTheMainScreenAndRefreshVisibleHunger()
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"RunningReuse-"+Guid.NewGuid().ToString("N"));

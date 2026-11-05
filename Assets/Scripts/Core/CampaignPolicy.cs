@@ -19,7 +19,14 @@ namespace Apocalypse
                     if(s.avatar==null)break;
                     if(s.avatar.sanity<50)g.Treat(true,false,s.syringes>0);
                     if(s.avatar==null)break;
-                    if(s.divinity>50)g.Invest(Stat.Attack,s.divinity-5);
+                    if(s.divinity>50)
+                    {
+                        // Rising prices reward buying both stats instead of spending every
+                        // point on increasingly costly attack. Uses public commands only.
+                        int budget=s.divinity-5;
+                        g.Invest(Stat.Health,budget/2);
+                        if(s.divinity>5)g.Invest(Stat.Attack,s.divinity-5);
+                    }
                     g.StartDay(Goal.Rift);break;
                 case Phase.Event:
                     var e=s.pending;int choice=g.AutomaticChoice(e);

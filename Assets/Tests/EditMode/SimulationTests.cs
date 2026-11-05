@@ -13,7 +13,7 @@ public class SimulationTests
         public double meanLifeDays, meanUnlocks, sealSuccessPerRun, winRate, meanDivinity;
         public int combatDeaths, starvationDeaths, breakdownDeaths;
         public System.Collections.Generic.List<int> winningSeeds=new System.Collections.Generic.List<int>();
-        public string policy = "최고 기본 공격력 후보 선택, 식량200 확보 시 첫날 공격 투자, 식량200까지 무작위 보급, 체력60%·정신력50 미만 치료, 가능 전투 우선. 최대100일.";
+        public string policy = "최고 기본 공격력 후보 선택, 식량200 확보 시 첫날 공격 투자, 식량200까지 무작위 보급, 체력60%·정신력50 미만 치료, 추가 강화는 체력에 예산 절반/남은 예산 공격, 가능 전투 우선. 최대100일.";
     }
     [TestCase(100)] [TestCase(1000)]
     public void SeededRunsStayValidAndCanReachVictory(int runs)

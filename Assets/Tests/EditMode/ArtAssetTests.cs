@@ -8,6 +8,17 @@ using UnityEngine;
 
 public class ArtAssetTests
 {
+    [Test] public void EncounterUsesOneCompressedEnemyAtlasWithoutUnusedAlliedBattleArt()
+    {
+        const string path="Assets/Resources/Art/Combat/encounter-enemies-v1.png";
+        var texture=Resources.Load<Texture2D>("Art/Combat/encounter-enemies-v1");Assert.NotNull(texture);
+        Assert.AreEqual(texture.width,texture.height);Assert.GreaterOrEqual(texture.width,1024);Assert.IsFalse(texture.isReadable);Assert.AreEqual(1,texture.mipmapCount);
+        var importer=(TextureImporter)AssetImporter.GetAtPath(path);Assert.AreEqual(FilterMode.Point,importer.filterMode);
+        Assert.AreEqual(TextureImporterFormat.BC7,importer.GetPlatformTextureSettings("Standalone").format);
+        Assert.IsNull(Resources.Load<Texture2D>("Art/Combat/battle-actors-v1"));Assert.IsNull(Resources.Load<Texture2D>("Art/Combat/legion-enemies-v2"));
+        Directory.CreateDirectory("TestResults");File.WriteAllText("TestResults/encounter-art.txt","width="+texture.width+"; height="+texture.height+"; runtimeBytes="+UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(texture)+"; pngBytes="+new FileInfo(path).Length);
+        Resources.UnloadAsset(texture);
+    }
     [Test] public void TwelveNewPortraitsAreDistinctAndAllGeneratedNamesHaveArt()
     {
         var hashes = new HashSet<string>();

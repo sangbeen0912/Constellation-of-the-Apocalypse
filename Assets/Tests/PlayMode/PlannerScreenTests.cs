@@ -14,7 +14,7 @@ public class PlannerScreenTests
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"PlannerUI-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Planner clinic");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
         app.BeginNew(123);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);var g=app.Game;
-        g.S.avatar.baseHealth=120;g.S.avatar.health=20;g.S.avatar.sanity=20;g.S.syringes=1;g.S.medicine=1;g.S.hours=18.5;
+        g.S.avatar.baseHealth=120;g.S.avatar.health=20;g.S.avatar.sanity=20;g.S.syringes=1;g.S.medicine=1;g.S.hours=13.5;
         app.Navigate("의무실");yield return null;
         Assert.IsFalse(Button(root,"체력 회복 실행").interactable);Assert.IsFalse(Button(root,"잠자기 실행").interactable);
         Assert.AreEqual(3,root.GetComponentsInChildren<Button>().Count(b=>b.GetComponentInChildren<Text>().text.EndsWith(" 실행")));
@@ -22,7 +22,7 @@ public class PlannerScreenTests
         root.GetComponentsInChildren<Toggle>().Single(t=>t.name=="Item checkbox 응급 의료 키트 사용").isOn=true;yield return null;
         Assert.IsTrue(Button(root,"체력 회복 실행").interactable);
         Button(root,"체력 회복 실행").onClick.Invoke();yield return null;
-        Assert.AreEqual(104,g.S.avatar.health);Assert.AreEqual(0,g.S.medicine);Assert.AreEqual(20.5,g.S.hours);
+        Assert.AreEqual(104,g.S.avatar.health);Assert.AreEqual(0,g.S.medicine);Assert.AreEqual(14.5,g.S.hours);
         g.S.avatar.sanity=100;g.S.controlLocked=false;g.S.day=2;g.S.phase=Phase.Running;g.S.goal=Goal.Rift;g.S.hours=0;g.S.food=4;g.S.eventSlots=0;
         Assert.IsFalse(g.PresentGeneralEvent("R-02"));g.S.activeRift=0;
         Assert.IsTrue(g.PresentGeneralEvent("R-02"));app.Render();yield return null;

@@ -1,0 +1,17 @@
+{
+  "created": "2026-11-05",
+  "tool": "built-in image_gen",
+  "prompt": "enemy-atlas-prompt.txt",
+  "asset": "Assets/Resources/Art/Combat/encounter-enemies-v1.png",
+  "sha256": "70F62F7CAFC3D12F64FB95B10A0D28FAE188C456976D1FADE4F600BA085F43F0",
+  "pngBytes": 2400436,
+  "layout": "4x4; normal=0; named=1; specials=2..8; demons=9..15",
+  "transparent": true,
+  "runtimeMeasurement": "width=1024; height=1024; runtimeBytes=1049472; pngBytes=2400436",
+  "oldRuntimePngBytes": 2977099.0,
+  "oldRuntimeAssets": [
+    "battle-actors-v1.png",
+    "legion-enemies-v2.png"
+  ],
+  "portraitPolicy": "Retain portraits used by HUD/personnel/named history. Remove unused allied full bodies from Resources."
+}

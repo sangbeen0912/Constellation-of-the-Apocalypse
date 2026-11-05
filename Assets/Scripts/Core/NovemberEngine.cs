@@ -30,6 +30,14 @@ namespace Apocalypse
                 S.eventTarget=Math.Max(S.eventSlots,3);S.rulesRevision=4;
                 Log("11월4일 규칙 적용 · 지역 탐사 / 행동별 전투 / 호기심→냉철함");
             }
+            if(S.rulesRevision<5)
+            {
+                if(S.hours>Rules.DayHours){Log("이전 규칙의 경과 "+S.hours.ToString("0.0")+"시간을 기록하고 오늘 활동을 마감합니다.");S.hours=Rules.DayHours;}
+                if(!pendingCostsUpdated&&S.pending!=null&&S.pending.options!=null)foreach(var o in S.pending.options)o.hours=Rules.ActionHours(o.hours);
+                S.nextImportantHour=Math.Min(S.nextImportantHour,Rules.DayHours);
+                S.constellationMeetingHour=Math.Min(S.constellationMeetingHour,Rules.DayHours);
+                S.rulesRevision=5;
+            }
         }
         public bool SelectExplorationArea(Area area)
         {
@@ -52,8 +60,8 @@ namespace Apocalypse
         bool ResolveTransit(int choice)
         {
             var e=S.pending;if(!IsTransit(e)||choice<0||choice>1)return false;
-            var dest=(Area)S.exploration.destination;double hours=choice==0?AreaRules.TravelHours[(int)dest]:2;
-            if(hours>24-S.hours)return false;
+            var dest=(Area)S.exploration.destination;double hours=choice==0?AreaRules.TravelHours[(int)dest]:1;
+            if(hours>Rules.DayHours-S.hours)return false;
             S.pending=null;S.phase=Phase.Running;
             if(!SpendTime(Activity.Travel,hours))return true;
             if(choice==0)
@@ -64,8 +72,8 @@ namespace Apocalypse
             else
             {
                 S.exploration.rejected.Add((int)dest);while(S.exploration.rejected.Count>2)S.exploration.rejected.RemoveAt(0);
-                Log("다른 노선 탐색 · 2시간");
-                if(S.hours>=24)RequestReturn("탐사 시간이 끝나");
+                Log("다른 노선 탐색 · 1시간");
+                if(S.hours>=Rules.DayHours)RequestReturn("탐사 시간이 끝나");
                 else if(S.eventSlots<S.eventTarget&&Rng.Next()<B.november.rerollEventChance)
                 {
                     S.exploration.resumeTransit=true;
@@ -78,9 +86,9 @@ namespace Apocalypse
         }
         public bool ReturnToSubway()
         {
-            if(S.phase!=Phase.Running||S.combat!=null||S.exploration.current<Area.Museum||S.exploration.current>Area.Heritage||24-S.hours<1)return false;
-            if(!SpendTime(Activity.Travel,1))return true;
-            S.exploration.current=Area.Subway;S.exploration.routeOffered=false;Log("지하철역 복귀 · 1시간");SavePoint();return true;
+            if(S.phase!=Phase.Running||S.combat!=null||S.exploration.current<Area.Museum||S.exploration.current>Area.Heritage||Rules.DayHours-S.hours<.5)return false;
+            if(!SpendTime(Activity.Travel,.5))return true;
+            S.exploration.current=Area.Subway;S.exploration.routeOffered=false;Log("지하철역 복귀 · 30분");SavePoint();return true;
         }
         public bool ReturnToShelter()
         {
@@ -96,7 +104,8 @@ namespace Apocalypse
                 var o=e.options[i];double hours=cost!=null&&cost.hours!=null&&i<cost.hours.Length?cost.hours[i]:(o.defaultHours?B.november.defaultEventHours:o.hours);
                 int food=cost!=null&&cost.food!=null&&i<cost.food.Length?cost.food[i]:o.food;
                 int kits=cost!=null&&cost.kits!=null&&i<cost.kits.Length?cost.kits[i]:o.kits;
-                if(hours>24-S.hours||food>S.food||kits>S.medicine||o.syringes>S.syringes)continue;
+                hours=Rules.ActionHours(hours);
+                if(hours>Rules.DayHours-S.hours||food>S.food||kits>S.medicine||o.syringes>S.syringes)continue;
                 if(S.day==S.avatar.selectedDay&&(o.normal>0||o.special>0||o.boss))continue;
                 return true;
             }

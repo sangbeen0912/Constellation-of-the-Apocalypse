@@ -17,6 +17,8 @@ public class SingleScreenTests
         s.phase=Phase.Running;s.scheduledConstellation="sejong";s.constellationMeetingHour=23;s.hours=3;
         app.Render();yield return null;
         Assert.IsTrue(app.OmenVisible);Assert.IsNotNull(root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Constellation watching scene"));
+        Assert.AreEqual(1,root.GetComponentsInChildren<Button>().Count(b=>b.interactable));
+        Assert.AreEqual("계속 진행",root.GetComponentsInChildren<Button>().Single(b=>b.interactable).GetComponentInChildren<Text>().text);
         yield return new WaitForSecondsRealtime(.3f);Assert.AreEqual(3,s.hours,"연출은 게임 시간을 소비하지 않습니다.");
         root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text=="계속 진행").onClick.Invoke();
         Assert.AreEqual(s.day,s.omenShownDay);Assert.IsTrue(app.LoadGame());Assert.IsFalse(app.OmenVisible);
@@ -30,7 +32,9 @@ public class SingleScreenTests
     public static void AssertInsideMain(GameObject root)
     {
         Canvas.ForceUpdateCanvases();var main=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Main");
-        Assert.AreEqual(0,main.GetComponentsInChildren<ScrollRect>().Length);
+        if(!main.GetComponentsInChildren<RectTransform>().Any(r=>r.name=="Location stage"))Assert.AreEqual(0,main.GetComponentsInChildren<ScrollRect>().Length);
+        else foreach(var scroll in main.GetComponentsInChildren<ScrollRect>())
+        {Assert.IsNotNull(scroll.viewport.GetComponent<RectMask2D>());Assert.IsTrue(scroll.viewport.IsChildOf(main),"기록·긴 설명만 고정 주화면 안에서 스크롤합니다.");}
         foreach(var b in main.GetComponentsInChildren<Button>())
         {
             var corners=new Vector3[4];b.GetComponent<RectTransform>().GetWorldCorners(corners);

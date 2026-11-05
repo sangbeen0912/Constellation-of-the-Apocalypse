@@ -59,7 +59,7 @@ namespace Apocalypse
     public static class AreaRules
     {
         public static readonly string[] Names={"쉘터","반파된 거주지","침수된 지하철역","박물관","폐마트","군사시설","종교시설","테마파크","문화유산","균열"};
-        public static readonly int[] TravelHours={0,0,0,4,2,3,4,3,3,0};
+        public static readonly int[] TravelHours={0,0,0,3,1,2,3,2,2,0};
         public static readonly Area[] Destinations={Area.Museum,Area.Mart,Area.Military,Area.Sanctuary,Area.ThemePark,Area.Heritage};
         public static string Name(Area area){return Names[(int)area];}
         public static string Scene(Area area){return area==Area.Rift?"rift":area==Area.Sanctuary?"chapel":area==Area.Residence?"ruins":"area:"+(int)area;}

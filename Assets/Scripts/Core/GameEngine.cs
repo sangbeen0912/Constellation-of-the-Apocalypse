@@ -39,7 +39,7 @@ namespace Apocalypse
         }
         public void Log(string message)
         {
-            S.logs.Add(string.Format("{0}일 {1:00}:{2:00}  {3}", S.day, (int)S.hours, (int)((S.hours % 1) * 60), message));
+            S.logs.Add(S.day+"일 "+Rules.Clock(S.hours)+"  "+message);
             if (S.logs.Count > 350) S.logs.RemoveAt(0);
         }
         void SavePoint() { if (Checkpoint != null) Checkpoint(); }
@@ -77,10 +77,19 @@ namespace Apocalypse
         public bool Invest(Stat stat, int amount)
         {
             if (S.phase != Phase.Morning || amount <= 0 || S.divinity < amount || S.avatar == null) return false;
-            S.divinity -= amount;
-            if (stat == Stat.Health) S.avatar.healthInvestment += amount; else S.avatar.attackInvestment += amount;
-            Log("후원 신위 " + amount + " · " + (stat == Stat.Health ? "최대 체력" : "공격력") + " 강화"); SavePoint(); return true;
+            if(stat!=Stat.Health&&stat!=Stat.Attack)return false;
+            int spent=0,steps=0;
+            while(UpgradeCost(stat)<=amount-spent)
+            {
+                int cost=UpgradeCost(stat);spent+=cost;steps++;
+                if(stat==Stat.Health)S.avatar.healthInvestment+=10;else S.avatar.attackInvestment+=10;
+            }
+            if(steps==0)return false;
+            S.divinity-=spent;
+            Log("후원 신위 " + spent + " · " + (stat == Stat.Health ? "최대 체력" : "공격력") + " "+steps+"회 강화"); SavePoint(); return true;
         }
+        public int UpgradeCount(Stat stat){return S.avatar==null?0:(stat==Stat.Health?S.avatar.healthInvestment:S.avatar.attackInvestment)/10;}
+        public int UpgradeCost(Stat stat){return 10*(1+UpgradeCount(stat)/10);}
         public bool Inherit(string id)
         {
             if (S.phase != Phase.Morning || S.avatar == null || !S.permanent.unlocked.Contains(id) || S.avatar.Has(id)) return false;
@@ -117,7 +126,7 @@ namespace Apocalypse
         {
             if (S.avatar == null || S.phase == Phase.Death || S.phase == Phase.Victory || hours<0) return false;
             AutoEat();
-            double actual = Math.Min(hours, Math.Max(0, 24 - S.hours));
+            double actual = Math.Min(hours, Math.Max(0, Rules.DayHours-S.hours));
             S.hours += actual; S.avatar.hunger = Rules.Clamp(S.avatar.hunger - actual * B.hungerRates[(int)activity]);
             LockControl();
             if (CheckDeath(combat, legion)) return false;
@@ -143,14 +152,14 @@ namespace Apocalypse
 
         public bool StartDay(Goal goal)
         {
-            if(S.phase!=Phase.Morning||S.avatar==null||S.hours>=24)return false;
+            if(S.phase!=Phase.Morning||S.avatar==null||S.hours>=Rules.DayHours)return false;
             S.goal=goal==Goal.Rift&&S.activeRift>=0&&S.day>S.avatar.selectedDay?Goal.Rift:Goal.Explore;S.phase=Phase.Running;
             S.exploration.current=S.goal==Goal.Rift?Area.Rift:S.exploration.selected;S.exploration.routeOffered=false;
             S.exploration.resumeTransit=false;
             if(!S.dayStarted)
             {
                 S.dayStarted=true;S.normalWins=0;S.eventSlots=0;S.returnRequested=false;
-                S.eventTarget=DailyEventCount();S.nextImportantHour=S.hours+(24-S.hours)/(S.eventTarget+1);
+                S.eventTarget=DailyEventCount();S.nextImportantHour=S.hours+(Rules.DayHours-S.hours)/(S.eventTarget+1);
                 if(S.avatar.personality==Temperament.Defiant&&Rng.Next()<B.refusalChance){S.goal=Goal.Explore;Log("고집 센 화신체가 공략을 거부하고 탐사를 택했다.");}
                 RollConstellation();
             }
@@ -168,7 +177,7 @@ namespace Apocalypse
             int[] weights=AvailableGradeWeights();if(weights.Sum()==0||Rng.Next()>=Rules.ConstellationChance)return false;
             int grade=Rng.Weighted(weights);
             S.scheduledConstellation=Rng.Pick(Content.constellations.Where(c=>c.grade==grade&&!S.permanent.unlocked.Contains(c.id)).ToList()).id;
-            S.constellationMeetingHour=Math.Min(23,S.hours+B.constellationMeetDelay);
+            S.constellationMeetingHour=Math.Min(Rules.DayHours,S.hours+B.constellationMeetDelay);
             Log(S.avatar!=null&&S.avatar.personality==Temperament.Cautious?"누군가의 시선이 느껴진다. 한 성좌가 조심스러운 발걸음을 지켜본다.":"한 성좌가 당신과 당신의 화신체를 흥미롭게 바라봅니다.");return true;
         }
 
@@ -188,7 +197,7 @@ namespace Apocalypse
             if(S.phase!=Phase.Running||S.avatar==null)return;
             LockControl();if(CheckDeath(false,null))return;AutoEat();
             if(S.returnRequested){ContinueReturn();return;}
-            if(S.hours>=24-.00001){if(!EncounterConstellation())EndDay();return;}
+            if(S.hours>=Rules.DayHours-.00001){if(!EncounterConstellation())EndDay();return;}
             if(!string.IsNullOrEmpty(S.scheduledConstellation)&&S.hours>=S.constellationMeetingHour){EncounterConstellation();return;}
             if(S.exploration.resumeTransit&&S.exploration.current==Area.Subway){OfferTransit();return;}
             bool bossReady=S.goal==Goal.Rift&&S.activeRift>=0&&S.day>S.avatar.selectedDay&&CanReachDemon((Sin)S.activeRift);
@@ -205,10 +214,10 @@ namespace Apocalypse
             if(S.avatar.personality==Temperament.Cautious)weights[3]+=20;
             if(S.exploration.current==Area.Residence&&Branch("HOM-01",1))weights[2]=Rules.Round(weights[2]*B.november.noiseMultiplier);
             int action=Rng.Weighted(weights);
-            if(action==0){if(!SpendTime(Activity.Search,Math.Min(3,24-S.hours)))return;SearchFood();}
-            else if(action==1){if(!SpendTime(Activity.Scout,Math.Min(3*(S.avatar.Has("zhuge")?1-B.zhugeTime:1),24-S.hours)))return;Log("폐허 정찰 · 생존 신호를 탐색한다.");}
-            else if(action==2){if(!SpendTime(Activity.Travel,Math.Min(1,24-S.hours)))return;Battle(EnemyKind.Normal,Rng.Int(1,4),(Sin)S.activeRift);}
-            else {if(!SpendTime(Activity.Rest,Math.Min(2,24-S.hours)))return;Log("잠시 멈춰 주변을 살피고 호흡을 가다듬었다.");}
+            if(action==0){if(!SpendTime(Activity.Search,Math.Min(Rules.ActionHours(3),Rules.DayHours-S.hours)))return;SearchFood();}
+            else if(action==1){if(!SpendTime(Activity.Scout,Math.Min(Rules.ActionHours(3)*(S.avatar.Has("zhuge")?1-B.zhugeTime:1),Rules.DayHours-S.hours)))return;Log("폐허 정찰 · 생존 신호를 탐색한다.");}
+            else if(action==2){if(!SpendTime(Activity.Travel,Math.Min(Rules.ActionHours(1),Rules.DayHours-S.hours)))return;Battle(EnemyKind.Normal,Rng.Int(1,4),(Sin)S.activeRift);}
+            else {if(!SpendTime(Activity.Rest,Math.Min(Rules.ActionHours(2),Rules.DayHours-S.hours)))return;Log("잠시 멈춰 주변을 살피고 호흡을 가다듬었다.");}
             S.totalActions++;SavePoint();
         }
 
@@ -281,7 +290,7 @@ namespace Apocalypse
             if (S.phase != Phase.Running || S.settledDay == S.day || S.avatar == null) return;
             S.settledDay = S.day;
             CreditRelicDay();
-            S.report = S.day + "일 정산\n" + S.avatar.name + " 생존 · 활동 " + S.hours.ToString("0.0") + "/24시간\n" +
+            S.report = S.day + "일 정산\n" + S.avatar.name + " 생존 · 활동 " + S.hours.ToString("0.0") + "/15시간\n" +
                 "신위 " + S.divinity + " · 식량 " + S.food + " · 봉인 " + S.demons.Count(d => d.remaining > 0) + "/7\n" +
                 "허기 " + Rules.Round(S.avatar.hunger) + " · 정신력 " + Rules.Round(S.avatar.sanity);
             S.exploration.current=Area.Shelter;S.exploration.rejected.Clear();S.phase = Phase.Report; SavePoint();
@@ -311,7 +320,7 @@ namespace Apocalypse
         }
         public void Validate()
         {
-            if (S.day < 1 || S.hours < 0 || S.hours > 24.00001 || S.divinity < 0 || S.food < 0 || S.medicine<0 || S.syringes<0 || S.activeRift < -1 || S.activeRift > 6) throw new InvalidOperationException("Invalid world state");
+            if (S.day < 1 || S.hours < 0 || S.hours > Rules.DayHours+.00001 || S.divinity < 0 || S.food < 0 || S.medicine<0 || S.syringes<0 || S.activeRift < -1 || S.activeRift > 6) throw new InvalidOperationException("Invalid world state");
             if(S.eventSlots<0||S.eventSlots>4||S.eventTarget<0||S.eventTarget>4)throw new InvalidOperationException("Invalid daily event count");
             if(S.relics.Select(r=>r.id).Distinct().Count()!=S.relics.Count||S.relics.Any(r=>r.paidDays>r.days||r.paidZombies>r.Zombies||r.paidDemons>r.demonKills)||S.avatar!=null&&S.avatar.relics.Count>1)throw new InvalidOperationException("Invalid heirloom record");
             if (S.permanent.unlocked.Distinct().Count() != S.permanent.unlocked.Count || S.rewardLedger.Distinct().Count() != S.rewardLedger.Count) throw new InvalidOperationException("Duplicate transaction");

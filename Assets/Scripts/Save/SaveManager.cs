@@ -76,6 +76,8 @@ namespace Apocalypse
             var c=JsonUtility.FromJson<Content>(Resources.Load<TextAsset>("content").text);
             var activity=JsonUtility.FromJson<Content>(Resources.Load<TextAsset>("activity-content").text);
             c.activityEvents=activity.activityEvents;c.relicDefinitions=activity.relicDefinitions;c.rareNpcs=activity.rareNpcs;c.supplies=activity.supplies;
+            var residence=JsonUtility.FromJson<Content>(Resources.Load<TextAsset>("residence-divine").text);
+            c.activityEvents.AddRange(residence.activityEvents);
             return c;
         }
     }

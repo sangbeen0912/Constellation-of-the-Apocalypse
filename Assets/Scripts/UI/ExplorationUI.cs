@@ -12,6 +12,7 @@ namespace Apocalypse
         bool choosingExploration,transitWalking;
         float walkSeconds;
         RectTransform walkPortrait;
+        RectTransform transitLayer;
         Text walkCaption;
         string walkText,walkArrival;
         public bool TransitWalkVisible { get { return transitWalking; } }
@@ -47,38 +48,32 @@ namespace Apocalypse
         void FinishTransitWalk()
         {
             if(!transitWalking)return;
-            transitWalking=false;walkPortrait=null;walkCaption=null;clock=0;Render();
-            if(battleLayer==null&&battleAtlas!=null){Resources.UnloadAsset(battleAtlas);battleAtlas=null;}
+            if(transitLayer!=null){transitLayer.gameObject.SetActive(false);Destroy(transitLayer.gameObject);transitLayer=null;}
+            transitWalking=false;walkPortrait=null;walkCaption=null;clock=0;fieldContentKey=null;Render();
         }
         bool UpdateTransitWalk()
         {
             if(!transitWalking)return false;
             walkSeconds+=Time.unscaledDeltaTime;
-            if(walkPortrait!=null){walkPortrait.anchoredPosition=new Vector2(Mathf.Lerp(-260,260,Mathf.Clamp01(walkSeconds/1.6f)),Mathf.Sin(walkSeconds*12)*4);}
+            if(walkPortrait!=null){walkPortrait.anchoredPosition=new Vector2(Mathf.Lerp(12,-12,Mathf.Clamp01(walkSeconds/1.6f)),Mathf.Sin(walkSeconds*12)*3);}
             if(walkCaption!=null)walkCaption.text=walkSeconds<1.6f?walkText:walkArrival;
             if(walkSeconds>=2.4f||Input.GetKeyDown(KeyCode.Escape)||Input.GetKeyDown(KeyCode.Space))FinishTransitWalk();
             return true;
         }
         void RenderTransitWalk(Transform root)
         {
-            if(!transitWalking)return;
-            foreach(var button in root.GetComponentsInChildren<Button>())button.interactable=false;
-            var shield=Box(root,"Transit walking",Vector2.zero,Vector2.one,new Color(0,0,0,.9f));
-            var stage=Box(shield,"Walking passage",new Vector2(.205f,.14f),new Vector2(.985f,.885f),panel);
+            if(!transitWalking||transitLayer!=null)return;
+            foreach(var button in canvas.GetComponentsInChildren<Button>())button.interactable=false;
+            var shield=Box(fieldStage!=null?fieldStage:root,"Transit walking",Vector2.zero,Vector2.one,panel);
+            transitLayer=shield;
+            var stage=Box(shield,"Walking passage",Vector2.zero,Vector2.one,panel);
             DrawAreaArt(stage,Area.Subway,Vector2.zero,Vector2.one);
-            var shade=Box(stage,"Walking caption",new Vector2(.025f,.025f),new Vector2(.975f,.30f),new Color(.02f,.03f,.04f,.95f));
+            var shade=Box(stage,"Walking caption",new Vector2(.025f,.025f),new Vector2(.975f,.40f),new Color(.02f,.03f,.04f,.95f));
             Positioned(shade,"도보 탐색",new Vector2(.025f,.64f),new Vector2(.97f,.95f),26,gold);
-            walkCaption=Positioned(shade,walkSeconds<1.6f?walkText:walkArrival,new Vector2(.025f,.22f),new Vector2(.97f,.65f),29,ink);
+            walkCaption=Positioned(shade,walkSeconds<1.6f?walkText:walkArrival,new Vector2(.025f,.30f),new Vector2(.97f,.65f),24,ink);
             Positioned(shade,"폐선 연결 통로를 따라 이동합니다.",new Vector2(.025f,.015f),new Vector2(.70f,.22f),19,muted);
-            walkPortrait=Box(stage,"Walking avatar",new Vector2(.44f,.34f),new Vector2(.56f,.62f),Color.clear);
-            if(battleAtlas==null)battleAtlas=Resources.Load<Texture2D>("Art/Combat/battle-actors-v1");
-            int sprite=Game.S.avatar.species==Species.Human?(PortraitIdentity.Index(Game.S.avatar.name)>=6?1:0):(int)Game.S.avatar.species+1;
-            var region=BattleRegions[sprite];
-            var actor=new GameObject("Walking body",typeof(RectTransform),typeof(RawImage),typeof(AspectRatioFitter));actor.transform.SetParent(walkPortrait,false);
-            var image=actor.GetComponent<RawImage>();image.texture=battleAtlas;image.raycastTarget=false;
-            image.uvRect=new Rect(region.x/1254,1-region.yMax/1254,region.width/1254,region.height/1254);
-            var fit=actor.GetComponent<AspectRatioFitter>();fit.aspectMode=AspectRatioFitter.AspectMode.FitInParent;fit.aspectRatio=region.width/region.height;
-            var skip=PlacedButton(shade,"넘기기",new Vector2(.78f,.025f),new Vector2(.98f,.27f),FinishTransitWalk,true,true);
+            walkPortrait=stage.GetComponentInChildren<RawImage>().rectTransform;walkPortrait.localScale=Vector3.one*1.06f;
+            var skip=PlacedButton(shade,"넘기기",new Vector2(.72f,.025f),new Vector2(.98f,.30f),FinishTransitWalk,true,true);
             if(UnityEngine.EventSystems.EventSystem.current!=null)UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(skip.gameObject);
         }
         readonly Text[] resourceTexts=new Text[4];
@@ -91,7 +86,7 @@ namespace Apocalypse
             if(resourceTexts[2]!=null)resourceTexts[2].text="식량  "+s.food;
             if(resourceTexts[3]!=null)resourceTexts[3].text="의료품  "+s.medicine;
             foreach(var m in hudMeters){double value=m.name=="체력"?a.health:m.name=="정신력"?a.sanity:a.hunger,max=m.name=="체력"?a.MaxHealth:100;m.text.text=m.name+"  "+Rules.Round(value)+" / "+Rules.Round(max);m.fill.anchorMax=new Vector2((float)(value/max),1);}
-            if(timeStatus!=null)timeStatus.text=s.hours.ToString("0.0")+" / 24시간";
+            if(timeStatus!=null)timeStatus.text=Rules.Clock(s.hours)+" · 남은 "+Math.Max(0,Rules.DayHours-s.hours).ToString("0.0")+"시간";
             if(controlStatus!=null){controlStatus.text=s.controlLocked?"개입권 잠김":"개입 가능";controlStatus.color=s.controlLocked?new Color(.95f,.45f,.35f):muted;}
         }
         void DrawAreaArt(Transform parent,Area area,Vector2 min,Vector2 max)
@@ -115,12 +110,12 @@ namespace Apocalypse
             var controls=Stack(row,8);var buttons=Row(controls,56);
             MakeButton(buttons,"쉘터로 돌아가기 · 0시간",()=>Act(()=>Game.ReturnToShelter()));
             if(Game.S.exploration.current>=Area.Museum&&Game.S.exploration.current<=Area.Heritage)
-                subwayReturnButton=MakeButton(buttons,"지하철역으로 돌아가기 · 1시간",()=>Act(()=>Game.ReturnToSubway()),24-Game.S.hours>=1);
+                subwayReturnButton=MakeButton(buttons,"지하철역으로 돌아가기 · 30분",()=>Act(()=>Game.ReturnToSubway()),Rules.DayHours-Game.S.hours>=.5);
         }
         void RefreshExplorationStatus()
         {
-            if(subwayReturnButton!=null)subwayReturnButton.interactable=24-Game.S.hours>=1;
-            if(explorationStatus!=null)explorationStatus.text=AreaRules.Name(Game.S.exploration.current)+"  ·  남은 "+(24-Game.S.hours).ToString("0.0")+"시간  ·  사건 "+Game.S.eventSlots+" / "+Game.S.eventTarget;
+            if(subwayReturnButton!=null)subwayReturnButton.interactable=Rules.DayHours-Game.S.hours>=.5;
+            if(explorationStatus!=null)explorationStatus.text=AreaRules.Name(Game.S.exploration.current)+"  ·  남은 "+(Rules.DayHours-Game.S.hours).ToString("0.0")+"시간  ·  사건 "+Game.S.eventSlots+" / "+Game.S.eventTarget;
         }
         void RenderTransitExit(Transform body)
         {

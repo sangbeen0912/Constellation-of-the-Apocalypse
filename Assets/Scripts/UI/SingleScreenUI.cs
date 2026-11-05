@@ -28,6 +28,7 @@ namespace Apocalypse
         }
         void CloseOmen()
         {
+            fieldMain=null;
             Game.S.omenShownDay = Game.S.day; omenSeconds = 0; clock = 0;
             ReleaseOmen(); Commit();
         }
@@ -51,7 +52,10 @@ namespace Apocalypse
             Positioned(words,"별의 시선이 화신체의 발걸음을 따라갑니다.",new Vector2(.035f,.04f),new Vector2(.97f,.28f),23,muted);
             omenStar = Positioned(screen,"✦",new Vector2(.74f,.66f),new Vector2(.85f,.81f),64,gold).rectTransform;
             var advance = PrepCard(screen,"Omen continue",new Vector2(.79f,.12f),new Vector2(.95f,.20f));
-            MakeButton(advance,"계속 진행",CloseOmen,true,true);
+            foreach(var button in parent.GetComponentsInChildren<Button>())button.interactable=false;
+            var proceed=MakeButton(advance,"계속 진행",CloseOmen,true,true);
+            proceed.GetComponent<LayoutElement>().preferredHeight=64;
+            if(UnityEngine.EventSystems.EventSystem.current!=null)UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(proceed.gameObject);
         }
         RectTransform ScreenArea(Transform parent,string name,Vector2 min,Vector2 max)
         { return Box(parent,name,min,max,Color.clear); }
@@ -119,7 +123,7 @@ namespace Apocalypse
         void RenderClinicScreen(Transform body)
         {
             var s=Game.S;
-            Positioned(body,"남은 시간 "+(24-s.hours).ToString("0.0")+"시간   ·   의료 키트 "+s.medicine+"   ·   주사기 "+s.syringes,new Vector2(.01f,.91f),new Vector2(.99f,1),23,muted);
+            Positioned(body,"남은 시간 "+(Rules.DayHours-s.hours).ToString("0.0")+"시간   ·   의료 키트 "+s.medicine+"   ·   주사기 "+s.syringes,new Vector2(.01f,.91f),new Vector2(.99f,1),23,muted);
             if(s.medicine==0)healthItem=false;if(s.syringes==0)mentalItem=false;
             for(int i=0;i<3;i++)
             {
@@ -168,8 +172,12 @@ namespace Apocalypse
             var invest=PrepCard(area,"Investments",new Vector2(.01f,.46f),new Vector2(.41f,.98f));
             FixedArt(area,Facility(1),new Vector2(.01f,.02f),new Vector2(.41f,.43f));
             Label(invest,"화신체 후원",31,55,gold);Label(invest,"보유 신위  "+s.divinity,26,50);
-            MakeButton(invest,"최대 체력 투자 · 신위 10",()=>Act(()=>Game.Invest(Stat.Health,10)),s.phase==Phase.Morning&&s.divinity>=10);
-            MakeButton(invest,"공격력 투자 · 신위 10",()=>Act(()=>Game.Invest(Stat.Attack,10)),s.phase==Phase.Morning&&s.divinity>=10);
+            foreach(var stat in new[]{Stat.Health,Stat.Attack})
+            {
+                var chosen=stat;int cost=Game.UpgradeCost(stat);int count=Game.UpgradeCount(stat);
+                Label(invest,(stat==Stat.Health?"최대 체력":"공격력")+" · "+count+"회 강화 / 기본값 +"+(stat==Stat.Health?s.avatar.healthInvestment:s.avatar.attackInvestment)+"%",21,36,muted);
+                MakeButton(invest,(stat==Stat.Health?"체력":"공격력")+" 강화 +10% · 신위 "+cost,()=>Act(()=>Game.Invest(chosen,Game.UpgradeCost(chosen))),s.phase==Phase.Morning&&s.divinity>=cost);
+            }
             var owned=content.constellations.Where(c=>s.permanent.unlocked.Contains(c.id)).ToList();
             inheritancePage=Math.Max(0,Math.Min(inheritancePage,Math.Max(0,(owned.Count-1)/6)));
             var inherit=PrepCard(area,"Inheritance",new Vector2(.43f,.13f),new Vector2(.99f,.98f));Label(inherit,"성좌의 계승",29,46,gold);
