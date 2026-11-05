@@ -10,6 +10,7 @@ namespace Apocalypse
         public Area current=Area.Shelter, selected=Area.Residence;
         public int destination=-1;
         public bool routeOffered;
+        public bool resumeTransit;
         public List<int> rejected=new List<int>(2);
     }
     [Serializable] public sealed class PlotState
@@ -47,6 +48,8 @@ namespace Apocalypse
         public int[] demonHp={300,300,260,310,360,270,330}, demonAttack={9,10,9,10,8,12,8};
         public int[] specialHp={70,55,50,55,75,45,80}, specialAttack={7,9,8,9,7,11,6};
         public double martFood=.70, otherFood=.02, supplyDiscovery=.60;
+        public double residenceFood=.30, rerollEventChance=.25;
+        public int residenceFoodEventWeight=2;
         public double crisisHp=.30, enemyCrisisHp=.25, boundaryLow=30,boundaryHigh=40;
         public double optionalEncounterChance=.35, noiseMultiplier=.8;
         public double injuryChance=.25;

@@ -40,6 +40,7 @@ namespace Apocalypse
         public bool OfferTransit()
         {
             if(S.phase!=Phase.Running||S.goal!=Goal.Explore||S.exploration.current!=Area.Subway)return false;
+            S.exploration.resumeTransit=false;
             var choices=new List<Area>(6);
             foreach(var a in AreaRules.Destinations)if(!S.exploration.rejected.Contains((int)a))choices.Add(a);
             if(choices.Count==0){S.exploration.rejected.Clear();choices.AddRange(AreaRules.Destinations);}
@@ -63,7 +64,15 @@ namespace Apocalypse
             else
             {
                 S.exploration.rejected.Add((int)dest);while(S.exploration.rejected.Count>2)S.exploration.rejected.RemoveAt(0);
-                Log("다른 노선 탐색 · 2시간");if(S.hours<24)OfferTransit();else RequestReturn("탐사 시간이 끝나");
+                Log("다른 노선 탐색 · 2시간");
+                if(S.hours>=24)RequestReturn("탐사 시간이 끝나");
+                else if(S.eventSlots<S.eventTarget&&Rng.Next()<B.november.rerollEventChance)
+                {
+                    S.exploration.resumeTransit=true;
+                    var next=DrawGeneralEvent(Goal.Explore);
+                    if(next==null||!PresentGeneralEvent(next.id))OfferTransit();
+                }
+                else OfferTransit();
             }
             SavePoint();return true;
         }
@@ -76,7 +85,7 @@ namespace Apocalypse
         public bool ReturnToShelter()
         {
             if(S.combat!=null||S.avatar==null||S.phase!=Phase.Running&&!(S.phase==Phase.Event&&IsTransit(S.pending)))return false;
-            S.pending=null;S.phase=Phase.Running;S.exploration.destination=-1;S.exploration.rejected.Clear();
+            S.pending=null;S.phase=Phase.Running;S.exploration.destination=-1;S.exploration.rejected.Clear();S.exploration.resumeTransit=false;
             return RequestReturn("탐사를 마치고");
         }
         bool TemplateAffordable(ActivityEvent e)
@@ -168,6 +177,6 @@ namespace Apocalypse
             if(S.plot.viewed.Contains(e.id))return "이전에 남긴 기록을 보존한 채 다시 조사합니다.";
             return "";
         }
-        public double FoodDiscoveryChance { get { return S.exploration.current==Area.Mart?B.november.martFood:B.november.otherFood; } }
+        public double FoodDiscoveryChance { get { return S.exploration.current==Area.Mart?B.november.martFood:S.exploration.current==Area.Residence?B.november.residenceFood:B.november.otherFood; } }
     }
 }

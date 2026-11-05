@@ -12,7 +12,7 @@ if ($taskFiles.Count -eq 0) { Write-Output 'No deployment symbols to move.'; ret
 foreach ($taskFile in $taskFiles) {
     if ($taskFile.DirectoryName -ne $taskManaged -or $taskFile.LinkType) { throw 'Unexpected symbol path.' }
 }
-$taskArchiveDirectory = Join-Path $taskRoot 'docs\optimization-2026-11-04-pass2'
+$taskArchiveDirectory = Join-Path $taskRoot ('TestResults\SymbolArchives\' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $taskArchiveDirectory -Force | Out-Null
 $taskArchive = Join-Path $taskArchiveDirectory ($Build.ToLowerInvariant() + '-symbols.zip')
 Compress-Archive -LiteralPath $taskFiles.FullName -DestinationPath $taskArchive -Force

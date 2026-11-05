@@ -96,7 +96,14 @@ namespace Apocalypse
         }
         public ActivityEvent DrawGeneralEvent(Goal location)
         {
-            var eligible=EligibleEvents(location);return eligible.Count==0?null:Rng.Pick(eligible);
+            var eligible=EligibleEvents(location);if(eligible.Count==0)return null;
+            if(location==Goal.Explore&&S.exploration.current==Area.Residence)
+            {
+                // Preserve the original pool order; append the additional food tickets.
+                var food=eligible.Where(e=>e.options.Any(o=>o.discoverFood)).ToArray();
+                for(int weight=1;weight<Math.Max(1,B.november.residenceFoodEventWeight);weight++)eligible.AddRange(food);
+            }
+            return Rng.Pick(eligible);
         }
         void ApplyTemplate(ChoiceEvent destination,ActivityEvent template)
         {

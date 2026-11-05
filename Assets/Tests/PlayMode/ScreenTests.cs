@@ -24,7 +24,7 @@ public class ScreenTests
         Assert.IsFalse(texts.Any(t=>t.Contains("일반 +1점")||t.Contains("50점 이후")));
         Assert.AreEqual(7,root.GetComponentsInChildren<SealGlyph>().Length);
         Assert.IsTrue(root.GetComponentsInChildren<RawImage>().Any(i=>i.texture==ArtCatalog.Environment(4)));
-        Assert.IsTrue(root.GetComponentsInChildren<Button>().Any(b=>b.GetComponentInChildren<Text>().text=="침수된 지하철역"));
+        Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(b=>b.GetComponentInChildren<Text>().text=="침수된 지하철역"),"목적지는 탐사를 누른 뒤 표시합니다.");
         var main=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Main");
         foreach(string label in new[]{"탐사","공략","진행"})
         {
@@ -158,6 +158,8 @@ public class ScreenTests
         app.Game.S.avatar.sanity=100;
         app.Navigate("전투준비");yield return null;
         var start=root.GetComponentsInChildren<Button>().First(x=>x.GetComponentInChildren<Text>().text=="진행");start.onClick.Invoke();yield return null;
+        Assert.AreEqual(Phase.Morning,app.Game.S.phase,"탐사는 목적지 UI에서 출발을 확정합니다.");
+        root.GetComponentsInChildren<Button>().Single(x=>x.GetComponentInChildren<Text>().text=="탐사 출발").onClick.Invoke();yield return null;
         Assert.IsTrue(app.Game.S.phase==Phase.Running||app.Game.S.phase==Phase.Event);
         Assert.IsTrue(app.LoadGame());Assert.NotNull(app.Game.S.avatar);
         UnityEngine.Object.Destroy(root);yield return null;System.IO.Directory.Delete(temp,true);

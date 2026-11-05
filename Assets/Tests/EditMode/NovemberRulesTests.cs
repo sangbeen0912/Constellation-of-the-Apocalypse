@@ -6,6 +6,31 @@ using NUnit.Framework;
 using UnityEngine;
 public class NovemberRulesTests
 {
+    [Test] public void ResidenceFoodDiscoveryIsThirtyPercentAndFoodEventsHaveDoubleWeight()
+    {
+        var g=Veteran();g.S.goal=Goal.Explore;g.S.exploration.current=Area.Residence;
+        Assert.AreEqual(.30,g.FoodDiscoveryChance);Assert.AreEqual(2,g.B.november.residenceFoodEventWeight);
+        int found=0;for(int i=0;i<20000;i++){int food=g.S.food;g.SearchFood();if(g.S.food>food)found++;}
+        Assert.AreEqual(.30,found/20000.0,.015);
+        var eligible=g.EligibleEvents(Goal.Explore);int foodEvents=eligible.Count(e=>e.options.Any(o=>o.discoverFood));
+        Assert.Greater(foodEvents,0);Assert.Greater(eligible.Count,foodEvents);
+        int draws=0;for(int i=0;i<20000;i++)if(g.DrawGeneralEvent(Goal.Explore).options.Any(o=>o.discoverFood))draws++;
+        Assert.AreEqual(foodEvents*2.0/(eligible.Count+foodEvents),draws/20000.0,.015);
+        g.S.exploration.current=Area.Mart;Assert.AreEqual(.70,g.FoodDiscoveryChance);
+        g.S.exploration.current=Area.Subway;Assert.AreEqual(.02,g.FoodDiscoveryChance);
+    }
+    [Test] public void RerollStoryResumesRouteAfterSaveReloadWithoutChargingTravelAgain()
+    {
+        var g=Veteran();g.S.goal=Goal.Explore;g.S.exploration.current=Area.Subway;g.S.eventTarget=4;
+        g.B.november.rerollEventChance=1;Assert.IsTrue(g.OfferTransit());int previous=g.S.exploration.destination;
+        Assert.IsTrue(g.Resolve(g.S.pending.id,1));Assert.AreEqual(2,g.S.hours);Assert.AreEqual(1,g.S.eventSlots);
+        Assert.IsFalse(g.IsTransit(g.S.pending));Assert.IsTrue(g.S.exploration.resumeTransit);
+        g=new GameEngine(JsonUtility.FromJson<GameState>(JsonUtility.ToJson(g.S)),g.B,g.Content);
+        Assert.IsTrue(g.Resolve(g.S.pending.id,2));double after=g.S.hours;int slots=g.S.eventSlots;
+        Assert.AreEqual(Phase.Running,g.S.phase);g.Tick();Assert.IsTrue(g.IsTransit(g.S.pending));
+        Assert.AreNotEqual(previous,g.S.exploration.destination);Assert.AreEqual(after,g.S.hours);Assert.AreEqual(slots,g.S.eventSlots);
+        Assert.IsFalse(g.S.exploration.resumeTransit);g.Validate();
+    }
     static GameEngine Veteran()
     {
         var g=GameEngine.New(444,GameData.LoadBalance(),GameData.LoadContent());
@@ -87,6 +112,7 @@ public class NovemberRulesTests
     [Test] public void TransitIsUniformExcludesRecentTwoAndNeverConsumesStorySlots()
     {
         var g=Veteran();g.S.goal=Goal.Explore;g.S.exploration.current=Area.Subway;int[] counts=new int[6];
+        g.B.november.rerollEventChance=0; // Test pure route draws independently of story encounters.
         for(int i=0;i<6000;i++){g.S.phase=Phase.Running;Assert.IsTrue(g.OfferTransit());counts[g.S.exploration.destination-3]++;}
         foreach(int n in counts)Assert.AreEqual(1.0/6,n/6000.0,.025);
         for(int i=0;i<8;i++)

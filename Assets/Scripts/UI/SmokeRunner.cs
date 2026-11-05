@@ -52,13 +52,28 @@ namespace Apocalypse
             Click("새로 시작");yield return Frame();Click("모두 초기화하고 시작");yield return Frame();
             Check(app.Game.S.phase==Phase.Morning&&app.Game.S.avatar!=null&&app.Game.S.candidates.Count==0,"Automatic one human start");
             yield return Capture("shelter");
-            Click("전투준비");yield return Frame();Click("침수된 지하철역");yield return Frame();yield return Capture("subway-preparation");
-            Click("진행");yield return Frame();app.Game.S.scheduledConstellation=null;app.Render();yield return Frame();
+            Click("전투준비");yield return Frame();
+            Check(!app.GetComponentsInChildren<Button>().Any(b=>b.GetComponentInChildren<Text>().text=="침수된 지하철역"),"Destinations hidden before exploration click");
+            Click("탐사");yield return Frame();Click("침수된 지하철역");yield return Frame();yield return Capture("subway-preparation");
+            Click("탐사 출발");yield return Frame();app.Game.S.scheduledConstellation=null;app.Render();yield return Frame();
             Check(app.Game.OfferTransit(),"Offer transit");app.Render();yield return Frame();yield return Capture("walking-route");
+            app.Game.B.november.rerollEventChance=0;
             double hours=app.Game.S.hours;int destination=app.Game.S.exploration.destination;Click("표시된 길을 거절");yield return Frame();
+            Check(app.TransitWalkVisible,"Walking shown after reroll");app.enabled=true;yield return new WaitForSecondsRealtime(.7f);app.enabled=false;
+            yield return Capture("walking-animation");Click("넘기기");yield return Frame();
             Check(app.Game.S.hours==hours+2&&app.Game.S.exploration.destination!=destination&&app.Game.S.eventSlots==0,"Transit reroll exactly two hours, no story slot");
             yield return Capture("route-reroll");
             Click("쉘터로 돌아가기");yield return Frame();Check(app.Game.S.phase==Phase.Report,"Free return from transit");yield return Capture("returned-shelter");
+            app.Game.B.november.rerollEventChance=.25;
+            Fixture(Area.Subway);app.Game.B.november.rerollEventChance=1;app.Game.S.eventTarget=4;
+            Check(app.Game.OfferTransit(),"Story transit offer");app.Render();yield return Frame();Click("표시된 길을 거절");yield return Frame();Click("넘기기");yield return Frame();
+            Check(!app.Game.IsTransit(app.Game.S.pending)&&app.Game.S.eventSlots==1&&app.Game.S.exploration.resumeTransit,"Reroll story counts as one actual story");
+            yield return Capture("reroll-subway-story");Check(app.Saves.Write(app.Game.S)&&app.LoadGame(),"Reroll story save reload");yield return Frame();
+            Click(app.Game.S.pending.choices[2]);yield return Frame();hours=app.Game.S.hours;app.Game.Tick();app.Render();yield return Frame();
+            Check(app.Game.IsTransit(app.Game.S.pending)&&app.Game.S.hours==hours&&app.Game.S.eventSlots==1,"Story continues to route without duplicate travel charge");
+            app.Game.B.november.rerollEventChance=.25;
+            Fixture(Area.Museum);app.Game.S.pending=null;app.Navigate("하루 기록");yield return Frame();yield return Capture("fixed-field-return");
+            hours=app.Game.S.hours;Click("지하철역으로 돌아가기");yield return Frame();Check(app.Game.S.hours==hours+1&&app.Game.S.exploration.current==Area.Subway,"Fixed subway button");
             string[] areaEvents={"SUB-N01","MUS-01","MRT-03","ARM-02","SAN-01","FUN-01","HER-01"};
             foreach(string id in areaEvents)
             {

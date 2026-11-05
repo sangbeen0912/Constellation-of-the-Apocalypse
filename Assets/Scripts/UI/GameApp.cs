@@ -35,7 +35,7 @@ namespace Apocalypse
         string scrollKey;
         public CodexIndex Codex { get { return codex; } }
         public string ActiveTab { get { return tab; } }
-        public void Navigate(string destination) { tab = destination; codexPage=personnelPage=relicPage=0; Render(); }
+        public void Navigate(string destination) { choosingExploration=false;tab = destination; codexPage=personnelPage=relicPage=0; Render(); }
         public void Start()
         {
             if (canvas != null) return;
@@ -70,7 +70,7 @@ namespace Apocalypse
         {
             var state = Saves.Read();
             if (state == null) { notice = "불러오기 실패: " + Saves.LastError; Render(); return false; }
-            ClearBattles();Attach(new GameEngine(state, balance, content)); title = false;confirmNew=false; tab = "쉘터"; notice = Saves.LastError; Render(); return true;
+            ClearBattles();transitWalking=choosingExploration=false;Attach(new GameEngine(state, balance, content)); title = false;confirmNew=false; tab = "쉘터"; notice = Saves.LastError; Render(); return true;
         }
         void Attach(GameEngine game)
         {
@@ -90,6 +90,7 @@ namespace Apocalypse
         {
             if(title){if(confirmNew&&Input.GetKeyDown(KeyCode.Escape)){confirmNew=false;Render();}return;}
             if (Game == null) return;
+            if (UpdateTransitWalk()) return;
             if (UpdateBattlePresentation()) return;
             if (UpdateOmen()) return;
             if(Input.GetKeyDown(KeyCode.Escape)){var back=BackNavigation(out _);if(back!=null){back();return;}}
@@ -98,7 +99,7 @@ namespace Apocalypse
             if (clock < delay) return;
             clock = 0;
             if(Game.S.phase==Phase.Event&&Game.S.controlLocked&&Game.S.pending!=null)
-            {RecordBattles(()=>Game.Resolve(Game.S.pending.id,Game.AutomaticChoice(Game.S.pending)));Render();return;}
+            {ResolveEventChoice(Game.S.pending.id,Game.AutomaticChoice(Game.S.pending));return;}
             if (visibleLogs < Game.S.logs.Count) { visibleLogs = speed == 2 ? Game.S.logs.Count : visibleLogs + 1; if(logBody!=null)RefreshLogRows(); return; }
             if (Game.S.phase == Phase.Running) { var previous=Game.S.phase;Game.Tick(); if(Game.S.phase==previous&&Game.S.combat==null){visibleLogs=Math.Min(visibleLogs,Game.S.logs.Count);if(logBody!=null)RefreshLogRows();RefreshExplorationStatus();RefreshRunningHud();}else Render(); }
         }
@@ -246,15 +247,17 @@ namespace Apocalypse
             }
             else Label(side,"새로운 별의 그릇을 찾습니다.",22,64,gold);
             foreach (string item in new[] { "쉘터", "전투준비", "하루 기록", "성좌 도감", "기록 보관소" })
-            { string t = item; MakeButton(side,t,() => { tab = t; Render(); },true,tab == t || t=="쉘터"&&Array.IndexOf(ArtCatalog.FacilityNames,tab)>=0).GetComponent<LayoutElement>().preferredHeight = 40; }
+            { string t = item; MakeButton(side,t,() => Navigate(t),true,tab == t || t=="쉘터"&&Array.IndexOf(ArtCatalog.FacilityNames,tab)>=0).GetComponent<LayoutElement>().preferredHeight = 40; }
             var bottom = Row(side,44); MakeButton(bottom,"저장",() => { Save(); notice = string.IsNullOrEmpty(Saves.LastError) ? "자동 저장 완료" : Saves.LastError; Render(); });
             MakeButton(bottom,"타이틀",() => { title = true; Render(); });
             scrollKey = s.phase == Phase.Event ? "event:"+s.pending.id : s.phase == Phase.Selection || s.phase == Phase.Death ? "selection" : tab == "성좌 도감" ? "codex:"+(codex.SelectedId ?? "list") : tab;
             var main=Box(root,"Main",new Vector2(.205f,.14f),new Vector2(.985f,.885f),panel);
             Plate(main,panel);
             bool preparation=tab=="전투준비"&&s.phase!=Phase.Selection&&s.phase!=Phase.Death&&s.phase!=Phase.Event&&s.phase!=Phase.Victory&&s.phase!=Phase.Report;
+            bool runningLog=s.phase==Phase.Running&&tab!="성좌 도감"&&tab!="기록 보관소"&&!preparation;
             bool historyScreen=(s.phase==Phase.Morning||s.phase==Phase.Running)&&(tab=="하루 기록"||tab=="기록 보관소"||s.phase==Phase.Running);
             var body = historyScreen ? Scroller(main) : main;
+            if(runningLog&&body!=main)body.parent.GetComponent<RectTransform>().offsetMin=new Vector2(0,90);
             if (s.phase == Phase.Selection || s.phase == Phase.Death) RenderSelectionScreen(main);
             else if (s.phase == Phase.Event) RenderEventScreen(main);
             else if (s.phase == Phase.Victory) RenderVictory(Stack(main));
@@ -267,7 +270,8 @@ namespace Apocalypse
             timeStatus=Positioned(root,string.IsNullOrEmpty(notice) ? "" + s.hours.ToString("0.0") + " / 24시간  ·  " + (s.activeRift < 0 ? "활성 균열 없음" : Rules.Sins[s.activeRift] + " 군단 활성") : notice,new Vector2(.025f,.025f),new Vector2(.19f,.12f),19,muted);
             var footer = Row(Box(root,"Footer",new Vector2(.44f,.045f),new Vector2(.985f,.095f),Color.clear),38);
             foreach (int n in new[] {0,1,2}) { int selected = n; MakeButton(footer,new[] { "일반 · 0.8초", "빠르게 · 0.2초", "즉시 표시" }[n],() => { speed = selected; Render(); },true,speed == n); }
-            RenderBackNavigation(root);RenderOmen(root);RenderBattleScene();
+            if(runningLog)RenderFieldActions(main);
+            RenderBackNavigation(root);RenderOmen(root);RenderBattleScene();RenderTransitWalk(root);
             Canvas.ForceUpdateCanvases();
             if (activeScroll != null) activeScroll.verticalNormalizedPosition = scrollPositions.ContainsKey(scrollKey) ? scrollPositions[scrollKey] : 1;
             }
@@ -340,12 +344,12 @@ namespace Apocalypse
         }
         void RenderPreparation(Transform body)
         {
+            if(choosingExploration&&Game.S.phase==Phase.Morning){RenderExplorationPicker(body);return;}
             var s=Game.S;var stage=Box(body,"Preparation",new Vector2(.012f,.018f),new Vector2(.988f,.982f),Color.clear);
             var current=s.activeRift>=0?s.demons[s.activeRift]:null;int progress=current==null?0:current.progress;
             Positioned(stage,"전투준비",new Vector2(0,.93f),new Vector2(.36f,1),32,gold);
             Positioned(stage,current==null?"활성 균열 없음":Rules.Sins[s.activeRift]+"의 군단",new Vector2(.36f,.93f),new Vector2(.685f,1),25,muted);
             DrawAreaArt(stage,goal==Goal.Rift?Area.Rift:s.exploration.selected,new Vector2(0,.42f),new Vector2(.685f,.915f));
-            if(s.phase==Phase.Morning){var locations=PrepCard(stage,"Field locations",new Vector2(0,.33f),new Vector2(.685f,.42f));var locationRow=Row(locations,38);foreach(var a in new[]{Area.Residence,Area.Subway}){var area=a;MakeButton(locationRow,AreaRules.Name(a),()=>Act(()=>Game.SelectExplorationArea(area)),goal==Goal.Explore,s.exploration.selected==a);}}
             var route=PrepCard(stage,"Rift progress",new Vector2(0,.17f),new Vector2(.685f,.32f));
             Label(route,"군단 봉쇄 돌파  "+progress+" / "+Rules.RiftProgressRequired,27,38,gold);
             var track=Box(route,"Progress track",Vector2.zero,Vector2.one,new Color(.10f,.12f,.14f));
@@ -361,11 +365,11 @@ namespace Apocalypse
             foreach(Goal option in new[]{Goal.Explore,Goal.Rift})
             {
                 Goal selected=option;float x=.32f+optionIndex++*.20f;
-                var button=PlacedButton(controls,option==Goal.Explore?"탐사":"공략",new Vector2(x,.24f),new Vector2(x+.185f,.76f),()=>{goal=selected;Render();},s.phase==Phase.Morning&&(option==Goal.Explore||s.activeRift>=0&&s.day>s.avatar.selectedDay),goal==option);
+                var button=PlacedButton(controls,option==Goal.Explore?"탐사":"공략",new Vector2(x,.24f),new Vector2(x+.185f,.76f),()=>{goal=selected;choosingExploration=selected==Goal.Explore;Render();},s.phase==Phase.Morning&&(option==Goal.Explore||s.activeRift>=0&&s.day>s.avatar.selectedDay),goal==option);
                 bool chosen=goal==option;
                 DistinctAction(button,chosen?new Color(.45f,.75f,.82f):new Color(.065f,.10f,.14f),chosen?new Color(.02f,.055f,.07f):new Color(.92f,.95f,.98f),chosen?new Color(.75f,.94f,1):new Color(.33f,.47f,.58f),tick:chosen);
             }
-            var proceed=PlacedButton(controls,"진행",new Vector2(.76f,.24f),new Vector2(.975f,.76f),()=>Act(()=>{tab="하루 기록";Game.StartDay(goal);}),s.phase==Phase.Morning,true);
+            var proceed=PlacedButton(controls,"진행",new Vector2(.76f,.24f),new Vector2(.975f,.76f),()=>{if(goal==Goal.Explore){choosingExploration=true;Render();}else Depart();},s.phase==Phase.Morning,true);
             DistinctAction(proceed,new Color(.96f,.75f,.32f),new Color(.07f,.045f,.01f),new Color(1,.89f,.58f),forward:true);
             var seals=PrepCard(stage,"Current seals",new Vector2(.705f,.65f),Vector2.one);
             Label(seals,"악마 봉인  "+Game.ActiveSealCount+" / 7",29,48,gold);

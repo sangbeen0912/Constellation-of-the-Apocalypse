@@ -7,6 +7,7 @@ namespace Apocalypse
         void ResetNewGameView()
         {
             speed=1;battleSpeed=1;clock=0;healthItem=mentalItem=false;
+            choosingExploration=transitWalking=false;walkSeconds=0;
             restorationId=historyId=null;restorationStep=historyChapter=0;chapelSection="후원";
             codexPage=personnelPage=relicPage=inheritancePage=restorePage=0;
             codex.Back();for(int grade=0;grade<4;grade++)if(!codex.IsExpanded(grade))codex.Toggle(grade);

@@ -60,6 +60,7 @@ namespace Apocalypse
         {
             label=null;
             if(Game==null||Game.S.phase!=Phase.Morning)return null;
+            if(choosingExploration){label="활동 선택으로";return ()=>{choosingExploration=false;Render();};}
             if(tab=="성좌 도감"&&codex.SelectedId!=null){label="도감으로";return ()=>{codex.Back();Render();};}
             if(tab=="보급창고"&&historyId!=null){label="보관함 목록으로";return ()=>{historyId=null;Render();};}
             if(tab=="예배방"&&chapelSection=="성유물 복원"&&restorationId!=null){label="복원 목록으로";return ()=>{restorationId=null;restorationStep=0;Render();};}

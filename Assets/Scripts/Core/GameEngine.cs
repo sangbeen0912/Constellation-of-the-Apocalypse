@@ -146,6 +146,7 @@ namespace Apocalypse
             if(S.phase!=Phase.Morning||S.avatar==null||S.hours>=24)return false;
             S.goal=goal==Goal.Rift&&S.activeRift>=0&&S.day>S.avatar.selectedDay?Goal.Rift:Goal.Explore;S.phase=Phase.Running;
             S.exploration.current=S.goal==Goal.Rift?Area.Rift:S.exploration.selected;S.exploration.routeOffered=false;
+            S.exploration.resumeTransit=false;
             if(!S.dayStarted)
             {
                 S.dayStarted=true;S.normalWins=0;S.eventSlots=0;S.returnRequested=false;
@@ -189,6 +190,7 @@ namespace Apocalypse
             if(S.returnRequested){ContinueReturn();return;}
             if(S.hours>=24-.00001){if(!EncounterConstellation())EndDay();return;}
             if(!string.IsNullOrEmpty(S.scheduledConstellation)&&S.hours>=S.constellationMeetingHour){EncounterConstellation();return;}
+            if(S.exploration.resumeTransit&&S.exploration.current==Area.Subway){OfferTransit();return;}
             bool bossReady=S.goal==Goal.Rift&&S.activeRift>=0&&S.day>S.avatar.selectedDay&&CanReachDemon((Sin)S.activeRift);
             if(S.goal==Goal.Explore&&S.exploration.current==Area.Subway&&!S.exploration.routeOffered&&Rng.Next()<.35){OfferTransit();return;}
             if(S.eventSlots<S.eventTarget&&(S.hours>=S.nextImportantHour||bossReady&&S.eventSlots==0)){ShowGeneralEvent();return;}

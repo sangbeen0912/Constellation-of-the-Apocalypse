@@ -243,7 +243,6 @@ namespace Apocalypse
             var e=Game.S.pending;bool ce=!string.IsNullOrEmpty(e.constellationId);
             var art=PrepCard(body,"Event illustration",new Vector2(.015f,.025f),new Vector2(.47f,.985f));
             if(ce)ConstellationArt(art,e.constellationId,420,280);else EventArtwork(art,e);
-            RenderTransitExit(body);
             if(ce){var c=content.Find(e.constellationId);Label(art,c.ability,28,58,gold);Label(art,c.description,23,100);Label(art,"소속  "+c.affiliation,22,45,muted);}
             var story=PrepCard(body,"Event story",new Vector2(.485f,.025f),new Vector2(.985f,.985f));
             Label(story,ce?"별의 기억  /  "+Rules.Grades[content.Find(e.constellationId).grade]:"운명의 갈림길",22,35,gold);
@@ -251,10 +250,11 @@ namespace Apocalypse
             for(int i=0;i<e.choices.Length;i++)
             {
                 int choice=i;string id=e.id;bool possible=Game.CanChoose(e,i,out string reason);string cost=OptionCost(e,i);
-                var optionButton=MakeButton(story,e.choices[i]+(cost.Length>0?"  · "+cost:""),()=>Act(()=>Game.Resolve(id,choice)),possible&&!Game.S.controlLocked,true);
+                var optionButton=MakeButton(story,e.choices[i]+(cost.Length>0?"  · "+cost:""),()=>ResolveEventChoice(id,choice),possible&&!Game.S.controlLocked,true);
                 optionButton.GetComponent<LayoutElement>().preferredHeight=88;optionButton.GetComponentInChildren<Text>().fontSize=22;
                 if(!possible)Label(story,reason,20,28,muted);
             }
+            RenderTransitExit(story);
         }
         void RenderCodexScreen(Transform body)
         {
