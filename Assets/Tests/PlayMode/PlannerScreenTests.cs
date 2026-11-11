@@ -30,7 +30,7 @@ public class PlannerScreenTests
         Assert.IsFalse(choice.interactable);Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(t=>t.text.Contains("부족")));
         UnityEngine.Object.Destroy(root);yield return null;System.IO.Directory.Delete(temp,true);
     }
-    [UnityTest] public IEnumerator RestorationPreviewSkipHistoryAndConfirmationHaveSeparateTransactions()
+    [UnityTest] public IEnumerator RestorationImmediatePreviewOptionalHistoryAndConfirmationHaveSeparateTransactions()
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"PlannerRestore-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Planner restoration");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
@@ -43,7 +43,7 @@ public class PlannerScreenTests
         SingleScreenTests.AssertInsideMain(root);
         Assert.IsFalse(root.GetComponentsInChildren<Text>().Any(t=>t.text.Contains("성유물 생성")));
         Button(root,"복원 기록 보기 · 궁니르").onClick.Invoke();yield return null;
-        Button(root,"연출 건너뛰고 복원 미리보기").onClick.Invoke();yield return null;Assert.AreEqual(200,g.S.divinity);Assert.AreEqual(2,relic.healthBonus);
+        Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(t=>t.text.Contains("복원 후 ·")));Assert.IsTrue(Button(root,"복원 확정 · 신위 100").interactable);Assert.AreEqual(200,g.S.divinity);Assert.AreEqual(2,relic.healthBonus);
         Button(root,"복원 목록으로").onClick.Invoke();yield return null;Button(root,"복원 기록 보기 · 궁니르").onClick.Invoke();yield return null;
         foreach(string label in new[]{"마지막 사용자의 기록","이전 전승 기록","이번 복원 결과"}){Button(root,label).onClick.Invoke();yield return null;Assert.AreEqual(200,g.S.divinity);SingleScreenTests.AssertInsideMain(root);}
         Button(root,"복원 확정 · 신위 100").onClick.Invoke();yield return null;

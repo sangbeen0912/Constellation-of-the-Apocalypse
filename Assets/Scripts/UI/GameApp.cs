@@ -15,6 +15,8 @@ namespace Apocalypse
         [NonSerialized] public string saveDirectoryOverride;
         Canvas canvas;
         Font font;
+        TMPro.TMP_FontAsset statusFont;
+        DynamicFontRefresh glyphRefresh;
         Balance balance;
         Content content;
         string tab = "쉘터", notice = "";
@@ -22,8 +24,8 @@ namespace Apocalypse
         int speed = 1, visibleLogs;
         float clock;
         Goal goal;
-        readonly Color bg = new Color(.027f,.032f,.031f), panel = new Color(.075f,.083f,.079f);
-        readonly Color gold = new Color(.89f,.72f,.39f), muted = new Color(.60f,.63f,.65f), ink = new Color(.89f,.88f,.83f);
+        readonly Color bg = new Color(.032f,.039f,.060f), panel = new Color(.073f,.089f,.124f);
+        readonly Color gold = new Color(.91f,.73f,.42f), muted = new Color(.66f,.69f,.74f), ink = new Color(.94f,.93f,.89f);
         Texture2D city, gate;
         readonly Dictionary<string, Texture2D> portraits = new Dictionary<string, Texture2D>();
         readonly Dictionary<int, Texture2D> facilities = new Dictionary<int, Texture2D>();
@@ -35,7 +37,7 @@ namespace Apocalypse
         string scrollKey;
         public CodexIndex Codex { get { return codex; } }
         public string ActiveTab { get { return tab; } }
-        public void Navigate(string destination) { choosingExploration=false;tab = destination; codexPage=personnelPage=relicPage=0; Render(); }
+        public void Navigate(string destination) { choosingExploration=false;if(destination=="쉘터")shelterFacility="의무실";tab = destination; codexPage=personnelPage=relicPage=0; Render(); }
         public void Start()
         {
             if (canvas != null) return;
@@ -48,10 +50,20 @@ namespace Apocalypse
             }
             #endif
             Application.targetFrameRate = 60;
-            font = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 24);
+            var installed=Font.GetOSInstalledFontNames();
+            string family=new[]{"맑은 고딕","Malgun Gothic","Noto Sans KR Medium","Noto Sans KR","Arial"}.FirstOrDefault(name=>installed.Any(candidate=>string.Equals(candidate,name,StringComparison.OrdinalIgnoreCase)))??"Arial";
+            font=Font.CreateDynamicFontFromOSFont(family,24);
+            var statusMaterial=Resources.Load<Material>("StatusTypography");
+            foreach(string candidate in new[]{"Malgun Gothic","맑은 고딕","Noto Sans KR","Arial"})
+            {
+                statusFont=TMPro.TMP_FontAsset.CreateFontAsset(candidate,"Regular",40);
+                if(statusFont!=null)break;
+            }
+            if(statusFont!=null&&statusMaterial!=null)statusFont.material.shader=statusMaterial.shader;
             balance = GameData.LoadBalance(); content = GameData.LoadContent(); Saves = new SaveManager(string.IsNullOrEmpty(saveDirectoryOverride) ? Application.persistentDataPath : saveDirectoryOverride);
             var go = new GameObject("GameCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             go.transform.SetParent(transform, false); canvas = go.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            glyphRefresh=go.AddComponent<DynamicFontRefresh>();glyphRefresh.trackedFont=font;glyphRefresh.refresh=RefreshVisibleGlyphs;
             var scaler = go.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920,1080); scaler.matchWidthOrHeight = .5f;
             if (FindFirstObjectByType<EventSystem>() == null)
@@ -113,6 +125,7 @@ namespace Apocalypse
             if(battleInterior!=null){Resources.UnloadAsset(battleInterior);battleInterior=null;}
             if(areaAtlas!=null){Resources.UnloadAsset(areaAtlas);areaAtlas=null;}
             if (font != null) Destroy(font);
+            if(statusFont!=null){foreach(var texture in statusFont.atlasTextures)if(texture!=null)Destroy(texture);Destroy(statusFont.material);Destroy(statusFont);}
         }
         void DetachIllustration()
         {
@@ -126,12 +139,13 @@ namespace Apocalypse
             go.name = name; if (go.transform.parent != parent) go.transform.SetParent(parent, false);
             var r = go.GetComponent<RectTransform>(); r.anchorMin = min; r.anchorMax = max; r.offsetMin = r.offsetMax = Vector2.zero;
             go.GetComponent<Image>().color = color;
-            if(color.a>.5f){var edge=go.AddComponent<Outline>();edge.effectColor=new Color(.25f,.25f,.23f);edge.effectDistance=new Vector2(1,-1);}
+            if(color.a>.8f&&(name=="Main"||name=="Sidebar"||name=="Departure workspace"||name.StartsWith("Clinic ")||name.StartsWith("Title ")||name=="Event and command pane"))
+            {go.GetComponent<Image>().color=Color.clear;Plate(r,color);}
             return r;
         }
         Text Label(Transform parent, string value, int size = 25, float height = 46, Color? color = null)
         {
-            var go = new GameObject("Text", typeof(RectTransform), typeof(Text), typeof(LayoutElement)); go.transform.SetParent(parent,false);
+            var go = new GameObject("Text", typeof(RectTransform), typeof(ReadableText), typeof(LayoutElement)); go.transform.SetParent(parent,false);
             var t = go.GetComponent<Text>(); t.font = font; t.text = value; t.fontSize = size; t.color = color ?? ink;
             t.alignment = TextAnchor.MiddleLeft; t.horizontalOverflow = HorizontalWrapMode.Wrap; t.verticalOverflow = VerticalWrapMode.Truncate;
             go.GetComponent<LayoutElement>().preferredHeight = height; return t;
@@ -152,13 +166,15 @@ namespace Apocalypse
             }
             go.name = "Button " + text;
             go.GetComponent<Image>().color = Color.clear;
-            var label = go.GetComponentInChildren<Text>(); label.font = font; label.text = text; label.color = enabled ? ink : muted; label.fontSize = 21;
-            var layout = go.GetComponent<LayoutElement>(); if (layout == null) layout = go.AddComponent<LayoutElement>(); layout.preferredHeight = 38; layout.flexibleWidth = 1;
+            var label = go.GetComponentInChildren<Text>(); label.font = font; label.text = text; label.color = enabled ? ink : muted; label.fontSize = 24;
+            var layout = go.GetComponent<LayoutElement>(); if (layout == null) layout = go.AddComponent<LayoutElement>(); layout.preferredHeight = 58; layout.flexibleWidth = 1;
             var edge = go.GetComponent<Outline>(); if (edge == null) edge = go.AddComponent<Outline>();
             edge.effectColor = accent ? new Color(.68f,.54f,.32f) : new Color(.23f,.29f,.32f); edge.effectDistance = new Vector2(1,-1);
             label.rectTransform.offsetMin=new Vector2(28,0);label.rectTransform.offsetMax=new Vector2(-12,0);
             edge.enabled=false;
-            var surface=Plate(go.GetComponent<RectTransform>(),accent?new Color(.28f,.24f,.15f):new Color(.14f,.17f,.15f),true,accent);
+            var surface=Plate(go.GetComponent<RectTransform>(),accent?new Color(.24f,.38f,.53f):new Color(.13f,.16f,.22f),true,accent);
+            surface.icon=PixelPlate.IconFor(text);surface.symbolColor=ink;label.fontStyle=FontStyle.Bold;
+            label.rectTransform.offsetMin=new Vector2(surface.icon>0?50:18,0);label.rectTransform.offsetMax=new Vector2(-16,0);
             var b = go.GetComponent<Button>();b.targetGraphic=surface; b.interactable = enabled; b.onClick.RemoveAllListeners(); b.onClick.AddListener(() => click()); return b;
         }
         RectTransform Stack(Transform parent, int padding = 24)
@@ -167,6 +183,8 @@ namespace Apocalypse
             var v = r.gameObject.AddComponent<VerticalLayoutGroup>(); v.padding = new RectOffset(padding,padding,padding,padding); v.spacing = 8;
             v.childControlHeight = true; v.childForceExpandHeight = false; v.childControlWidth = true; v.childForceExpandWidth = true; return r;
         }
+        readonly List<ScrollRect> workspaceScrolls=new List<ScrollRect>(2);
+        readonly Dictionary<string,float> workspaceScrollPositions=new Dictionary<string,float>();
         RectTransform Scroller(Transform parent)
         {
             var viewport = Box(parent,"Viewport",Vector2.zero,Vector2.one,Color.clear); viewport.offsetMax = new Vector2(-20,0); viewport.gameObject.AddComponent<RectMask2D>();
@@ -174,6 +192,7 @@ namespace Apocalypse
             var r = Stack(viewport); r.anchorMin = new Vector2(0,1); r.anchorMax = Vector2.one; r.pivot = new Vector2(.5f,1);
             var fitter = r.gameObject.AddComponent<ContentSizeFitter>(); fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             scroll.content = r; scroll.viewport = viewport;
+            if(parent.name=="Codex entries viewport"||parent.name=="Inheritance viewport")workspaceScrolls.Add(scroll);
             var rail = Box(parent,"Scroll track",new Vector2(1,0),Vector2.one,new Color(.04f,.06f,.08f)); rail.offsetMin = new Vector2(-14,8); rail.offsetMax = new Vector2(-4,-8);
             var handle = Box(rail,"Scroll handle",Vector2.zero,Vector2.one,new Color(.40f,.47f,.49f));
             var bar = rail.gameObject.AddComponent<Scrollbar>(); bar.direction = Scrollbar.Direction.BottomToTop; bar.handleRect = handle; bar.targetGraphic = handle.GetComponent<Image>();
@@ -212,21 +231,24 @@ namespace Apocalypse
         string Personality(Character c) { return PersonalityNames[(int)c.personality] + (c.species==Species.Human?(c.mutant?" · 돌연변이":""):" · "+SpeciesName(c.species)); }
         void Meter(Transform parent, string name, double value, double max, Color color)
         {
-            var row = Row(parent,30); var layout = row.GetComponent<HorizontalLayoutGroup>(); layout.childForceExpandWidth = false; layout.childForceExpandHeight = false; layout.childAlignment = TextAnchor.MiddleLeft;
-            var label = Label(row, name + "  " + Rules.Round(value) + " / " + Rules.Round(max),19,30);
+            var row = Stack(parent,0);row.name="Status "+name;row.gameObject.AddComponent<LayoutElement>().preferredHeight=57;row.GetComponent<VerticalLayoutGroup>().spacing=2;
+            var label = Label(row, name + "  " + Rules.Round(value) + " / " + Rules.Round(max),20,29);
             label.horizontalOverflow=HorizontalWrapMode.Overflow;
-            var textLayout = label.GetComponent<LayoutElement>(); textLayout.minWidth = 185; textLayout.preferredWidth = 185; textLayout.flexibleWidth = 1;
             var track = Box(row,"Meter",Vector2.zero,Vector2.one,new Color(.1f,.14f,.18f));
-            var barLayout = track.gameObject.AddComponent<LayoutElement>(); barLayout.minWidth = 72; barLayout.preferredWidth = 72; barLayout.minHeight = 16; barLayout.preferredHeight = 16;
+            var barLayout = track.gameObject.AddComponent<LayoutElement>();barLayout.minHeight=16;barLayout.preferredHeight=16;
+            Plate(track,new Color(.13f,.17f,.23f));
             var fill=Box(track,"Fill",Vector2.zero,new Vector2((float)Math.Max(0,Math.Min(1,value/max)),1),color);
+            fill.offsetMin=new Vector2(3,3);fill.offsetMax=new Vector2(-3,-3);
             hudMeters.Add(new HudMeter{name=name,text=label,fill=fill});
         }
         public void Render()
         {
             if (canvas == null) return;
             if(!title&&fieldMain!=null&&IsFieldPhase&&!OmenVisible&&omenTexture==null){RefreshEncounter();if(transitWalking)RenderTransitWalk(fieldMain);return;}
+            foreach(var scroll in workspaceScrolls)if(scroll!=null)workspaceScrollPositions[scroll.name]=scroll.verticalNormalizedPosition;
+            workspaceScrolls.Clear();
             fieldMain=null;fieldContentKey=fieldArtKey=null;
-            logBody=null;logRows.Clear();hudMeters.Clear();explorationStatus=null;
+            logBody=null;logRows.Clear();logSources.Clear();hudMeters.Clear();explorationStatus=null;
             if (activeScroll != null && scrollKey != null) scrollPositions[scrollKey] = activeScroll.verticalNormalizedPosition;
             activeScroll = null;
             foreach (Transform child in canvas.transform) { if(child==battleLayer)continue;child.gameObject.SetActive(false); Destroy(child.gameObject); }
@@ -236,26 +258,27 @@ namespace Apocalypse
             {
             var root = Box(canvas.transform,"Background",Vector2.zero,Vector2.one,bg);
             root.SetAsFirstSibling();
-            Positioned(root,"종말의 성좌",new Vector2(.025f,.925f),new Vector2(.37f,.985f),34,gold);
-            Positioned(root,"CONSTELLATION OF THE APOCALYPSE",new Vector2(.027f,.90f),new Vector2(.4f,.93f),14,muted);
+            var masthead=Box(root,"Steel masthead",new Vector2(.012f,.912f),new Vector2(.988f,.992f),Color.clear);Plate(masthead,panel);
+            Icon(root,1,new Vector2(.028f,.936f),new Vector2(.051f,.979f),gold);
+            Positioned(root,"종말의 성좌",new Vector2(.064f,.927f),new Vector2(.37f,.986f),36,ink).fontStyle=FontStyle.Bold;
             if (title) { RenderTitle(root); return; }
             var s = Game.S;
             RenderResourceHeader(root);
-            var side = Stack(Box(root,"Sidebar",new Vector2(.015f,.14f),new Vector2(.19f,.885f),panel),12);
-            Plate((RectTransform)side.parent,panel);
-            side.GetComponent<VerticalLayoutGroup>().spacing = 6;
+            var side = Stack(Box(root,"Sidebar",new Vector2(.015f,.14f),new Vector2(.19f,.895f),panel),16);
+            side.GetComponent<VerticalLayoutGroup>().spacing = 5;
             if (s.avatar != null)
             {
                 RenderDossier(side);
+                foreach(var caption in side.GetComponentsInChildren<ReadableText>())caption.UseTextCore(statusFont);
             }
             else Label(side,"새로운 별의 그릇을 찾습니다.",22,64,gold);
-            foreach (string item in new[] { "쉘터", "전투준비", "하루 기록", "성좌 도감", "기록 보관소" })
-            { string t = item; MakeButton(side,t,() => Navigate(t),true,tab == t || t=="쉘터"&&Array.IndexOf(ArtCatalog.FacilityNames,tab)>=0).GetComponent<LayoutElement>().preferredHeight = 40; }
+            foreach (string item in new[] { "쉘터", "성좌 도감", "기록 보관소" })
+            { string t = item; MakeButton(side,t,() => Navigate(t),true,tab == t || t=="쉘터"&&Array.IndexOf(ArtCatalog.FacilityNames,tab)>=0).GetComponent<LayoutElement>().preferredHeight = 56; }
             var bottom = Row(side,44); MakeButton(bottom,"저장",() => { Save(); notice = string.IsNullOrEmpty(Saves.LastError) ? "자동 저장 완료" : Saves.LastError; Render(); });
             MakeButton(bottom,"타이틀",() => { title = true; Render(); });
+            RenderSealSummary(side);
             scrollKey = s.phase == Phase.Event ? "event:"+s.pending.id : s.phase == Phase.Selection || s.phase == Phase.Death ? "selection" : tab == "성좌 도감" ? "codex:"+(codex.SelectedId ?? "list") : tab;
-            var main=Box(root,"Main",new Vector2(.205f,.14f),new Vector2(.985f,.885f),panel);
-            Plate(main,panel);
+            var main=Box(root,"Main",new Vector2(.205f,.14f),new Vector2(.985f,.895f),panel);
             bool preparation=tab=="전투준비"&&s.phase!=Phase.Selection&&s.phase!=Phase.Death&&s.phase!=Phase.Event&&s.phase!=Phase.Victory&&s.phase!=Phase.Report;
             bool runningLog=s.phase==Phase.Running&&tab!="성좌 도감"&&tab!="기록 보관소"&&!preparation;
             bool historyScreen=!IsFieldPhase&&(s.phase==Phase.Morning||s.phase==Phase.Running)&&(tab=="하루 기록"||tab=="기록 보관소"||s.phase==Phase.Running);
@@ -266,20 +289,31 @@ namespace Apocalypse
             else if (s.phase == Phase.Victory) RenderVictory(Stack(main));
             else if (s.phase == Phase.Report) { tab="쉘터"; RenderFacilityScreen(main); }
             else if (tab == "성좌 도감") RenderCodexScreen(main);
-            else if (preparation) RenderPreparation(body);
+            else if (preparation) RenderShelterWorkspace(main);
             else if (tab == "기록 보관소") RenderRecords(body);
             else if (tab == "하루 기록" || s.phase == Phase.Running) RenderLogs(body);
             else RenderFacilityScreen(main);
             timeStatus=Positioned(root,string.IsNullOrEmpty(notice)?Rules.Clock(s.hours)+" · 남은 "+Math.Max(0,Rules.DayHours-s.hours).ToString("0.0")+"시간":notice,new Vector2(.025f,.025f),new Vector2(.19f,.12f),21,gold);
-            var footer = Row(Box(root,"Footer",new Vector2(.44f,.045f),new Vector2(.985f,.095f),Color.clear),38);
+            ((ReadableText)timeStatus).UseTextCore(statusFont);
+            var footer = Row(Box(root,"Footer",new Vector2(.62f,.045f),new Vector2(.985f,.095f),Color.clear),38);
             foreach (int n in new[] {0,1,2}) { int selected = n; MakeButton(footer,new[] { "일반 · 0.8초", "빠르게 · 0.2초", "즉시 표시" }[n],() => { speed = selected; Render(); },true,speed == n); }
             if(IsFieldPhase)RefreshEncounter();
             RenderBackNavigation(root);RenderOmen(root);RenderBattleScene();RenderTransitWalk(root);
-            Canvas.ForceUpdateCanvases();
+            RefreshVisibleGlyphs();glyphRefresh.Schedule();Canvas.ForceUpdateCanvases();
             if (activeScroll != null) activeScroll.verticalNormalizedPosition = scrollPositions.ContainsKey(scrollKey) ? scrollPositions[scrollKey] : 1;
+            foreach(var scroll in workspaceScrolls)scroll.verticalNormalizedPosition=workspaceScrollPositions.ContainsKey(scroll.name)?workspaceScrollPositions[scroll.name]:1;
             }
             finally { if(!constellationArtUsed)constellationArt.Dispose(); }
         }
+        // Let Text own glyph requests; refresh cached geometry after a dynamic atlas changes.
+        readonly List<Text> visibleGlyphLabels=new List<Text>(128);
+        void RefreshVisibleGlyphs()
+        {
+            canvas.GetComponentsInChildren(false,visibleGlyphLabels);
+            foreach(var label in visibleGlyphLabels)if(label.font!=null){if(label is ReadableText readable)readable.RefreshGlyphs();else label.FontTextureChanged();}
+            visibleGlyphLabels.Clear();
+        }
+        
         void RenderTitle(Transform root)
         {
             var left = Stack(Box(root,"Title artwork",new Vector2(.025f,.10f),new Vector2(.63f,.85f),panel),30);
@@ -308,14 +342,20 @@ namespace Apocalypse
         }
         Transform logBody;
         readonly List<Text> logRows=new List<Text>(60);
+        readonly List<string> logSources=new List<string>(60);
         void RefreshLogRows()
         {
+            if(logBody==null)return;
             int end=Math.Min(visibleLogs,Game.S.logs.Count),count=Math.Min(60,end);
-            while(logRows.Count<count){var row=Label(logBody,"",22,52);row.name="Observation log row";logRows.Add(row);}
+            while(logRows.Count<count){var row=Label(logBody,"",22,52);row.name="Observation log row";logRows.Add(row);logSources.Add(null);}
             for(int i=0;i<logRows.Count;i++)
             {
                 bool used=i<count;if(logRows[i].gameObject.activeSelf!=used)logRows[i].gameObject.SetActive(used);
-                if(used)logRows[i].text=Game.S.logs[end-1-i].Replace("전투 시작 · 망자","전투 시작 · 일반 좀비").Replace("균열 진행도","군단 봉쇄 돌파");
+                if(used)
+                {
+                    string source=Game.S.logs[end-1-i];
+                    if(logSources[i]!=source){logSources[i]=source;logRows[i].text=source.Replace("전투 시작 · 망자","전투 시작 · 일반 좀비").Replace("균열 진행도","군단 봉쇄 돌파");}
+                }
             }
         }
         void ConstellationArt(Transform parent,string id,float height,float blankHeight)
@@ -345,57 +385,7 @@ namespace Apocalypse
             var aspect=picture.GetComponent<AspectRatioFitter>();aspect.aspectMode=AspectRatioFitter.AspectMode.EnvelopeParent;
             aspect.aspectRatio=texture==null?16f/9:texture.width/(float)texture.height;
         }
-        void RenderPreparation(Transform body)
-        {
-            if(choosingExploration&&Game.S.phase==Phase.Morning){RenderExplorationPicker(body);return;}
-            var s=Game.S;var stage=Box(body,"Preparation",new Vector2(.012f,.018f),new Vector2(.988f,.982f),Color.clear);
-            var current=s.activeRift>=0?s.demons[s.activeRift]:null;int progress=current==null?0:current.progress;
-            Positioned(stage,"전투준비",new Vector2(0,.93f),new Vector2(.36f,1),32,gold);
-            Positioned(stage,current==null?"활성 균열 없음":Rules.Sins[s.activeRift]+"의 군단",new Vector2(.36f,.93f),new Vector2(.685f,1),25,muted);
-            DrawAreaArt(stage,goal==Goal.Rift?Area.Rift:s.exploration.selected,new Vector2(0,.42f),new Vector2(.685f,.915f));
-            var route=PrepCard(stage,"Rift progress",new Vector2(0,.17f),new Vector2(.685f,.32f));
-            Label(route,"군단 봉쇄 돌파  "+progress+" / "+Rules.RiftProgressRequired,27,38,gold);
-            var track=Box(route,"Progress track",Vector2.zero,Vector2.one,new Color(.10f,.12f,.14f));
-            var trackLayout=track.gameObject.AddComponent<LayoutElement>();trackLayout.preferredHeight=16;trackLayout.flexibleHeight=0;
-            for(int segment=0;segment<Rules.RiftProgressRequired;segment++)
-            {
-                var mark=Box(track,"Progress segment",new Vector2(segment/(float)Rules.RiftProgressRequired,0),new Vector2((segment+1)/(float)Rules.RiftProgressRequired,1),segment<progress?gold:new Color(.16f,.18f,.20f));
-                mark.offsetMin=new Vector2(1,2);mark.offsetMax=new Vector2(-1,-2);
-            }
-            var controls=Box(stage,"Departure controls",Vector2.zero,new Vector2(.685f,.15f),panel);Plate(controls,panel);
-            Positioned(controls,"오늘의 활동: "+(goal==Goal.Rift?"공략":"탐사"),new Vector2(.025f,.25f),new Vector2(.30f,.75f),25,gold);
-            int optionIndex=0;
-            foreach(Goal option in new[]{Goal.Explore,Goal.Rift})
-            {
-                Goal selected=option;float x=.32f+optionIndex++*.20f;
-                var button=PlacedButton(controls,option==Goal.Explore?"탐사":"공략",new Vector2(x,.24f),new Vector2(x+.185f,.76f),()=>{goal=selected;choosingExploration=selected==Goal.Explore;Render();},s.phase==Phase.Morning&&(option==Goal.Explore||s.activeRift>=0&&s.day>s.avatar.selectedDay),goal==option);
-                bool chosen=goal==option;
-                DistinctAction(button,chosen?new Color(.45f,.75f,.82f):new Color(.065f,.10f,.14f),chosen?new Color(.02f,.055f,.07f):new Color(.92f,.95f,.98f),chosen?new Color(.75f,.94f,1):new Color(.33f,.47f,.58f),tick:chosen);
-            }
-            var proceed=PlacedButton(controls,"진행",new Vector2(.76f,.24f),new Vector2(.975f,.76f),()=>{if(goal==Goal.Explore){choosingExploration=true;Render();}else Depart();},s.phase==Phase.Morning,true);
-            DistinctAction(proceed,new Color(.96f,.75f,.32f),new Color(.07f,.045f,.01f),new Color(1,.89f,.58f),forward:true);
-            var seals=PrepCard(stage,"Current seals",new Vector2(.705f,.65f),Vector2.one);
-            Label(seals,"악마 봉인  "+Game.ActiveSealCount+" / 7",29,48,gold);
-            var marks=Row(seals,44);
-            foreach(var demon in s.demons)
-            {
-                var mark=new GameObject("Seal "+demon.sin,typeof(RectTransform),typeof(CanvasRenderer),typeof(SealGlyph));mark.transform.SetParent(marks,false);
-                mark.GetComponent<SealGlyph>().raycastTarget=false;
-                mark.GetComponent<SealGlyph>().color=demon.remaining>0?gold:new Color(.25f,.28f,.30f);
-            }
-            string active=string.Join("  ·  ",s.demons.Where(d=>d.remaining>0).Select(d=>Rules.Sins[(int)d.sin]+" "+d.remaining+"일"));
-            Label(seals,active.Length==0?"현재 봉인된 악마가 없습니다.":active,21,120,muted);
-            var growth=PrepCard(stage,"Enemy scaling",new Vector2(.705f,.395f),new Vector2(1,.63f));
-            Label(growth,"현재 적 강화",27,32,gold);
-            Label(growth,"체력  "+Rules.Round(Game.EnemyHealthMultiplier*100)+"%",29,42,new Color(.83f,.36f,.32f));
-            Label(growth,"공격력  "+Rules.Round(Game.EnemyAttackMultiplier*100)+"%",29,42,new Color(.83f,.36f,.32f));
-            Label(growth,"현재 봉인 "+Game.ActiveSealCount+"명 기준",19,24,muted);
-            var recent=PrepCard(stage,"Recent records",new Vector2(.705f,0),new Vector2(1,.375f));
-            Label(recent,"최근 기록",27,40,gold);
-            var records=s.logs.Where(l=>l.Contains("전투 시작")||l.Contains("봉인 성공")).Reverse().Take(4).Reverse().ToList();
-            if(records.Count==0)Label(recent,"전투 기록이 여기에 표시됩니다.",21,80,muted);
-            else foreach(string line in records)Label(recent,line,21,52,ink);
-        }
+        void RenderPreparation(Transform body){RenderShelterWorkspace(body);}
         void RenderRecords(Transform body)
         {
             var p = Game.S.permanent; Label(body,"별이 기억하는 이름",36,65,gold);

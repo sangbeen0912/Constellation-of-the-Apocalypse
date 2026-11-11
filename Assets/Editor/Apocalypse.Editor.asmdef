@@ -1,1 +1,1 @@
-{"name":"Apocalypse.Editor","references":["Apocalypse.Runtime","Unity.ugui"],"includePlatforms":["Editor"]}
+{"name":"Apocalypse.Editor","references":["Apocalypse.Runtime","Unity.ugui","Unity.TextMeshPro"],"includePlatforms":["Editor"]}

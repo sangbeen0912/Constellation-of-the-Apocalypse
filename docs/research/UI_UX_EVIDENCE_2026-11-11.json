@@ -1,0 +1,100 @@
+{
+  "date": "2026-11-11",
+  "scope": "research only; no implementation or reference-game hands-on play",
+  "directlyObservedUiMedia": [
+    {
+      "id": "DD-town",
+      "game": "Darkest Dungeon",
+      "kind": "official screenshot",
+      "url": "https://img2.storyblok.com/fit-in/1280x640/filters:format(webp)/f/127947/1920x1080/f2aa3be891/ss-18.png",
+      "observed": "village, roster right, resources and single Embark at bottom",
+      "version": "not labeled by gallery"
+    },
+    {
+      "id": "DD-battle",
+      "game": "Darkest Dungeon",
+      "kind": "official screenshot",
+      "url": "https://img2.storyblok.com/fit-in/1280x640/filters:format(webp)/f/127947/1920x1080/cec0cc962f/ss-01.png",
+      "observed": "combat stage above character/actions and map below; older UI",
+      "version": "not labeled; older presentation"
+    },
+    {
+      "id": "DD-character",
+      "game": "Darkest Dungeon",
+      "kind": "official screenshot",
+      "url": "https://img2.storyblok.com/fit-in/1280x640/filters:format(webp)/f/127947/1920x1080/f0bf48a6c3/ss-15.png",
+      "observed": "character inspection overlays village; roster remains visible",
+      "version": "not labeled"
+    },
+    {
+      "id": "TLS-character",
+      "game": "The Last Spell",
+      "kind": "official Steam screenshot",
+      "url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1105670/ss_9379ffc91f53bb564c96f78676ddd1f6044504f6.1920x1080.jpg?t=1791544938",
+      "observed": "character sheet, persistent stats, tabs, grouped equipment/perks, highlighted tooltip",
+      "version": "gallery patch version not labeled"
+    },
+    {
+      "id": "TLS-battle",
+      "game": "The Last Spell",
+      "kind": "official Steam screenshot",
+      "url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1105670/ss_f9f2f753294fdbbbe637e8b3060fd3272ed13d37.1920x1080.jpg?t=1791544938",
+      "observed": "bottom compact action icons, roster top right, contextual selected-enemy information",
+      "version": "gallery patch version not labeled"
+    },
+    {
+      "id": "ZS-hud",
+      "game": "ZERO Sievert",
+      "kind": "official Steam screenshot",
+      "url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1782120/ss_1a8d33591a260af5e18b900319e978c9f9d46380.1920x1080.jpg?t=1788990111",
+      "observed": "compact HP/stamina/status HUD at upper left, unframed gameplay area",
+      "version": "gallery patch version not labeled"
+    },
+    {
+      "id": "ZS-effect",
+      "game": "ZERO Sievert",
+      "kind": "official Steam screenshot",
+      "url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1782120/ss_74742b57383823fa85512d01232809857664a545.1920x1080.jpg?t=1788990111",
+      "observed": "same small HUD, strong magenta effects; do not copy neon palette wholesale",
+      "version": "gallery patch version not labeled"
+    },
+    {
+      "id": "SP-shelter-before",
+      "game": "Shardpunk",
+      "kind": "developer GIF, sampled visually, not full sequence timing",
+      "url": "https://i.imgur.com/Mx0rbCX.gif",
+      "source": "https://bryqu.itch.io/shardpunk/devlog/475926/devlog-134-shelter-phase-changes",
+      "observed": "shelter scene and action strip with repeated portrait actions",
+      "version": "pre-release development history 2023"
+    },
+    {
+      "id": "SP-shelter-after",
+      "game": "Shardpunk",
+      "kind": "developer GIF, sampled visually, not full sequence timing",
+      "url": "https://i.imgur.com/J6eKHmy.gif",
+      "source": "https://bryqu.itch.io/shardpunk/devlog/475926/devlog-134-shelter-phase-changes",
+      "observed": "shelter and action strip, fewer repeated healing portraits; selection-specific information",
+      "version": "pre-release development history 2023"
+    }
+  ],
+  "excludedFromUiLayoutAnalysis": [
+    {
+      "url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1782120/757458a09b184d78cee3ef98b6e5f331af7438db/ss_757458a09b184d78cee3ef98b6e5f331af7438db.1920x1080.jpg?t=1788990111",
+      "reason": "promotional illustration, no game UI"
+    },
+    {
+      "url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1183800/ss_902c86d9a1d65c36258b75fc014d07f77d0ff9de.1920x1080.jpg?t=1792858782",
+      "reason": "cropped battle feedback only; not shelter or full UI evidence"
+    },
+    {
+      "url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1183800/ss_47abedcd201836989093a239c473c0e350701a25.1920x1080.jpg?t=1792858782",
+      "reason": "cropped reaction-attack feedback only; not full UI layout evidence"
+    }
+  ],
+  "currentGameScreens": [
+    "TestResults/PlayerQA/Runs/20261111-192204-3d8786832cbd4958b9fadf7668891185/03-shelter.png",
+    "TestResults/PlayerQA/Runs/20261111-192204-3d8786832cbd4958b9fadf7668891185/05-tiered-upgrades.png",
+    "TestResults/PlayerQA/Runs/20261111-192204-3d8786832cbd4958b9fadf7668891185/37-emergency-commands.png"
+  ],
+  "clickCounts": "static source audit, conditional start states; proposals are untested targets"
+}

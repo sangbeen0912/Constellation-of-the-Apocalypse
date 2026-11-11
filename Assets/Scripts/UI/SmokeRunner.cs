@@ -22,7 +22,50 @@ namespace Apocalypse
         IEnumerator Frame(){yield return new WaitForEndOfFrame();yield return null;}
         IEnumerator Capture(string label)
         {
-            yield return new WaitForEndOfFrame();ScreenCapture.CaptureScreenshot(Path.Combine(output,(++screenshot).ToString("00")+"-"+label+".png"));yield return null;yield return null;
+            var fonts=app.GetComponentInChildren<DynamicFontRefresh>();float limit=Time.realtimeSinceStartup+1;
+            while(fonts!=null&&!fonts.IsSettled&&Time.realtimeSinceStartup<limit)yield return null;
+            Check(fonts==null||fonts.IsSettled,"Font cache must settle: "+label);
+            yield return new WaitForSecondsRealtime(.25f);
+            yield return new WaitForEndOfFrame();
+            if(Environment.GetCommandLineArgs().Contains("-qa-font-diagnostics")){DumpSidebar(label);if(label=="direct-enemy-target"||label=="chapel-supplies")DumpFontTextures(label);}
+            var captured=ScreenCapture.CaptureScreenshotAsTexture();
+            // Exercise every screen, but persist only a small current showcase instead of dozens of near-duplicates.
+            bool keep=label=="title"||label=="shelter"||label=="tiered-upgrades"||label=="area-Subway"||label=="codex-workspace"||label=="personnel"||label=="emergency-commands"||label=="campaign-victory";
+            if(keep)File.WriteAllBytes(Path.Combine(output,(++screenshot).ToString("00")+"-"+label+".png"),captured.EncodeToPNG());
+            Destroy(captured);yield return null;yield return null;
+        }
+        
+        void DumpFontTextures(string screen)
+        {
+            int index=0;
+            foreach(var font in app.GetComponentsInChildren<Text>().Select(t=>t.font).Where(f=>f!=null).Distinct())
+            {
+                var source=font.material.mainTexture;var target=RenderTexture.GetTemporary(source.width,source.height,0,RenderTextureFormat.ARGB32);
+                var old=RenderTexture.active;Graphics.Blit(source,target);RenderTexture.active=target;
+                var copy=new Texture2D(source.width,source.height,TextureFormat.RGBA32,false);copy.ReadPixels(new Rect(0,0,source.width,source.height),0,0);
+                var pixels=copy.GetPixels32();for(int i=0;i<pixels.Length;i++){byte alpha=pixels[i].a;pixels[i]=new Color32(alpha,alpha,alpha,255);}copy.SetPixels32(pixels);copy.Apply(false);
+                File.WriteAllBytes(Path.Combine(output,screen+"-font"+(++index)+"-"+source.GetInstanceID()+".png"),copy.EncodeToPNG());
+                Destroy(copy);RenderTexture.active=old;RenderTexture.ReleaseTemporary(target);
+            }
+        }
+        void DumpSidebar(string screen)
+        {
+            var sidebar=app.GetComponentsInChildren<RectTransform>().FirstOrDefault(r=>r.name=="Sidebar");if(sidebar==null)return;
+            var report=new System.Text.StringBuilder();
+            foreach(var t in sidebar.GetComponentsInChildren<Text>())
+            {
+                report.AppendLine(t.text.Replace("\n"," / ")+" size="+t.fontSize+" scale="+t.pixelsPerUnit+" rect="+t.rectTransform.rect+" mask="+t.maskable+" clipParents="+t.GetComponentsInParent<RectMask2D>().Length+" fontID="+t.font.GetInstanceID()+" textureID="+t.mainTexture.GetInstanceID()+" clip="+t.canvasRenderer.hasRectClipping);
+                var mesh=t.canvasRenderer.GetMesh();var vertices=mesh.vertices;var uv=mesh.uv;
+                report.AppendLine("mesh="+vertices.Length+" generated="+t.cachedTextGenerator.vertexCount+" texture="+t.mainTexture.width+"x"+t.mainTexture.height);
+                for(int i=0;i<Math.Min(16,vertices.Length);i++)report.AppendLine(i+" pos="+vertices[i].ToString("F3")+" uv="+uv[i].ToString("F5"));
+                for(int i=0;i<Math.Min(6,t.text.Length);i++)
+                {
+                    CharacterInfo info;int size=Mathf.RoundToInt(t.fontSize*t.pixelsPerUnit);bool has=t.font.GetCharacterInfo(t.text[i],out info,size,t.fontStyle);
+                    report.AppendLine(t.text[i]+" size="+size+" has="+has+" uv="+info.uvBottomLeft.ToString("F5")+","+info.uvTopRight.ToString("F5"));
+                }
+
+            }
+            File.WriteAllText(Path.Combine(output,screen+"-sidebar.txt"),report.ToString());
         }
         Button Find(string prefix)
         {
@@ -30,7 +73,11 @@ namespace Apocalypse
         }
         void Click(string prefix)
         {
-            var button=Find(prefix);Canvas.ForceUpdateCanvases();var rect=button.GetComponent<RectTransform>();
+            ClickButton(Find(prefix));
+        }
+        void ClickButton(Button button)
+        {
+            string prefix=button.name;Canvas.ForceUpdateCanvases();var rect=button.GetComponent<RectTransform>();
             var pointer=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,rect.TransformPoint(rect.rect.center)),button=PointerEventData.InputButton.Left};
             var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(pointer,hits);
             Check(hits.Count>0&&hits[0].gameObject.GetComponentInParent<Button>()==button,"Pointer blocked: "+prefix);
@@ -58,8 +105,12 @@ namespace Apocalypse
             yield return Capture("omen-locked");Click("계속 진행");yield return Frame();
             app.Game.S.scheduledConstellation=null;app.Game.S.phase=Phase.Morning;app.Game.S.divinity=1000;
             Check(app.Game.Invest(Stat.Attack,100)&&app.Game.UpgradeCost(Stat.Attack)==20&&app.Game.UpgradeCost(Stat.Health)==10,"Independent upgrade tiers");
-            app.Navigate("예배방");yield return Frame();yield return Capture("tiered-upgrades");app.Navigate("쉘터");yield return Frame();
-            Click("전투준비");yield return Frame();
+            app.Navigate("예배방");yield return Frame();yield return Capture("tiered-upgrades");
+            Click("×10");yield return Frame();yield return Capture("batch-upgrade-preview");
+            int batchMoney=app.Game.S.divinity;Click("체력 10회 강화");yield return Frame();Check(app.Game.UpgradeCount(Stat.Health)==10&&app.Game.S.divinity==batchMoney-100,"One click batch preserves stepped cost");
+            Click("보급품");yield return Frame();batchMoney=app.Game.S.divinity;Click("5회 보급");yield return Frame();Check(app.Game.S.divinity==batchMoney-5,"Five supplies exact cost");yield return Capture("chapel-supplies");
+            if(args.Contains("-qa-hold-ui"))yield return new WaitForSecondsRealtime(20);
+            app.Navigate("쉘터");yield return Frame();
             Check(!app.GetComponentsInChildren<Button>().Any(b=>b.GetComponentInChildren<Text>().text=="침수된 지하철역"),"Destinations hidden before exploration click");
             Click("탐사");yield return Frame();Click("침수된 지하철역");yield return Frame();yield return Capture("subway-preparation");
             Click("탐사 출발");yield return Frame();app.Game.S.scheduledConstellation=null;app.Render();yield return Frame();
@@ -111,13 +162,23 @@ namespace Apocalypse
                 Click("이야기 확인");yield return Frame();Check(app.Game.S.permanent.unlocked.Contains(c.id),"Constellation unlocked");
             }
             app.Game.S.phase=Phase.Morning;foreach(var n in app.Game.Content.rareNpcs)app.Game.S.candidates.Add(app.Game.CreateRare(n.id));
+            app.Navigate("성좌 도감");app.Codex.Select("yog",app.Game.S.permanent);app.Render();yield return Frame();yield return Capture("codex-workspace");
+            var restore=app.Game.S.relics.First();restore.awaitingRestoration=true;app.Navigate("예배방");yield return Frame();Click("성유물 복원");yield return Frame();Click("복원 기록 보기");yield return Frame();yield return Capture("restoration-preview");Click("복원 확정");yield return Frame();Check(!restore.awaitingRestoration,"Restore from immediate preview");
             app.Navigate("인재관리실");yield return Frame();yield return Capture("personnel");
             Fixture(Area.Rift);app.Game.InteractiveCombat=true;app.Game.S.avatar.baseAttack=8;
             Check(app.Game.PresentGeneralEvent("RF-005"),"Mixed formation");app.Render();yield return Frame();Click(app.Game.S.pending.choices[0]);yield return Frame();yield return Capture("live-battle");
+            app.Game.S.combat.waiting=true;app.Game.S.combat.prompt="공격 대상을 선택하십시오";app.enabled=true;
+            float targetDeadline=Time.realtimeSinceStartup+3;
+            while(!app.GetComponentsInChildren<Button>().Any(b=>b.GetComponentInChildren<Text>().text=="명령 없이 계속")&&Time.realtimeSinceStartup<targetDeadline)yield return null;
+            Check(app.GetComponentsInChildren<Button>().Any(b=>b.GetComponentInChildren<Text>().text=="명령 없이 계속"),"Direct target command panel ready");
+            string selectionState=JsonUtility.ToJson(app.Game.S);ClickButton(app.GetComponentsInChildren<Button>().Single(b=>b.name=="Combat bar 1"));yield return Frame();
+            Check(selectionState==JsonUtility.ToJson(app.Game.S),"Direct target selection changes no core state");
+            Check(app.GetComponentsInChildren<Text>().Any(t=>t.text=="▶ "+app.Game.S.combat.enemies[1].name),"Selected enemy highlight");yield return Capture("direct-enemy-target");app.enabled=false;Click("명령 없이 계속");yield return Frame();
             Click("연출 건너뛰기");app.enabled=true;float deadline=Time.realtimeSinceStartup+10;
             while(app.Game.S.combat!=null&&!app.Game.S.combat.waiting&&Time.realtimeSinceStartup<deadline)yield return null;
             Check(app.Game.S.combat!=null&&app.Game.S.combat.waiting,"Emergency command reached");yield return new WaitForSecondsRealtime(.8f);yield return Capture("emergency-commands");
             hours=app.Game.S.hours;uint rng=app.Game.S.rng;int money=app.Game.S.divinity;
+
             app.SkipBattlePresentation();yield return Frame();Check(app.Game.S.hours==hours&&app.Game.S.rng==rng&&app.Game.S.divinity==money,"Skip pauses at command");
             Check(app.Saves.Write(app.Game.S)&&app.LoadGame(),"Live battle save reload");yield return new WaitForSecondsRealtime(.8f);
             Check(app.Game.S.combat.waiting,"Command restored");
@@ -139,7 +200,7 @@ namespace Apocalypse
             }
             Check(app.Game.S.phase==Phase.Victory,"Natural campaign victory");app.Game.InteractiveCombat=true;app.Render();yield return Frame();yield return Capture("campaign-victory");
             Check(app.Saves.Write(app.Game.S)&&app.LoadGame(),"Final save reload");yield return Frame();
-            string report="result=PASS\nversion=Unified encounter rules5\napproved-events=174; supplemental-rift=4; residence-divine=3\nrelics=10; constellations=20\nactual-pointer-clicks=PASS\ntransit/reroll/free-return=PASS\nlive-animation/command/skip/reload/gluttony=PASS\ncampaign-seed="+seed+"; days="+app.Game.S.day+"; steps="+steps+"\nsave="+app.Saves.PathName;
+            string report="result=PASS\nversion=Pixel UI 2026-11-12\napproved-events=174; supplemental-rift=4; residence-divine=3\nrelics=10; constellations=20\nactual-pointer-clicks=PASS\ntransit/reroll/free-return=PASS\nlive-animation/command/skip/reload/gluttony=PASS\ncampaign-seed="+seed+"; days="+app.Game.S.day+"; steps="+steps+"\nsave="+app.Saves.PathName;
             File.WriteAllText(Path.Combine(output,"player-smoke.txt"),report);Debug.Log("APOCALYPSE_PLAYER_SMOKE_PASS");Application.Quit(0);
         }
         void OnDestroy(){Application.logMessageReceived-=OnLog;}

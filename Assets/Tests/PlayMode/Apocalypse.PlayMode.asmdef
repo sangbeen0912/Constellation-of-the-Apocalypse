@@ -1,1 +1,1 @@
-{"name":"Apocalypse.PlayMode","references":["Apocalypse.Runtime","Unity.ugui"],"optionalUnityReferences":["TestAssemblies"]}
+{"name":"Apocalypse.PlayMode","references":["Apocalypse.Runtime","Unity.ugui","Unity.TextMeshPro"],"optionalUnityReferences":["TestAssemblies"]}

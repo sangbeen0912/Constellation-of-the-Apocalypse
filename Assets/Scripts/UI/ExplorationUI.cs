@@ -77,17 +77,29 @@ namespace Apocalypse
             if(UnityEngine.EventSystems.EventSystem.current!=null)UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(skip.gameObject);
         }
         readonly Text[] resourceTexts=new Text[4];
-        sealed class HudMeter{public string name;public Text text;public RectTransform fill;}
+        sealed class HudMeter{public string name;public Text text;public RectTransform fill;public double value=double.NaN,max=double.NaN;}
+        readonly Text[] lastResourceLabels=new Text[4];
+        readonly int[] lastResourceValues=new int[4];
+        Text lastHudClock,lastHudControl;
+        double lastHudHours=double.NaN;
+        bool lastHudLock;
+        void RefreshResource(int index,string caption,int value)
+        {
+            var label=resourceTexts[index];if(label==null)return;
+            if(lastResourceLabels[index]==label&&lastResourceValues[index]==value)return;
+            lastResourceLabels[index]=label;lastResourceValues[index]=value;label.text=caption+value;
+        }
         readonly System.Collections.Generic.List<HudMeter> hudMeters=new System.Collections.Generic.List<HudMeter>(3);
         void RefreshRunningHud()
         {
             var s=Game.S;var a=s.avatar;if(a==null)return;
-            if(resourceTexts[1]!=null)resourceTexts[1].text="신위  "+s.divinity;
-            if(resourceTexts[2]!=null)resourceTexts[2].text="식량  "+s.food;
-            if(resourceTexts[3]!=null)resourceTexts[3].text="의료품  "+s.medicine;
-            foreach(var m in hudMeters){double value=m.name=="체력"?a.health:m.name=="정신력"?a.sanity:a.hunger,max=m.name=="체력"?a.MaxHealth:100;m.text.text=m.name+"  "+Rules.Round(value)+" / "+Rules.Round(max);m.fill.anchorMax=new Vector2((float)(value/max),1);}
-            if(timeStatus!=null)timeStatus.text=Rules.Clock(s.hours)+" · 남은 "+Math.Max(0,Rules.DayHours-s.hours).ToString("0.0")+"시간";
-            if(controlStatus!=null){controlStatus.text=s.controlLocked?"개입권 잠김":"개입 가능";controlStatus.color=s.controlLocked?new Color(.95f,.45f,.35f):muted;}
+            RefreshSealSummary();
+            RefreshResource(1,"신위  ",s.divinity);
+            RefreshResource(2,"식량  ",s.food);
+            RefreshResource(3,"의료품  ",s.medicine);
+            foreach(var m in hudMeters){double value=m.name=="체력"?a.health:m.name=="정신력"?a.sanity:a.hunger,max=m.name=="체력"?a.MaxHealth:100;if(m.value==value&&m.max==max)continue;m.value=value;m.max=max;m.text.text=m.name+"  "+Rules.Round(value)+" / "+Rules.Round(max);m.fill.anchorMax=new Vector2((float)(value/max),1);}
+            if(timeStatus!=null&&(lastHudClock!=timeStatus||lastHudHours!=s.hours)){lastHudClock=timeStatus;lastHudHours=s.hours;timeStatus.text=Rules.Clock(s.hours)+" · 남은 "+Math.Max(0,Rules.DayHours-s.hours).ToString("0.0")+"시간";}
+            if(controlStatus!=null&&(lastHudControl!=controlStatus||lastHudLock!=s.controlLocked)){lastHudControl=controlStatus;lastHudLock=s.controlLocked;controlStatus.text=s.controlLocked?"개입권 잠김":"개입 가능";controlStatus.color=s.controlLocked?new Color(.95f,.45f,.35f):muted;}
         }
         void DrawAreaArt(Transform parent,Area area,Vector2 min,Vector2 max)
         {

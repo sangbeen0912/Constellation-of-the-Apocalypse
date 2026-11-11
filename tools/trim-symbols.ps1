@@ -7,12 +7,20 @@ if (!(Test-Path -LiteralPath (Join-Path $taskBuildRoot 'build-summary.txt'))) { 
 if (!(Get-Content -LiteralPath (Join-Path $taskBuildRoot 'build-summary.txt') -Raw).Contains('result=Succeeded')) { throw 'Build has not succeeded.' }
 $taskActual = (Resolve-Path -LiteralPath $taskManaged).Path
 if ($taskActual -ne $taskManaged -or (Get-Item -LiteralPath $taskManaged -Force).LinkType) { throw 'Unexpected managed directory.' }
+# Burst emits source-level diagnostic text in a directory explicitly excluded from shipping.
+$taskBuildActual=(Resolve-Path -LiteralPath $taskBuildRoot).Path
+foreach($taskDebug in @(Get-ChildItem -LiteralPath $taskBuildActual -Directory | Where-Object { $_.Name.EndsWith('_BurstDebugInformation_DoNotShip') })) {
+    $taskDebugPath=(Resolve-Path -LiteralPath $taskDebug.FullName).Path
+    if($taskDebug.Parent.FullName -ne $taskBuildActual -or !$taskDebugPath.StartsWith($taskBuildActual+'\',[StringComparison]::OrdinalIgnoreCase) -or ($taskDebug.Attributes -band [IO.FileAttributes]::ReparsePoint)){throw 'Unexpected Burst diagnostic directory.'}
+    if(@(Get-ChildItem -LiteralPath $taskDebugPath -Recurse -Force | Where-Object { $_.Attributes -band [IO.FileAttributes]::ReparsePoint }).Count){throw 'Linked Burst diagnostic directory.'}
+    Remove-Item -LiteralPath $taskDebugPath -Recurse -Force
+}
 $taskFiles = @(Get-ChildItem -LiteralPath $taskManaged -Filter '*.pdb' -File)
 if ($taskFiles.Count -eq 0) { Write-Output 'No deployment symbols to move.'; return }
 foreach ($taskFile in $taskFiles) {
     if ($taskFile.DirectoryName -ne $taskManaged -or $taskFile.LinkType) { throw 'Unexpected symbol path.' }
 }
-$taskArchiveDirectory = Join-Path $taskRoot ('TestResults\SymbolArchives\' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [Guid]::NewGuid().ToString('N'))
+$taskArchiveDirectory = Join-Path $taskRoot 'TestResults\SymbolArchives'
 New-Item -ItemType Directory -Path $taskArchiveDirectory -Force | Out-Null
 $taskArchive = Join-Path $taskArchiveDirectory ($Build.ToLowerInvariant() + '-symbols.zip')
 Compress-Archive -LiteralPath $taskFiles.FullName -DestinationPath $taskArchive -Force

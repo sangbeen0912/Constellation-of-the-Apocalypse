@@ -61,7 +61,7 @@ namespace Apocalypse
         { return Box(parent,name,min,max,Color.clear); }
         void PageBar(Transform parent,int page,int count,Action<int> change)
         {
-            int total = Math.Max(1,count);
+            int total = Math.Max(1,count);if(total<=1)return;
             var row = Row(parent,42);
             MakeButton(row,"이전 페이지",()=>change(page-1),page>0);
             Label(row,(page+1)+" / "+total,22,42,gold).alignment=TextAnchor.MiddleCenter;
@@ -78,42 +78,15 @@ namespace Apocalypse
             FixedArt(body,Facility(index),new Vector2(.735f,.82f),new Vector2(.985f,.985f));
             return ScreenArea(body,"Facility content",new Vector2(.015f,.015f),new Vector2(.985f,.80f));
         }
-        void RenderFacilityScreen(Transform body)
-        {
-            if(tab=="쉘터")
-            {
-                var s=Game.S;
-                Positioned(body,s.phase==Phase.Report?"제7 쉘터  /  귀환":"제7 쉘터  /  새벽의 준비",new Vector2(.025f,.91f),new Vector2(.975f,.99f),34,gold);
-                for(int i=0;i<4;i++)
-                {
-                    int index=i;string destination=ArtCatalog.FacilityNames[i];float y=.705f-i*.215f;
-                    var card=Box(body,"Shelter "+destination,new Vector2(.02f,y),new Vector2(.62f,y+.185f),panel);
-                    Plate(card,panel);FixedArt(card,Facility(index),new Vector2(.012f,.055f),new Vector2(.25f,.945f));
-                    Positioned(card,"0"+(index+1)+"  "+destination,new Vector2(.28f,.50f),new Vector2(.97f,.87f),27,gold);
-                    string detail=new[]{"회복 · 수면","보급 · 복원 · 후원","물자 · 성유물","화신체 · 생존자"}[index];
-                    Positioned(card,detail,new Vector2(.28f,.17f),new Vector2(.62f,.48f),21,muted);
-                    PlacedButton(card,"시설 이용 · "+destination,new Vector2(.64f,.13f),new Vector2(.98f,.45f),()=>Navigate(destination),s.phase==Phase.Morning);
-                }
-                var overview=Box(body,"Shelter overview",new Vector2(.645f,.06f),new Vector2(.98f,.89f),panel);Plate(overview,panel);
-                FixedArt(overview,city,new Vector2(.025f,.49f),new Vector2(.975f,.98f));
-                Positioned(overview,s.phase==Phase.Report?"귀환 기록":"오늘의 준비",new Vector2(.05f,.38f),new Vector2(.95f,.47f),28,gold);
-                Positioned(overview,s.phase==Phase.Report?s.report:"시설에서 화신체를 정비하고\n오늘의 활동을 준비하십시오.",new Vector2(.05f,.13f),new Vector2(.95f,.37f),22,ink);
-                if(s.phase==Phase.Report)PlacedButton(overview,"다음 날 아침",new Vector2(.05f,.035f),new Vector2(.95f,.115f),()=>Act(()=>Game.NextDay()),true,true);
-                else PlacedButton(overview,"활동 준비",new Vector2(.05f,.035f),new Vector2(.95f,.115f),()=>Navigate("전투준비"),true,true);
-                return;
-            }
-            var area=FacilityBody(body);
-            if(tab=="의무실")RenderClinicScreen(area);
-            else if(tab=="예배방")RenderChapelScreen(area);
-            else if(tab=="보급창고")RenderWarehouseScreen(area);
-            else RenderPersonnelScreen(area,false);
-        }
+        void RenderFacilityScreen(Transform body){RenderShelterWorkspace(body);}
         Toggle ItemCheck(Transform parent,string label,bool value,bool available,Action<bool> change)
         {
             var line=Row(parent,56);line.name="Item checkbox "+label;
             var layout=line.GetComponent<HorizontalLayoutGroup>();layout.childForceExpandWidth=false;layout.childForceExpandHeight=false;layout.childAlignment=TextAnchor.MiddleLeft;
             var toggle=line.gameObject.AddComponent<Toggle>();toggle.interactable=available;
             var frame=Box(line,"Checkbox",Vector2.zero,Vector2.one,new Color(.12f,.16f,.18f));
+            frame.GetComponent<Image>().color=Color.clear;
+            var checkbox=Plate(frame,new Color(.09f,.12f,.17f));checkbox.customRim=true;checkbox.rimColor=available?ink:muted;
             var le=frame.gameObject.AddComponent<LayoutElement>();le.minWidth=28;le.preferredWidth=28;le.minHeight=28;le.preferredHeight=28;le.flexibleWidth=0;
             var mark=Positioned(frame,"✓",Vector2.zero,Vector2.one,25,gold);
             toggle.targetGraphic=frame.GetComponent<Image>();toggle.graphic=mark;toggle.SetIsOnWithoutNotify(value);
@@ -122,69 +95,76 @@ namespace Apocalypse
         }
         void RenderClinicScreen(Transform body)
         {
-            var s=Game.S;
-            Positioned(body,"남은 시간 "+(Rules.DayHours-s.hours).ToString("0.0")+"시간   ·   의료 키트 "+s.medicine+"   ·   주사기 "+s.syringes,new Vector2(.01f,.91f),new Vector2(.99f,1),23,muted);
-            if(s.medicine==0)healthItem=false;if(s.syringes==0)mentalItem=false;
+            var s=Game.S;if(s.medicine==0)healthItem=false;if(s.syringes==0)mentalItem=false;
+            Positioned(body,"남은 "+(Rules.DayHours-s.hours).ToString("0.0")+"시간  ·  키트 "+s.medicine+"  ·  주사기 "+s.syringes,new Vector2(.015f,.91f),new Vector2(.99f,.99f),20,muted);
             for(int i=0;i<3;i++)
             {
                 bool mental=i==1,sleep=i==2,item=i==0?healthItem:i==1&&mentalItem;
-                string title=i==0?"체력 회복":i==1?"정신력 회복":"잠자기";
-                float y=.61f-i*.29f;var card=Box(body,"Clinic "+title,new Vector2(.01f,y),new Vector2(.99f,y+.26f),panel);Plate(card,panel);
+                string title=sleep?"잠자기":mental?"정신력 회복":"체력 회복";float x=i/3f;
+                var card=WorkPanel(body,"Clinic "+title,new Vector2(x+.006f,.02f),new Vector2(x+.327f,.90f));
+                Icon(card,sleep?7:mental?3:2,new Vector2(.06f,.83f),new Vector2(.19f,.95f),ink);
+                Positioned(card,title,new Vector2(.22f,.82f),new Vector2(.96f,.97f),25,ink).fontStyle=FontStyle.Bold;
                 var p=Game.PreviewTreatment(mental||sleep,sleep,item);
-                Positioned(card,title,new Vector2(.025f,.52f),new Vector2(.19f,.86f),28,gold);
-                Positioned(card,p.hours+"시간",new Vector2(.025f,.16f),new Vector2(.19f,.48f),23,muted);
-                Positioned(card,"체력  "+Rules.Round(s.avatar.health)+" → "+p.healthAfter+"\n정신력  "+Rules.Round(s.avatar.sanity)+" → "+p.sanityAfter,new Vector2(.21f,.40f),new Vector2(.46f,.88f),23,ink);
-                Positioned(card,p.available?"회복 +"+p.health+" / +"+p.sanity:p.reason,new Vector2(.21f,.10f),new Vector2(.46f,.38f),21,p.available?muted:ink);
-                var check=ScreenArea(card,"Treatment item",new Vector2(.48f,.23f),new Vector2(.77f,.77f));
-                if(!sleep)ItemCheck(check,i==0?"응급 의료 키트 사용":"정신 회복 주사기 사용",item,i==0?s.medicine>0:s.syringes>0,on=>{if(mental)mentalItem=on;else healthItem=on;});
-                else Positioned(check,"깊은 수면",Vector2.zero,Vector2.one,23,muted);
-                PlacedButton(card,title+" 실행",new Vector2(.79f,.32f),new Vector2(.975f,.68f),()=>Act(()=>Game.Treat(mental||sleep,sleep,item)),p.available,true);
+                var time=Box(card,"Treatment duration",new Vector2(.06f,.68f),new Vector2(.94f,.81f),new Color(.17f,.21f,.29f));
+                Positioned(time,p.hours+"시간",Vector2.zero,Vector2.one,27,ink).alignment=TextAnchor.MiddleCenter;
+                Positioned(card,"체력  "+Rules.Round(s.avatar.health)+" → "+p.healthAfter+"\n정신력  "+Rules.Round(s.avatar.sanity)+" → "+p.sanityAfter,new Vector2(.07f,.40f),new Vector2(.94f,.65f),23,ink);
+                if(!sleep)ItemCheck(ScreenArea(card,"Treatment item",new Vector2(.07f,.24f),new Vector2(.94f,.37f)),i==0?"응급 의료 키트 사용":"정신 회복 주사기 사용",item,i==0?s.medicine>0:s.syringes>0,on=>{if(mental)mentalItem=on;else healthItem=on;});
+                else Positioned(card,"두 상태를 함께 회복",new Vector2(.07f,.24f),new Vector2(.94f,.35f),22,muted);
+                if(!p.available)Positioned(card,p.reason,new Vector2(.07f,.14f),new Vector2(.94f,.23f),18,muted);
+                var action=PlacedButton(card,title+" 실행",new Vector2(.06f,.025f),new Vector2(.94f,.18f),()=>Act(()=>Game.Treat(mental||sleep,sleep,item)),p.available,true);
+                action.GetComponentInChildren<Text>().fontSize=22;
             }
         }
         void RenderChapelScreen(Transform body)
         {
-            var tabs=PrepCard(body,"Chapel sections",new Vector2(0,.89f),Vector2.one);var row=Row(tabs,42);
-            foreach(string name in new[]{"보급품","성유물 복원","후원"}){string section=name;MakeButton(row,name,()=>{chapelSection=section;Render();},true,name==chapelSection);}
+            var tabs=Row(Box(body,"Chapel sections",new Vector2(0,.90f),Vector2.one,Color.clear),58);
+            foreach(string name in new[]{"후원","보급품","성유물 복원"}){string selected=name;WorkspaceTab(tabs,name,chapelSection==name,()=>{chapelSection=selected;Render();});}
             var area=ScreenArea(body,"Chapel panel",Vector2.zero,new Vector2(1,.87f));var s=Game.S;
             if(chapelSection=="보급품")
             {
-                var card=PrepCard(area,"Supply request",new Vector2(.03f,.05f),new Vector2(.97f,.97f));
-                Label(card,"쉘터 보급 요청",32,55,gold);Label(card,"보유 신위  "+s.divinity,25,45);
-                var options=Row(card,150);
-                foreach(var supply in content.supplies){var cell=Stack(options,10);Label(cell,supply.name,26,65,gold);}
-                MakeButton(card,"무작위 보급품 받기 · 신위 1",()=>Act(()=>Game.Supply()),s.phase==Phase.Morning&&s.divinity>=Rules.SupplyCost,true);
-                return;
+                var card=Stack(area,16);Label(card,"쉘터 보급 요청",29,50,gold);Label(card,"한 번당 신위 1 · 결과는 각각 무작위",24,42);
+                Label(card,"보유 신위 "+s.divinity+" · 식량 "+s.food+" · 의료 키트 "+s.medicine,23,42,muted);
+                var items=Row(card,70);foreach(var supply in content.supplies)Label(items,supply.name,23,60,ink);
+                var actions=Row(card,72);MakeButton(actions,"무작위 보급품 받기 · 신위 1",()=>Act(()=>Game.SupplyBatch(1)),s.phase==Phase.Morning&&s.divinity>=Rules.SupplyCost,true);
+                MakeButton(actions,"5회 보급 · 신위 5",()=>Act(()=>Game.SupplyBatch(5)),s.phase==Phase.Morning&&s.divinity>=Rules.SupplyCost*5,true);
+                foreach(string line in s.logs.Where(l=>l.Contains("무작위 보급")).Reverse().Take(5))Label(card,line,21,32,muted);return;
             }
             if(chapelSection=="성유물 복원")
             {
-                if(restorationId!=null){RenderRestoration(PrepCard(area,"Restoration",new Vector2(.015f,.01f),new Vector2(.985f,.99f)));return;}
+                if(restorationId!=null){RenderRestoration(Stack(area,12));return;}
                 var waiting=s.relics.Where(r=>r.awaitingRestoration).ToList();restorePage=Math.Max(0,Math.Min(restorePage,Math.Max(0,(waiting.Count-1)/2)));
                 for(int i=0;i<2;i++)
                 {
-                    var relic=waiting.Skip(restorePage*2+i).FirstOrDefault();if(relic==null)break;string id=relic.id;
-                    var card=PrepCard(area,"Waiting relic "+id,new Vector2(i*.5f+.01f,.13f),new Vector2(i*.5f+.49f,.98f));
-                    RelicCard(card,relic);Label(card,"계승자의 기록을 확인하고\n성유물을 복원합니다.",24,120,muted);
-                    MakeButton(card,"복원 기록 보기 · "+relic.name,()=>{restorationId=id;restorationStep=0;Render();});
+                    var relic=waiting.Skip(restorePage*2+i).FirstOrDefault();if(relic==null)break;string id=relic.id;float y=.53f-i*.45f;
+                    var card=PrepCard(area,"Waiting relic "+id,new Vector2(.01f,y),new Vector2(.99f,y+.43f));
+                    RelicCard(card,relic);MakeButton(card,"복원 기록 보기 · "+relic.name,()=>{restorationId=id;restorationStep=0;Render();});
                 }
                 if(waiting.Count==0)Positioned(area,"복원을 기다리는 성유물이 없습니다.",new Vector2(.04f,.4f),new Vector2(.96f,.7f),26,muted);
                 PageBar(PageFooter(area),restorePage,(waiting.Count+1)/2,p=>{restorePage=p;Render();});return;
             }
-            var invest=PrepCard(area,"Investments",new Vector2(.01f,.46f),new Vector2(.41f,.98f));
-            FixedArt(area,Facility(1),new Vector2(.01f,.02f),new Vector2(.41f,.43f));
-            Label(invest,"화신체 후원",31,55,gold);Label(invest,"보유 신위  "+s.divinity,26,50);
-            foreach(var stat in new[]{Stat.Health,Stat.Attack})
+            var quantity=Row(Box(area,"Upgrade quantity",new Vector2(.01f,.86f),new Vector2(.99f,1),Color.clear),62);
+            Label(quantity,"강화 횟수",23,54,muted);
+            foreach(int n in new[]{1,5,10}){int amount=n;WorkspaceTab(quantity,"×"+n,upgradeQuantity==n,()=>{upgradeQuantity=amount;Render();});}
+            int index=0;
+            foreach(Stat stat in new[]{Stat.Health,Stat.Attack})
             {
-                var chosen=stat;int cost=Game.UpgradeCost(stat);int count=Game.UpgradeCount(stat);
-                Label(invest,(stat==Stat.Health?"최대 체력":"공격력")+" · "+count+"회 강화 / 기본값 +"+(stat==Stat.Health?s.avatar.healthInvestment:s.avatar.attackInvestment)+"%",21,36,muted);
-                MakeButton(invest,(stat==Stat.Health?"체력":"공격력")+" 강화 +10% · 신위 "+cost,()=>Act(()=>Game.Invest(chosen,Game.UpgradeCost(chosen))),s.phase==Phase.Morning&&s.divinity>=cost);
+                var chosen=stat;float x=index++*.5f;var card=WorkPanel(area,"Upgrade "+stat,new Vector2(x+.01f,.43f),new Vector2(x+.49f,.83f));
+                int count=Game.UpgradeCount(stat),cost=Game.UpgradeBatchCost(stat,upgradeQuantity);
+                Positioned(card,stat==Stat.Health?"최대 체력":"공격력",new Vector2(.05f,.78f),new Vector2(.96f,.97f),28,ink);
+                Positioned(card,count+"회 강화 · 다음 1회 신위 "+Game.UpgradeCost(stat),new Vector2(.05f,.61f),new Vector2(.96f,.78f),21,muted);
+                int current=stat==Stat.Health?s.avatar.MaxHealth:s.avatar.Attack;
+                int next=stat==Stat.Health?Rules.Round(s.avatar.baseHealth*(1+(s.avatar.healthInvestment+upgradeQuantity*10)/100.0))+s.avatar.relicHealthBonus:
+                    Rules.Round(s.avatar.baseAttack*(1+(s.avatar.attackInvestment+upgradeQuantity*10)/100.0))+s.avatar.relicAttackBonus;
+                Positioned(card,current+" → "+next+"\n합계 신위 "+cost,new Vector2(.05f,.34f),new Vector2(.96f,.61f),23,gold);
+                string label=upgradeQuantity==1?(stat==Stat.Health?"체력":"공격력")+" 강화 +10% · 신위 "+cost:(stat==Stat.Health?"체력":"공격력")+" "+upgradeQuantity+"회 강화 · 신위 "+cost;
+                PlacedButton(card,label,new Vector2(.04f,.035f),new Vector2(.96f,.32f),()=>Act(()=>Game.UpgradeBatch(chosen,upgradeQuantity)),s.phase==Phase.Morning&&s.divinity>=cost,true);
             }
             var owned=content.constellations.Where(c=>s.permanent.unlocked.Contains(c.id)).ToList();
-            inheritancePage=Math.Max(0,Math.Min(inheritancePage,Math.Max(0,(owned.Count-1)/6)));
-            var inherit=PrepCard(area,"Inheritance",new Vector2(.43f,.13f),new Vector2(.99f,.98f));Label(inherit,"성좌의 계승",29,46,gold);
-            foreach(var c in owned.Skip(inheritancePage*6).Take(6)){string id=c.id;int cost=Rules.InheritCosts[c.grade];MakeButton(inherit,c.name+" 계승 · "+cost+(s.avatar.Has(id)?" · 계승 완료":""),()=>Act(()=>Game.Inherit(id)),s.phase==Phase.Morning&&!s.avatar.Has(id)&&s.divinity>=cost);}
-            if(owned.Count==0)Label(inherit,"기록된 성좌가 없습니다.",23,80,muted);
-            var controls=PrepCard(area,"Inheritance pages",new Vector2(.43f,.01f),new Vector2(.99f,.12f));
-            PageBar(controls,inheritancePage,(owned.Count+5)/6,p=>{inheritancePage=p;Render();});
+            var inherit=Box(area,"Inheritance",new Vector2(.01f,.01f),new Vector2(.99f,.40f),Color.clear);
+            Positioned(inherit,"성좌의 계승",new Vector2(.01f,.78f),new Vector2(.98f,1),25,gold);
+            if(owned.Count==0){Positioned(inherit,"획득한 성좌가 생기면 이곳에서 계승합니다.",new Vector2(.01f,.30f),new Vector2(.98f,.70f),23,muted);return;}
+            var list=Scroller(ScreenArea(inherit,"Inheritance viewport",new Vector2(0,.01f),new Vector2(1,.77f)));
+            foreach(var c in owned){string id=c.id;int cost=Rules.InheritCosts[c.grade];MakeButton(list,c.name+" 계승 · "+cost+(s.avatar.Has(id)?" · 계승 완료":""),()=>Act(()=>Game.Inherit(id)),s.phase==Phase.Morning&&!s.avatar.Has(id)&&s.divinity>=cost);}
         }
         void RenderWarehouseScreen(Transform body)
         {
@@ -227,6 +207,7 @@ namespace Apocalypse
         }
         void RenderPersonnelScreen(Transform body,bool selectable)
         {
+            if(!selectable){RenderPersonnelRows(body);return;}
             var people=selectable?Game.S.candidates.ToList():new[]{Game.S.avatar}.Concat(Game.S.candidates).Where(c=>c!=null).ToList();
             int size=selectable?3:4;personnelPage=Math.Max(0,Math.Min(personnelPage,Math.Max(0,(people.Count-1)/size)));
             for(int i=0;i<size;i++)
@@ -267,25 +248,36 @@ namespace Apocalypse
         void RenderCodexScreen(Transform body)
         {
             var p=Game.S.permanent;
-            if(codex.SelectedId!=null&&p.unlocked.Contains(codex.SelectedId))
+            var catalog=WorkPanel(body,"Codex catalogue",new Vector2(.015f,.02f),new Vector2(.30f,.985f));
+            Positioned(catalog,"성좌 도감",new Vector2(.05f,.92f),new Vector2(.97f,.99f),29,ink);
+            for(int g=0;g<4;g++)
             {
-                var c=content.Find(codex.SelectedId);
-                var art=PrepCard(body,"Codex illustration",new Vector2(.015f,.025f),new Vector2(.49f,.985f));
-                ConstellationArt(art,c.id,460,280);
-                Label(art,"소속  "+c.affiliation,24,48,muted);
-                var detail=PrepCard(body,"Codex memory",new Vector2(.505f,.025f),new Vector2(.985f,.985f));
-                Label(detail,CodexIndex.DisplayName(c),29,90,gold);Label(detail,c.ability,28,60,gold);Label(detail,c.description,24,105);
-                var memory=p.stories.FirstOrDefault(x=>x.constellationId==c.id);
-                Label(detail,memory==null?c.title:memory.title,26,70,gold);Label(detail,memory==null?c.story:memory.body,24,340);return;
+                int grade=g,count=codex.Entries(content,p,g).Count();float x=g%2*.5f,y=g<2?.83f:.74f;
+                var b=PlacedButton(catalog,(codex.IsExpanded(g)?"− ":"+ ")+Rules.Grades[g]+" "+count,new Vector2(x+.025f,y),new Vector2(x+.475f,y+.08f),()=>{codex.Toggle(grade);Render();},count>0);
+                b.GetComponentInChildren<Text>().fontSize=21;
             }
-            var list=PrepCard(body,"Owned constellations",new Vector2(.015f,.12f),new Vector2(.985f,.985f));
-            Label(list,"성좌 도감",34,58,gold);var grades=Row(list,48);
-            for(int g=0;g<4;g++){int grade=g;int count=codex.Entries(content,p,g).Count();MakeButton(grades,(codex.IsExpanded(g)?"▾  ":"▸  ")+Rules.Grades[g]+"  "+count,()=>{codex.Toggle(grade);codexPage=0;Render();},count>0,true);}
+            var list=Scroller(ScreenArea(catalog,"Codex entries viewport",new Vector2(.025f,.02f),new Vector2(.975f,.72f)));
             var entries=Enumerable.Range(0,4).Where(g=>codex.IsExpanded(g)).SelectMany(g=>codex.Entries(content,p,g)).ToList();
-            codexPage=Math.Max(0,Math.Min(codexPage,Math.Max(0,(entries.Count-1)/6)));
-            foreach(var c in entries.Skip(codexPage*6).Take(6)){string id=c.id;MakeButton(list,CodexIndex.DisplayName(c),()=>{codex.Select(id,p);Render();});}
-            if(p.unlocked.Count==0)Label(list,"아직 기록된 성좌가 없습니다.",25,80,muted);
-            PageBar(PageFooter(body),codexPage,(entries.Count+5)/6,page=>{codexPage=page;Render();});
+            foreach(var c in entries)
+            {
+                string id=c.id;var b=MakeButton(list,CodexIndex.DisplayName(c),()=>{codex.Select(id,p);Render();},true,codex.SelectedId==id);
+                b.GetComponent<LayoutElement>().preferredHeight=80;b.GetComponentInChildren<Text>().fontSize=21;
+            }
+            if(p.unlocked.Count==0)Label(list,"아직 기록된 성좌가 없습니다.",24,100,muted);
+            var detail=ScreenArea(body,"Codex detail",new Vector2(.32f,.02f),new Vector2(.985f,.985f));
+            if(codex.SelectedId==null||!p.unlocked.Contains(codex.SelectedId))
+            {Positioned(detail,"성좌를 선택하면\n능력과 기록을 펼쳐 봅니다.",new Vector2(.10f,.35f),new Vector2(.9f,.65f),30,muted);return;}
+            var star=content.Find(codex.SelectedId);
+            Positioned(detail,CodexIndex.DisplayName(star),new Vector2(.015f,.88f),new Vector2(.99f,.995f),30,gold);
+            Positioned(detail,"소속  "+star.affiliation,new Vector2(.015f,.81f),new Vector2(.99f,.88f),24,muted);
+            var texture=constellationArt.Use(star.id);constellationArtUsed=texture!=null;
+            var art=ScreenArea(detail,"Codex illustration",new Vector2(.015f,.33f),new Vector2(.54f,.80f));FixedArt(art,texture,Vector2.zero,Vector2.one);
+            foreach(var fit in art.GetComponentsInChildren<AspectRatioFitter>())fit.aspectMode=AspectRatioFitter.AspectMode.FitInParent;
+            var ability=Stack(ScreenArea(detail,"Codex ability",new Vector2(.56f,.33f),new Vector2(.995f,.80f)),8);
+            Label(ability,star.ability,27,80,gold);Label(ability,star.description,24,225);
+            var story=Scroller(ScreenArea(detail,"Codex story viewport",new Vector2(.015f,.015f),new Vector2(.99f,.30f)));
+            var memory=p.stories.FirstOrDefault(x=>x.constellationId==star.id);Label(story,memory==null?star.title:memory.title,25,60,gold);
+            var words=Label(story,memory==null?star.story:memory.body,24,0);words.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,Math.Max(100,detail.rect.width-60));words.GetComponent<LayoutElement>().preferredHeight=Math.Max(180,words.preferredHeight+12);
         }
     }
 }

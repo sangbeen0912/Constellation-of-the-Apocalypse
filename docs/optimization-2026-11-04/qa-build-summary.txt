@@ -1,3 +1,0 @@
-development=True
-bytes=224798743
-result=Succeeded

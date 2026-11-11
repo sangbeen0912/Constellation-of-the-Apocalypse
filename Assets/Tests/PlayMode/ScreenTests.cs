@@ -9,24 +9,24 @@ using Apocalypse;
 
 public class ScreenTests
 {
-    [UnityTest] public IEnumerator ShelterIsFourFacilitiesAndPreparationOwnsGoalsAndDeparture()
+    [UnityTest] public IEnumerator ShelterCombinesFourFacilityTabsTreatmentAndInlineDeparture()
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"ApocalypsePrep-"+System.Guid.NewGuid().ToString("N"));
         var root=new GameObject("Preparation test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
         app.BeginNew(321);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);app.Game.S.avatar.personality=Temperament.Brave;app.Navigate("쉘터");yield return null;
         var labels=root.GetComponentsInChildren<Button>().Select(b=>b.GetComponentInChildren<Text>().text).ToArray();
-        CollectionAssert.AreEquivalent(ArtCatalog.FacilityNames.Select(n=>"시설 이용 · "+n),labels.Where(n=>n.StartsWith("시설 이용 · ")));
-        Assert.IsFalse(labels.Contains("진행")||labels.Contains("탐사")||labels.Contains("공략"));
+        CollectionAssert.AreEquivalent(ArtCatalog.FacilityNames,root.GetComponentsInChildren<Button>().Where(b=>b.name.StartsWith("Facility tab ")).Select(b=>b.GetComponentInChildren<Text>().text));
+        Assert.IsTrue(labels.Contains("탐사")&&labels.Contains("공략")&&labels.Contains("체력 회복 실행"));Assert.IsFalse(labels.Contains("진행"));
         app.Game.S.day=2;app.Game.S.activeRift=0;app.Game.S.demons[0].progress=23;app.Game.S.demons[1].remaining=8;app.Game.S.demons[2].remaining=12;
         app.Game.S.totalSeals=99;app.Navigate("전투준비");yield return null;Canvas.ForceUpdateCanvases();
         var texts=root.GetComponentsInChildren<Text>().Select(t=>t.text).ToArray();
-        CollectionAssert.IsSubsetOf(new[]{"군단 봉쇄 돌파  23 / 50","악마 봉인  2 / 7","체력  200%","공격력  140%","현재 봉인 2명 기준"},texts);
+        Assert.IsTrue(texts.Any(t=>t.Contains("봉쇄 돌파 23 / 50")));Assert.IsTrue(texts.Any(t=>t.Contains("악마 봉인 2 / 7")));Assert.IsTrue(texts.Any(t=>t.Contains("체력 200% · 공격력 140%")));
         Assert.IsFalse(texts.Any(t=>t.Contains("일반 +1점")||t.Contains("50점 이후")));
         Assert.AreEqual(7,root.GetComponentsInChildren<SealGlyph>().Length);
-        Assert.IsTrue(root.GetComponentsInChildren<RawImage>().Any(i=>i.texture==ArtCatalog.Environment(4)));
+        Assert.IsTrue(root.GetComponentsInChildren<RectTransform>().Any(r=>r.name=="Departure workspace"));
         Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(b=>b.GetComponentInChildren<Text>().text=="침수된 지하철역"),"목적지는 탐사를 누른 뒤 표시합니다.");
         var main=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Main");
-        foreach(string label in new[]{"탐사","공략","진행"})
+        foreach(string label in new[]{"탐사","공략","탐사 출발"})
         {
             var button=root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text==label);
             var corners=new Vector3[4];button.GetComponent<RectTransform>().GetWorldCorners(corners);
@@ -37,8 +37,9 @@ public class ScreenTests
             }
         }
         root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text=="공략").onClick.Invoke();yield return null;
-        Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(t=>t.text=="오늘의 활동: 공략"));
-        root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text=="진행").onClick.Invoke();yield return null;
+        Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(t=>t.text.Contains("봉쇄 돌파 23 / 50")));
+        app.enabled=false; // Test the departure action independently of real-time simulation ticks.
+        root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text=="공략 출발").onClick.Invoke();yield return null;
         Assert.AreEqual(Goal.Rift,app.Game.S.goal);Assert.IsTrue(app.Game.S.phase==Phase.Running||app.Game.S.phase==Phase.Event);
         UnityEngine.Object.Destroy(root);yield return null;System.IO.Directory.Delete(temp,true);
     }
@@ -84,30 +85,37 @@ public class ScreenTests
         Assert.AreEqual(image.texture.width/(float)image.texture.height,image.rectTransform.rect.width/image.rectTransform.rect.height,.01f);
         Assert.AreEqual(new Rect(0,0,1,1),image.uvRect,"전체 그림을 표시해야 합니다.");
     }
-    [UnityTest] public IEnumerator CodexUsesOwnedPagedRowsGroupsAndFullArtDetailWithoutScrolling()
+    [UnityTest] public IEnumerator CodexUsesOwnedScrollableCatalogueAndPersistentFullArtDetail()
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"ApocalypseCodex-"+System.Guid.NewGuid().ToString("N"));
         var root=new GameObject("Codex test");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;
-        app.BeginNew(77);if(app.Game.S.avatar==null)app.Game.Select(app.Game.S.candidates[0].id);app.Game.S.permanent.unlocked.Add("sejong");app.Navigate("성좌 도감");yield return null;
+        app.BeginNew(77);app.Game.S.permanent.unlocked.Add("sejong");app.Navigate("성좌 도감");yield return null;
         var texts=root.GetComponentsInChildren<Text>().Select(x=>x.text).ToArray();
         Assert.IsFalse(texts.Any(x=>x.Contains("매일 독립")||x.Contains("40%")||x.Contains("제우스")));
         string label=CodexIndex.DisplayName(app.Game.Content.Find("sejong"));
-        root.GetComponentsInChildren<Button>().First(x=>x.GetComponentInChildren<Text>().text==label).onClick.Invoke();yield return null;
+        root.GetComponentsInChildren<Button>().Single(x=>x.GetComponentInChildren<Text>().text==label).onClick.Invoke();yield return null;
         Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(x=>x.text.Contains("소속")));
         var art=root.GetComponentsInChildren<RawImage>().Single(x=>x.texture==ArtCatalog.Constellation("sejong"));AssertWholeImage(art);
         Assert.Greater(((RectTransform)art.transform.parent).rect.height,200);
-        Assert.IsFalse(root.GetComponentsInChildren<RectTransform>().Any(x=>x.name=="Constellation art blank"));
-        root.GetComponentsInChildren<Button>().First(x=>x.GetComponentInChildren<Text>().text=="도감으로").onClick.Invoke();yield return null;
-        var toggle=root.GetComponentsInChildren<Button>().First(x=>x.GetComponentInChildren<Text>().text.StartsWith("▾"));toggle.onClick.Invoke();yield return null;
+        Assert.IsNotNull(root.GetComponentsInChildren<Button>().Single(x=>x.GetComponentInChildren<Text>().text==label),"상세 옆에 목록을 유지합니다.");
+        Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(x=>x.GetComponentInChildren<Text>().text=="도감으로"));
+        var toggle=root.GetComponentsInChildren<Button>().First(x=>x.GetComponentInChildren<Text>().text.StartsWith("− ")&&x.interactable);toggle.onClick.Invoke();yield return null;
         Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(x=>x.GetComponentInChildren<Text>().text==label));
         app.Game.S.permanent.unlocked=app.Game.Content.constellations.Select(x=>x.id).ToList();app.Codex.Toggle(0);app.Render();yield return null;Canvas.ForceUpdateCanvases();
-        Assert.AreEqual(0,root.GetComponentsInChildren<ScrollRect>().Length);
-        var firstPage=root.GetComponentsInChildren<Button>().Where(b=>b.GetComponentInChildren<Text>().text.Contains(" / ")).Select(b=>b.GetComponentInChildren<Text>().text).ToArray();
-        Assert.AreEqual(6,firstPage.Length);
-        var next=root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text=="다음 페이지");Assert.IsTrue(next.interactable);next.onClick.Invoke();yield return null;
-        var secondPage=root.GetComponentsInChildren<Button>().Where(b=>b.GetComponentInChildren<Text>().text.Contains(" / ")).Select(b=>b.GetComponentInChildren<Text>().text).ToArray();
-        Assert.IsFalse(firstPage.Intersect(secondPage).Any());app.Render();yield return null;
-        CollectionAssert.AreEquivalent(secondPage,root.GetComponentsInChildren<Button>().Where(b=>b.GetComponentInChildren<Text>().text.Contains(" / ")).Select(b=>b.GetComponentInChildren<Text>().text));
+        var entries=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Codex entries viewport").GetComponent<ScrollRect>();
+        Assert.IsNotNull(entries);Assert.Greater(entries.content.rect.height,entries.viewport.rect.height);
+        var expected=app.Game.Content.constellations.Select(CodexIndex.DisplayName).ToArray();
+        CollectionAssert.IsSubsetOf(expected,root.GetComponentsInChildren<Button>().Select(b=>b.GetComponentInChildren<Text>().text).ToArray());
+        entries.verticalNormalizedPosition=0;Canvas.ForceUpdateCanvases();
+        root.GetComponentsInChildren<Button>().Single(x=>x.GetComponentInChildren<Text>().text==CodexIndex.DisplayName(app.Game.Content.Find("yog"))).onClick.Invoke();yield return null;
+        entries=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Codex entries viewport").GetComponent<ScrollRect>();
+        Assert.AreEqual(0,entries.verticalNormalizedPosition,.01f,"선택 후 목록의 읽던 위치가 유지되어야 합니다.");
+        foreach(var target in new[]{"napoleon","yog"})
+        {
+            root.GetComponentsInChildren<Button>().Single(x=>x.GetComponentInChildren<Text>().text==CodexIndex.DisplayName(app.Game.Content.Find(target))).onClick.Invoke();yield return null;
+            Assert.AreEqual(target,app.Codex.SelectedId);Assert.IsNotNull(root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Codex catalogue"));
+            Assert.AreEqual(1,ConstellationArtLease.ResidentCount);
+        }
         UnityEngine.Object.Destroy(root);yield return null;System.IO.Directory.Delete(temp,true);
     }
     [UnityTest] public IEnumerator PersonnelHasStableIconsStatsAndFacilitiesHaveBackgrounds()
@@ -157,7 +165,7 @@ public class ScreenTests
         }
         app.Game.S.avatar.sanity=100;
         app.Navigate("전투준비");yield return null;
-        var start=root.GetComponentsInChildren<Button>().First(x=>x.GetComponentInChildren<Text>().text=="진행");start.onClick.Invoke();yield return null;
+        var start=root.GetComponentsInChildren<Button>().First(x=>x.GetComponentInChildren<Text>().text=="탐사");start.onClick.Invoke();yield return null;
         Assert.AreEqual(Phase.Morning,app.Game.S.phase,"탐사는 목적지 UI에서 출발을 확정합니다.");
         root.GetComponentsInChildren<Button>().Single(x=>x.GetComponentInChildren<Text>().text=="탐사 출발").onClick.Invoke();yield return null;
         Assert.IsTrue(app.Game.S.phase==Phase.Running||app.Game.S.phase==Phase.Event);

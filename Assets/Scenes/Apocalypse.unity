@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &34212895
+--- !u!1 &687982600
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,8 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 34212897}
-  - component: {fileID: 34212896}
+  - component: {fileID: 687982602}
+  - component: {fileID: 687982601}
   m_Layer: 0
   m_Name: ApocalypseConstellation
   m_TagString: Untagged
@@ -136,13 +136,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &34212896
+--- !u!114 &687982601
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 34212895}
+  m_GameObject: {fileID: 687982600}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a3b1ca9c6ba61c468a488f98b4f15cf, type: 3}
@@ -150,13 +150,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Apocalypse.Runtime::Apocalypse.GameApp
   buttonPrefab: {fileID: 4891508358581672741, guid: a3ed137d08b4ee34cb4ba85c2cc74188, type: 3}
   panelPrefab: {fileID: 7671684739623510061, guid: 3c1966a8e8fd55a478c690b26082c039, type: 3}
---- !u!4 &34212897
+--- !u!4 &687982602
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 34212895}
+  m_GameObject: {fileID: 687982600}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -165,7 +165,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &916401281
+--- !u!1 &1751289440
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -173,8 +173,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 916401283}
-  - component: {fileID: 916401282}
+  - component: {fileID: 1751289442}
+  - component: {fileID: 1751289441}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -182,13 +182,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!20 &916401282
+--- !u!20 &1751289441
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 916401281}
+  m_GameObject: {fileID: 1751289440}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
@@ -233,13 +233,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &916401283
+--- !u!4 &1751289442
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 916401281}
+  m_GameObject: {fileID: 1751289440}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -252,5 +252,5 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 916401283}
-  - {fileID: 34212897}
+  - {fileID: 1751289442}
+  - {fileID: 687982602}

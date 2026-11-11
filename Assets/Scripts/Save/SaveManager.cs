@@ -34,7 +34,8 @@ namespace Apocalypse
             try
             {
                 string temp = path + ".tmp";
-                File.WriteAllText(temp, JsonUtility.ToJson(state, true)); ReadFile(temp);
+                // Whitespace is unnecessary on disk; validation and atomic backup stay identical.
+                File.WriteAllText(temp, JsonUtility.ToJson(state, false)); ReadFile(temp);
                 if (File.Exists(path))
                 {
                     try { ReadFile(path); File.Copy(path, path + ".bak", true); }

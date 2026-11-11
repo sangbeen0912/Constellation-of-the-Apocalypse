@@ -74,7 +74,9 @@ public class NavigationReadabilityTests
             Readable(back);VisibleClick(back);yield return null;Assert.AreEqual("쉘터",app.ActiveTab);
         }
         app.Game.S.permanent.unlocked.Add("sejong");app.Navigate("성좌 도감");app.Codex.Select("sejong",app.Game.S.permanent);app.Render();yield return null;
-        VisibleClick(Find(root,"도감으로"));yield return null;Assert.IsNull(app.Codex.SelectedId);Assert.AreEqual("성좌 도감",app.ActiveTab);
+        Assert.IsNotNull(Find(root,CodexIndex.DisplayName(app.Game.Content.Find("sejong"))));
+        Assert.IsNotNull(root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Codex catalogue"));
+        VisibleClick(Find(root,"쉘터로"));yield return null;Assert.AreEqual("쉘터",app.ActiveTab);
         app.Game.S.relics.Add(new Relic{id="gungnir",name="궁니르",awaitingRestoration=true});
         app.Navigate("예배방");yield return null;VisibleClick(Find(root,"성유물 복원"));yield return null;
         VisibleClick(Find(root,"복원 기록 보기 · 궁니르"));yield return null;
@@ -91,7 +93,7 @@ public class NavigationReadabilityTests
         VisibleClick(Find(root,"활동 선택으로"));yield return null;
         foreach(string label in new[]{"공략"})
         {
-            VisibleClick(Find(root,label));yield return null;var chosen=Find(root,label);var proceed=Find(root,"진행");
+            VisibleClick(Find(root,label));yield return null;var chosen=Find(root,label);var proceed=Find(root,"공략 출발");
             Assert.IsTrue(chosen.GetComponentInChildren<PixelPlate>().selectionTick);Assert.IsTrue(proceed.GetComponentInChildren<PixelPlate>().forwardArrow);
             Assert.AreNotEqual(chosen.GetComponentInChildren<PixelPlate>().color,proceed.GetComponentInChildren<PixelPlate>().color);
             Readable(Find(root,"탐사"));Readable(Find(root,"공략"));Readable(proceed);

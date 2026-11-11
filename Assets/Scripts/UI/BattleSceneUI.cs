@@ -17,7 +17,7 @@ namespace Apocalypse
         readonly List<BattleActor> battleEnemies=new List<BattleActor>(8);
         readonly List<Button> battleSpeedButtons=new List<Button>(3);
         BattleState liveBattle;CombatMoment liveMoment;
-        Text battleStatus,battleHeading,battleDamage;
+        Text battleStatus,battleHeading,battleDamage,commandTargetText;
         Image hitFlash;
         float battleClock,battleShake,battleSpeed=1,battleFinish;
         bool battleFast;int commandTarget=-1;
@@ -27,7 +27,7 @@ namespace Apocalypse
         void ClearBattles()
         {
             if(battleLayer!=null){battleLayer.gameObject.SetActive(false);foreach(var i in battleLayer.GetComponentsInChildren<RawImage>(true))i.texture=null;Destroy(battleLayer.gameObject);}
-            battleLayer=battleWorld=commandPanel=null;liveBattle=null;liveMoment=null;battleEnemies.Clear();battleSpeedButtons.Clear();battleClock=battleFinish=battleShake=0;
+            battleLayer=battleWorld=commandPanel=null;liveBattle=null;liveMoment=null;battleEnemies.Clear();battleSpeedButtons.Clear();battleClock=battleFinish=battleShake=0;commandTarget=-1;
             if(fieldBackdrop!=null)fieldBackdrop.anchoredPosition=Vector2.zero;
             if(enemyAtlas!=null){Resources.UnloadAsset(enemyAtlas);enemyAtlas=null;}
             fieldContentKey=null;
@@ -55,8 +55,11 @@ namespace Apocalypse
             var fill=Box(frame,"Enemy health",new Vector2(0,0),new Vector2(1,.09f),new Color(.8f,.25f,.22f));
             var go=new GameObject("Battle actor "+index,typeof(RectTransform),typeof(RawImage));go.transform.SetParent(battleWorld,false);
             var rect=go.GetComponent<RectTransform>();rect.anchorMin=rect.anchorMax=Vector2.zero;rect.pivot=new Vector2(.5f,0);
-            var image=go.GetComponent<RawImage>();image.texture=enemyAtlas;image.raycastTarget=false;
-            return new BattleActor{rect=rect,image=image,bar=frame,fill=fill,nameText=name,healthText=hp,index=index};
+            var image=go.GetComponent<RawImage>();image.texture=enemyAtlas;image.raycastTarget=true;
+            var actor=new BattleActor{rect=rect,image=image,bar=frame,fill=fill,nameText=name,healthText=hp,index=index};
+            var button=frame.gameObject.AddComponent<Button>();button.targetGraphic=frame.GetComponent<Image>();button.onClick.AddListener(()=>SelectBattleEnemy(actor.index));
+            go.AddComponent<BattleTargetPointer>().selected=()=>SelectBattleEnemy(actor.index);
+            return actor;
         }
         void SyncLiveActors()
         {
@@ -102,16 +105,29 @@ namespace Apocalypse
             if(commandPanel!=null||liveBattle==null||!liveBattle.waiting)return;
             ClearChildren(fieldPane);battleSpeedButtons.Clear();commandPanel=Stack(fieldPane,15);commandPanel.name="Emergency commands";
             Label(commandPanel,liveBattle.prompt,27,85,gold);Label(commandPanel,"명령당 신위 1 · 거절해도 소비\n보유 신위 "+Game.S.divinity,21,65,ink);
-            commandTarget=-1;for(int i=0;i<liveBattle.enemies.Count;i++)if(liveBattle.enemies[i].hp>0){commandTarget=i;break;}
-            var target=MakeButton(commandPanel,"",()=>{});target.GetComponent<LayoutElement>().preferredHeight=70;
-            Action refresh=()=>{var e=liveBattle.enemies[commandTarget];target.GetComponentInChildren<Text>().text="대상: "+e.name+" · "+e.hp+"/"+e.maxHp+"\n누르면 다음 대상";RefreshCommandButtons();};
-            target.onClick.RemoveAllListeners();target.onClick.AddListener(()=>{for(int n=1;n<=liveBattle.enemies.Count;n++){int i=(commandTarget+n)%liveBattle.enemies.Count;if(liveBattle.enemies[i].hp>0){commandTarget=i;break;}}refresh();});
+            if(commandTarget<0||commandTarget>=liveBattle.enemies.Count||liveBattle.enemies[commandTarget].hp<=0)
+                for(int i=0;i<liveBattle.enemies.Count;i++)if(liveBattle.enemies[i].hp>0){commandTarget=i;break;}
+            commandTargetText=Label(commandPanel,"",24,64,ink);
+            Label(commandPanel,"적이나 체력판을 눌러 대상을 고릅니다.",21,48,muted);
             foreach(BattleCommand c in Enum.GetValues(typeof(BattleCommand)))
             {
                 var command=c;var button=MakeButton(commandPanel,CommandName(c),()=>{if(!Game.IssueCombatCommand(command,commandTarget))return;CloseCommandPanel();Save();},Game.S.divinity>=1,true);button.GetComponent<LayoutElement>().preferredHeight=64;
             }
-            var proceed=MakeButton(commandPanel,"명령 없이 계속",()=>{Game.ContinueCombat();CloseCommandPanel();Save();});proceed.GetComponent<LayoutElement>().preferredHeight=64;refresh();
+            var proceed=MakeButton(commandPanel,"명령 없이 계속",()=>{Game.ContinueCombat();CloseCommandPanel();Save();});proceed.GetComponent<LayoutElement>().preferredHeight=64;RefreshSelectedEnemy();
             if(EventSystem.current!=null)EventSystem.current.SetSelectedGameObject(proceed.gameObject);
+        }
+        void SelectBattleEnemy(int index)
+        {
+            if(liveBattle==null||!liveBattle.waiting||commandPanel==null||index<0||index>=liveBattle.enemies.Count||liveBattle.enemies[index].hp<=0)return;
+            commandTarget=index;RefreshSelectedEnemy();
+        }
+        void RefreshSelectedEnemy()
+        {
+            if(liveBattle==null||commandTarget<0)return;
+            var e=liveBattle.enemies[commandTarget];
+            if(commandTargetText!=null)commandTargetText.text="대상 · "+e.name+"  "+e.hp+"/"+e.maxHp;
+            foreach(var actor in battleEnemies)if(actor.index<liveBattle.enemies.Count)actor.nameText.text=(actor.index==commandTarget?"▶ ":"")+liveBattle.enemies[actor.index].name;
+            RefreshCommandButtons();
         }
         static string CommandName(BattleCommand c){return c==BattleCommand.Attack?"공격 지정":c==BattleCommand.Defend?"방어":"퇴각";}
         void RefreshCommandButtons()
@@ -125,7 +141,7 @@ namespace Apocalypse
         {
             if(!BattleVisible)return false;
             if(battleLayer==null){if(fieldMain==null)Render();else RenderBattleScene();return true;}
-            RefreshRunningHud();if(fieldTime!=null)fieldTime.text=Rules.Clock(Game.S.hours)+"   남은 "+Math.Max(0,Rules.DayHours-Game.S.hours).ToString("0.0")+"시간 · 전투";
+            RefreshRunningHud();RefreshFieldTime(true);
             visibleLogs=Game.S.logs.Count;RefreshLogRows();
             float delta=Mathf.Min(.1f,Time.unscaledDeltaTime);battleClock+=delta*battleSpeed;
             battleShake=Mathf.Max(0,battleShake-delta);

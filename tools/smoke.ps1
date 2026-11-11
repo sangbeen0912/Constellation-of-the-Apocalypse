@@ -1,8 +1,16 @@
-param([switch]$ResetOnly)
+param([switch]$ResetOnly,[switch]$FontDiagnostics,[switch]$HoldUI)
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $taskPublished = Join-Path $taskRoot 'TestResults\PlayerQA'
-$taskOutput = Join-Path $taskPublished ('Runs\' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [Guid]::NewGuid().ToString('N'))
+$taskOutput = Join-Path $taskPublished 'Latest'
+if(Test-Path -LiteralPath $taskOutput) {
+    $taskActual=[IO.Path]::GetFullPath((Resolve-Path -LiteralPath $taskOutput).Path)
+    $taskExpected=[IO.Path]::GetFullPath((Join-Path $taskRoot 'TestResults\PlayerQA\Latest'))
+    if($taskActual -ne $taskExpected -or ((Get-Item -LiteralPath $taskOutput -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)){throw '예상한 QA 전용 폴더가 아닙니다.'}
+    if(@(Get-ChildItem -LiteralPath $taskOutput -Recurse -Force | Where-Object { $_.Attributes -band [IO.FileAttributes]::ReparsePoint }).Count){throw 'QA 폴더에 연결 경로가 있습니다.'}
+    if(Get-Process ApocalypseConstellation -ErrorAction SilentlyContinue){throw '게임 실행 중에는 QA 자료를 교체하지 않습니다.'}
+    Remove-Item -LiteralPath $taskActual -Recurse -Force
+}
 New-Item -ItemType Directory -Path $taskOutput -Force | Out-Null
 $taskExe = Join-Path $taskRoot 'Builds\QA\ApocalypseConstellation.exe'
 if (!(Test-Path -LiteralPath $taskExe)) { throw 'Windows 빌드가 없습니다. 먼저 tools/verify.ps1 -BuildQA를 실행하십시오.' }
@@ -12,6 +20,8 @@ $taskSeed=$taskCampaign.winningSeeds[0]
 $taskLog = Join-Path $taskOutput 'player.log'
 $taskArguments = "-screen-width 1280 -screen-height 720 -force-d3d11 -smoke-test -qa-seed $taskSeed -qa-output `"$taskOutput`" -logFile `"$taskLog`""
 if($ResetOnly){$taskArguments += ' -qa-reset-only'}
+if($FontDiagnostics){$taskArguments += ' -qa-font-diagnostics'}
+if($HoldUI){$taskArguments += ' -qa-hold-ui'}
 # A hidden Unity window does not present frames on this machine; visual QA must render a visible game.
 $taskPlayer = Start-Process -FilePath $taskExe -ArgumentList $taskArguments -WindowStyle Normal -PassThru
 if (!$taskPlayer.WaitForExit(60000)) {
@@ -26,8 +36,6 @@ if (!$taskReport.Contains('result=PASS')) { throw $taskReport }
 if (!(Get-Content -LiteralPath $taskLog -Raw).Contains('APOCALYPSE_PLAYER_SMOKE_PASS')) { throw "이번 실행의 완료 표식이 없습니다: $taskLog" }
 $taskHashes = Get-ChildItem -LiteralPath $taskOutput -Filter '*.png' | Get-FileHash | Select-Object -ExpandProperty Hash -Unique
 if ($taskHashes.Count -lt 4) { throw '서로 다른 화면 캡처가 부족합니다. 화면 렌더링을 확인하십시오.' }
-Get-ChildItem -LiteralPath $taskOutput -Filter '*.png' | Copy-Item -Destination $taskPublished
-Copy-Item -LiteralPath $taskReportPath -Destination (Join-Path $taskPublished 'player-smoke.txt')
-Copy-Item -LiteralPath $taskLog -Destination (Join-Path $taskRoot 'TestResults\player.log')
+# Keep one current result set; no duplicate screenshots or per-run history directories.
 Write-Output $taskReport
 Write-Output "qa-output=$taskOutput"

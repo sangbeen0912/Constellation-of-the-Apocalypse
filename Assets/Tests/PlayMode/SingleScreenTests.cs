@@ -23,7 +23,7 @@ public class SingleScreenTests
         root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text=="계속 진행").onClick.Invoke();
         Assert.AreEqual(s.day,s.omenShownDay);Assert.IsTrue(app.LoadGame());Assert.IsFalse(app.OmenVisible);
         app.Game.S.scheduledConstellation=null;app.Game.EndDay();Assert.AreEqual(Phase.Report,app.Game.S.phase);app.Render();yield return null;
-        Assert.AreEqual("쉘터",app.ActiveTab);Assert.AreEqual(4,root.GetComponentsInChildren<Button>().Count(b=>b.GetComponentInChildren<Text>().text.StartsWith("시설 이용")));
+        Assert.AreEqual("쉘터",app.ActiveTab);Assert.AreEqual(4,root.GetComponentsInChildren<Button>().Count(b=>b.name.StartsWith("Facility tab ")));
         root.GetComponentsInChildren<Button>().Single(b=>b.GetComponentInChildren<Text>().text=="다음 날 아침").onClick.Invoke();yield return null;
         Assert.AreEqual(Phase.Morning,app.Game.S.phase);Assert.AreEqual("쉘터",app.ActiveTab);
         Assert.IsFalse(Resources.FindObjectsOfTypeAll<Texture2D>().Any(t=>t.name=="constellation-omen-v1"));
@@ -32,18 +32,40 @@ public class SingleScreenTests
     public static void AssertInsideMain(GameObject root)
     {
         Canvas.ForceUpdateCanvases();var main=root.GetComponentsInChildren<RectTransform>().Single(r=>r.name=="Main");
-        if(!main.GetComponentsInChildren<RectTransform>().Any(r=>r.name=="Location stage"))Assert.AreEqual(0,main.GetComponentsInChildren<ScrollRect>().Length);
-        else foreach(var scroll in main.GetComponentsInChildren<ScrollRect>())
-        {Assert.IsNotNull(scroll.viewport.GetComponent<RectMask2D>());Assert.IsTrue(scroll.viewport.IsChildOf(main),"기록·긴 설명만 고정 주화면 안에서 스크롤합니다.");}
+        bool field=main.GetComponentsInChildren<RectTransform>().Any(r=>r.name=="Location stage");
+        foreach(var scroll in main.GetComponentsInChildren<ScrollRect>())
+        {
+            if(!field)CollectionAssert.Contains(new[]{"Codex entries viewport","Codex story viewport","Inheritance viewport"},scroll.name,"일반 행동은 스크롤 없이 표시하고 지정된 목록·긴 기록만 스크롤합니다.");
+            Assert.IsNotNull(scroll.viewport.GetComponent<RectMask2D>());Assert.IsTrue(scroll.viewport.IsChildOf(main));
+            Assert.IsFalse(scroll.horizontal);Assert.AreEqual(ScrollRect.MovementType.Clamped,scroll.movementType);
+            AssertRectInside(scroll.viewport,main,scroll.name);
+            foreach(var button in scroll.content.GetComponentsInChildren<Button>())
+            {
+                var rect=button.GetComponent<RectTransform>();
+                Assert.LessOrEqual(rect.rect.height,scroll.viewport.rect.height+1,"목록 항목 하나는 화면에 전부 들어가야 합니다: "+button.name);
+                AssertRectInside(rect,scroll.content,button.name+" content bounds");
+                float saved=scroll.verticalNormalizedPosition;
+                var bound=RectTransformUtility.CalculateRelativeRectTransformBounds(scroll.content,rect);
+                float range=scroll.content.rect.height-scroll.viewport.rect.height;
+                scroll.verticalNormalizedPosition=range<=0?1:Mathf.Clamp01(1-(scroll.content.rect.yMax-bound.center.y-scroll.viewport.rect.height*.5f)/range);
+                Canvas.ForceUpdateCanvases();AssertRectInside(rect,scroll.viewport,button.name+" must be fully reachable by scrolling");
+                scroll.verticalNormalizedPosition=saved;
+            }
+        }
         foreach(var b in main.GetComponentsInChildren<Button>())
         {
-            var corners=new Vector3[4];b.GetComponent<RectTransform>().GetWorldCorners(corners);
-            foreach(var p in corners){var local=main.InverseTransformPoint(p);Assert.That(local.x,Is.InRange(main.rect.xMin-1,main.rect.xMax+1),b.name);Assert.That(local.y,Is.InRange(main.rect.yMin-1,main.rect.yMax+1),b.name);}
+            var scroll=b.GetComponentInParent<ScrollRect>();
+            if(scroll==null||!b.transform.IsChildOf(scroll.content))AssertRectInside(b.GetComponent<RectTransform>(),main,b.name);
         }
         foreach(var t in main.GetComponentsInChildren<Text>().Where(t=>!string.IsNullOrEmpty(t.text)))
             Assert.LessOrEqual(t.preferredHeight,t.rectTransform.rect.height+2,"텍스트가 잘리면 안 됩니다: "+t.text);
     }
-    [UnityTest] public IEnumerator MainFacilitiesAndEveryOwnedCodexDetailFitWithoutVerticalScrolling()
+    static void AssertRectInside(RectTransform rect,RectTransform container,string message)
+    {
+        var corners=new Vector3[4];rect.GetWorldCorners(corners);
+        foreach(var p in corners){var local=container.InverseTransformPoint(p);Assert.That(local.x,Is.InRange(container.rect.xMin-1,container.rect.xMax+1),message);Assert.That(local.y,Is.InRange(container.rect.yMin-1,container.rect.yMax+1),message);}
+    }
+    [UnityTest] public IEnumerator MainFacilitiesAndEveryOwnedCodexDetailKeepActionsInsideFixedScreen()
     {
         string temp=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"ScreenFit-"+Guid.NewGuid().ToString("N"));
         var root=new GameObject("Screen fit");var app=root.AddComponent<GameApp>();app.saveDirectoryOverride=temp;yield return null;

@@ -1,1 +1,1 @@
-{"name":"Apocalypse.Runtime","references":["Unity.ugui"],"autoReferenced":true}
+{"name":"Apocalypse.Runtime","references":["Unity.ugui","Unity.TextMeshPro"],"autoReferenced":true}

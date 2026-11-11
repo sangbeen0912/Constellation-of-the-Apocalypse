@@ -14,6 +14,13 @@ public static class ProjectBuilder
     public static void Generate()
     {
         Directory.CreateDirectory("Assets/Scenes"); Directory.CreateDirectory("Assets/Prefabs");
+        if(AssetDatabase.LoadAssetAtPath<TMPro.TMP_Settings>("Assets/Resources/TMP Settings.asset")==null)
+        {
+            var typographySettings=ScriptableObject.CreateInstance<TMPro.TMP_Settings>();AssetDatabase.CreateAsset(typographySettings,"Assets/Resources/TMP Settings.asset");
+            var data=new SerializedObject(typographySettings);data.FindProperty("assetVersion").stringValue="2";data.ApplyModifiedPropertiesWithoutUndo();
+        }
+        if(AssetDatabase.LoadAssetAtPath<Material>("Assets/Resources/StatusTypography.mat")==null)
+            AssetDatabase.CreateAsset(new Material(Shader.Find("TextMeshPro/Mobile/Distance Field")),"Assets/Resources/StatusTypography.mat");
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
         var camera = new GameObject("Camera",typeof(Camera)); camera.tag = "MainCamera";
         camera.GetComponent<Camera>().backgroundColor = new Color(.035f,.055f,.085f); camera.GetComponent<Camera>().clearFlags = CameraClearFlags.SolidColor;
@@ -49,7 +56,7 @@ public static class ProjectBuilder
     static void Build(string directory,bool development)
     {
         Generate();Directory.CreateDirectory(directory);
-        var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions {scenes=new[]{"Assets/Scenes/Apocalypse.unity"},locationPathName=directory+"/ApocalypseConstellation.exe",target=BuildTarget.StandaloneWindows64,options=(development?BuildOptions.Development:BuildOptions.None)|BuildOptions.CompressWithLz4HC});
+        var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions {scenes=new[]{"Assets/Scenes/Apocalypse.unity"},locationPathName=directory+"/ApocalypseConstellation.exe",target=BuildTarget.StandaloneWindows64,options=(development?BuildOptions.Development:BuildOptions.None)|BuildOptions.CompressWithLz4HC|BuildOptions.CleanBuildCache});
         if(report.summary.result!=BuildResult.Succeeded)throw new Exception("Windows build failed: "+report.summary.result);
         File.WriteAllText(directory+"/build-summary.txt","development="+development+"\nbytes="+report.summary.totalSize+"\nresult="+report.summary.result);
         Debug.Log("APOCALYPSE_WINDOWS_BUILD_SUCCEEDED");

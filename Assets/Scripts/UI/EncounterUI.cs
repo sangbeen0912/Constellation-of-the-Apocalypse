@@ -9,6 +9,20 @@ namespace Apocalypse
         RectTransform fieldMain,fieldStage,fieldBackdrop,fieldPane,fieldButtons;
         Text fieldTime,fieldActivity;
         string fieldContentKey,fieldArtKey;
+        readonly System.Collections.Generic.List<Button> encounterButtonBuffer=new System.Collections.Generic.List<Button>(32);
+        Text lastFieldClock;
+        double lastFieldHours=double.NaN;
+        Area lastFieldArea;
+        bool lastFieldCombat;
+        void RefreshFieldTime(bool combat)
+        {
+            var s=Game.S;if(fieldTime==null)return;
+            if(lastFieldClock==fieldTime&&lastFieldHours==s.hours&&lastFieldArea==s.exploration.current&&lastFieldCombat==combat)return;
+            lastFieldClock=fieldTime;lastFieldHours=s.hours;lastFieldArea=s.exploration.current;lastFieldCombat=combat;
+            double remaining=Math.Max(0,Rules.DayHours-s.hours);
+            fieldTime.text=combat?Rules.Clock(s.hours)+"   남은 "+remaining.ToString("0.0")+"시간 · 전투":
+                Rules.Clock(s.hours)+"   남은 "+(int)remaining+"시간 "+Math.Round(remaining%1*60).ToString("00")+"분   ·   "+AreaRules.Name(s.exploration.current);
+        }
         bool IsFieldPhase { get { return Game!=null&&(Game.S.phase==Phase.Running||Game.S.phase==Phase.Event||Game.S.phase==Phase.Combat||liveBattle!=null); } }
         void RenderEncounter(Transform main)
         {
@@ -18,12 +32,12 @@ namespace Apocalypse
             fieldStage.gameObject.AddComponent<RectMask2D>();
             fieldBackdrop=Box(fieldStage,"Location backdrop",Vector2.zero,Vector2.one,Color.clear);
             var logs=Box(main,"Day observation",new Vector2(.015f,.09f),new Vector2(.675f,.28f),panel);
-            logBody=Scroller(logs);logRows.Clear();Label(logBody,"오늘의 기록",23,30,gold);
+            logBody=Scroller(logs);logRows.Clear();logSources.Clear();Label(logBody,"오늘의 기록",23,30,gold);
             fieldButtons=Box(main,"Field actions",new Vector2(.015f,.01f),new Vector2(.675f,.08f),panel);
             var buttons=Row(Stack(fieldButtons,3),48);
             MakeButton(buttons,"쉘터로 돌아가기 · 0시간",()=>Act(()=>Game.ReturnToShelter()));
             subwayReturnButton=MakeButton(buttons,"지하철역으로 돌아가기 · 30분",()=>Act(()=>Game.ReturnToSubway()));
-            fieldPane=Box(main,"Event and command pane",new Vector2(.69f,.01f),new Vector2(.985f,.915f),panel);Plate(fieldPane,panel);
+            fieldPane=Box(main,"Event and command pane",new Vector2(.69f,.01f),new Vector2(.985f,.915f),panel);
             Canvas.ForceUpdateCanvases();RefreshEncounter();
         }
         void ClearChildren(Transform parent)
@@ -34,13 +48,15 @@ namespace Apocalypse
         {
             if(fieldMain==null)return;
             var s=Game.S;double remaining=Math.Max(0,Rules.DayHours-s.hours);
-            fieldTime.text=Rules.Clock(s.hours)+"   남은 "+(int)remaining+"시간 "+Math.Round(remaining%1*60).ToString("00")+"분   ·   "+AreaRules.Name(s.exploration.current);
+            RefreshFieldTime(false);
             RefreshRunningHud();
             bool canTravel=s.phase==Phase.Running&&!BattleVisible;
-            foreach(var button in fieldButtons.GetComponentsInChildren<Button>())button.interactable=canTravel;
+            encounterButtonBuffer.Clear();fieldButtons.GetComponentsInChildren(false,encounterButtonBuffer);
+            foreach(var button in encounterButtonBuffer)button.interactable=canTravel;
             subwayReturnButton.gameObject.SetActive(s.exploration.current>=Area.Museum&&s.exploration.current<=Area.Heritage);
             subwayReturnButton.interactable=canTravel&&remaining>=.5;
-            foreach(var button in canvas.GetComponentsInChildren<Button>())
+            encounterButtonBuffer.Clear();canvas.GetComponentsInChildren(false,encounterButtonBuffer);
+            foreach(var button in encounterButtonBuffer)
                 if(!button.transform.IsChildOf(fieldMain))button.interactable=canTravel;
             string art=s.pending!=null&&!string.IsNullOrEmpty(s.pending.constellationId)?"star:"+s.pending.constellationId:
                 (Game.S.combat!=null?Game.S.combat.scene:s.pending!=null?s.pending.scene:null)=="interior"?"interior":((int)s.exploration.current).ToString();

@@ -36,11 +36,11 @@ namespace Apocalypse
         }
         void RelicCard(Transform body,Relic relic)
         {
-            var row=Row(body,116);Art(row,ArtCatalog.Relic(relic.id),108,true);
-            var detail=Stack(row,6);
-            Label(detail,relic.name,28,40,gold);
-            Label(detail,"최대 체력 +"+relic.healthBonus+"    공격력 +"+relic.attackBonus,23,36);
-            Label(detail,relic.awaitingRestoration?"복원 대기":"전승 기록 "+relic.history.Count+"장",21,30,muted);
+            var row=Row(body,104);row.GetComponent<HorizontalLayoutGroup>().enabled=false;
+            FixedArt(row,ArtCatalog.Relic(relic.id),new Vector2(.01f,.03f),new Vector2(.17f,.97f));
+            Positioned(row,relic.name,new Vector2(.20f,.65f),new Vector2(.99f,1),26,gold);
+            Positioned(row,"최대 체력 +"+relic.healthBonus+" · 공격력 +"+relic.attackBonus,new Vector2(.20f,.32f),new Vector2(.99f,.65f),22,ink);
+            Positioned(row,relic.awaitingRestoration?"복원 대기":"전승 기록 "+relic.history.Count+"장",new Vector2(.20f,0),new Vector2(.99f,.32f),21,muted);
         }
         string ChapterText(RelicChapter h)
         {
@@ -48,42 +48,26 @@ namespace Apocalypse
         }
         void RenderRestoration(Transform body)
         {
-            var relic=Game.S.relics.FirstOrDefault(r=>r.id==restorationId);
-            if(relic==null){restorationId=null;return;}
-            RelicCard(body,relic);
-            var preview=Game.PreviewRestoration(relic.id);
-            if(restorationStep==0)
-            {
-                Label(body,"복원 비용  신위100    보유 "+Game.S.divinity,25,55);
-                Label(body,"역대 사용자의 업적을 확인하고 이번 성장을 미리 볼 수 있습니다.",23,65,muted);
-                MakeButton(body,"마지막 사용자의 기록",()=>{restorationStep=1;Render();});
-            }
-            else if(restorationStep==1)
-            {
-                var last=relic.history.LastOrDefault();
-                if(last!=null){Label(body,"제"+relic.history.Count+"장 — "+last.name+"의 기록",30,48,gold);Label(body,ChapterText(last),24,80);}
-                MakeButton(body,"이전 전승 기록",()=>{restorationStep=2;Render();});
-            }
+            var relic=Game.S.relics.FirstOrDefault(r=>r.id==restorationId);if(relic==null){restorationId=null;return;}
+            body.GetComponent<VerticalLayoutGroup>().spacing=6;
+            RelicCard(body,relic);body.GetChild(body.childCount-1).GetComponent<LayoutElement>().preferredHeight=82;var preview=Game.PreviewRestoration(relic.id);
+            Label(body,relic.awaitingRestoration?"복원 비용 신위 100 · 보유 "+Game.S.divinity:"전승이 복원되었습니다.",24,34,gold);
+            Label(body,"이번 성장 · 최대 체력 +"+preview.health+" / 공격력 +"+preview.attack+"\n복원 후 · 최대 체력 +"+(relic.healthBonus+preview.health)+" / 공격력 +"+(relic.attackBonus+preview.attack),24,64);
+            var views=Row(body,52);
+            MakeButton(views,"마지막 사용자의 기록",()=>{restorationStep=1;Render();});
+            MakeButton(views,"이전 전승 기록",()=>{restorationStep=2;Render();});
+            MakeButton(views,"이번 복원 결과",()=>{restorationStep=3;Render();});
+            if(restorationStep==1)
+            {var h=relic.history.LastOrDefault();Label(body,h==null?"아직 전승 기록이 없습니다.":ChapterText(h),22,74);}
             else if(restorationStep==2)
             {
                 int count=Math.Max(0,relic.history.Count-1);historyChapter=Math.Max(0,Math.Min(historyChapter,Math.Max(0,count-1)));
-                if(count>0){Label(body,"제"+(historyChapter+1)+"장 — "+relic.history[historyChapter].name,27,44,gold);Label(body,ChapterText(relic.history[historyChapter]),23,80);
-                    PageBar(body,historyChapter,count,p=>{historyChapter=p;Render();});}
-                if(relic.history.Count<=1)Label(body,"첫 번째 전승입니다.",24,60,muted);
-                MakeButton(body,"이번 복원 결과",()=>{restorationStep=3;Render();});
+                var history=Row(body,74);history.GetComponent<HorizontalLayoutGroup>().enabled=false;
+                var words=Positioned(history,count==0?"이전 전승 기록이 없습니다.":ChapterText(relic.history[historyChapter]),Vector2.zero,new Vector2(count>1?.70f:1,1),22,ink);
+                if(count>1){PlacedButton(history,"이전",new Vector2(.72f,.05f),new Vector2(.85f,.95f),()=>{historyChapter--;Render();},historyChapter>0);PlacedButton(history,"다음",new Vector2(.87f,.05f),new Vector2(1,.95f),()=>{historyChapter++;Render();},historyChapter<count-1);}
             }
-            else if(restorationStep==3)
-            {
-                Label(body,"이번 성장  최대 체력 +"+preview.health+" / 공격력 +"+preview.attack,30,65,gold);
-                Label(body,"복원 후  최대 체력 +"+(relic.healthBonus+preview.health)+" / 공격력 +"+(relic.attackBonus+preview.attack)+"\n다음 전승에 이월  생존 "+preview.carryDays+"일 / 좀비 "+preview.carryZombies+"마리",25,115);
-                MakeButton(body,"복원 확정 · 신위 100",()=>Act(()=>{if(Game.RestoreRelic(relic.id))restorationStep=4;}),Game.S.phase==Phase.Morning&&Game.S.divinity>=Rules.RelicCost&&relic.awaitingRestoration);
-            }
-            else
-            {
-                Label(body,"전승이 복원되었습니다.",32,70,gold);
-                Label(body,"누적 최대 체력 +"+relic.healthBonus+" / 공격력 +"+relic.attackBonus+"\n이월 생존 "+(relic.days-relic.paidDays)+"일 / 좀비 "+(relic.Zombies-relic.paidZombies)+"마리",25,110);
-            }
-            if(restorationStep<3)MakeButton(body,"연출 건너뛰고 복원 미리보기",()=>{restorationStep=3;Render();});
+            else Label(body,"다음 전승 이월 · 생존 "+preview.carryDays+"일 / 좀비 "+preview.carryZombies+"마리\n이력은 선택해서 읽을 수 있습니다.",22,74,muted);
+            MakeButton(body,"복원 확정 · 신위 100",()=>Act(()=>{if(Game.RestoreRelic(relic.id))restorationStep=4;}),Game.S.phase==Phase.Morning&&Game.S.divinity>=Rules.RelicCost&&relic.awaitingRestoration,true).GetComponent<LayoutElement>().preferredHeight=58;
         }
     }
 }
