@@ -45,7 +45,7 @@ namespace Apocalypse
     public static class Rules
     {
         public const int SaveVersion = 1, RulesRevision = 5, MaxNpc = 10, SealDays = 100, EnhancedSealDays = 120, RelicCost = 100, SupplyCost = 1;
-        public const double DayHours=15, DayStart=9;
+        public const double DayHours=15, DayStart=9, LockedReturnEarliestHour=16;
         public static double ActionHours(double original){return original>1?Math.Max(.5,original-1):original==1?.5:0;}
         public static string Clock(double elapsed){int minutes=(int)Math.Round(Math.Min(DayHours,Math.Max(0,elapsed))*60)+540;return (minutes/60).ToString("00")+":"+(minutes%60).ToString("00");}
         public const int RiftProgressRequired = 50, NormalProgress = 1, SpecialProgress = 3, NamedProgress = 3;

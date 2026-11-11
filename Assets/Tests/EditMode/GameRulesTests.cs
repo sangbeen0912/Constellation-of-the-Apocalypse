@@ -26,7 +26,35 @@ public class GameRulesTests
     [Test] public void ControlLockPersistsAfterRecoveryUntilNextMorning()
     { Select();g.S.avatar.hunger=29;g.S.food=100;g.AutoEat();Assert.IsTrue(g.S.controlLocked);Assert.Greater(g.S.avatar.hunger,30);g.S.phase=Phase.Running;g.EndDay();g.NextDay();Assert.IsFalse(g.S.controlLocked); }
     [Test] public void LockedNpcCanChooseNormalEarlyReturn()
-    { Select();g.S.avatar.sanity=29;g.StartDay(Goal.Explore);if(g.S.pending!=null)g.Resolve(g.S.pending.id,0);for(int i=0;i<10&&g.S.phase==Phase.Running;i++)g.Tick();Assert.AreEqual(Phase.Report,g.S.phase);Assert.NotNull(g.S.avatar);Assert.IsTrue(g.S.controlLocked); }
+    { Select();g.S.avatar.sanity=29;g.StartDay(Goal.Explore);if(g.S.pending!=null)g.Resolve(g.S.pending.id,0);for(int i=0;i<10&&g.S.phase==Phase.Running;i++)g.Tick();Assert.AreEqual(Phase.Report,g.S.phase);Assert.NotNull(g.S.avatar);Assert.IsTrue(g.S.controlLocked);Assert.GreaterOrEqual(g.S.hours,7,"개입 불가의 상태 기반 조기 귀환은16시부터 허용합니다."); }
+    [TestCase(0,false)] [TestCase(6.999,false)] [TestCase(7,true)] [TestCase(8,true)]
+    public void LockedAutomaticReturnWaitsUntilSixteen(double elapsed,bool allowed)
+    {
+        Select();g.S.phase=Phase.Running;g.S.controlLocked=true;g.S.avatar.sanity=29;g.S.hours=elapsed;
+        string before=JsonUtility.ToJson(g.S);
+        Assert.AreEqual(allowed,g.ShouldReturn());Assert.AreEqual(before,JsonUtility.ToJson(g.S),"판정만으로 시간·자원·난수가 바뀌지 않습니다.");
+    }
+    [Test] public void LockedReturnBoundarySurvivesSavingWithoutSkippingActions()
+    {
+        Select();g.S.phase=Phase.Running;g.S.goal=Goal.Explore;g.S.controlLocked=true;g.S.avatar.sanity=29;
+        g.S.food=1000;g.S.eventTarget=g.S.eventSlots=0;g.S.scheduledConstellation=null;g.S.hours=6.5;
+        var reloaded=new GameEngine(JsonUtility.FromJson<GameState>(JsonUtility.ToJson(g.S)),g.B,g.Content);
+        Assert.IsFalse(reloaded.ShouldReturn());int actions=reloaded.S.totalActions;reloaded.Tick();
+        Assert.AreEqual(Phase.Running,reloaded.S.phase);Assert.AreEqual(actions+1,reloaded.S.totalActions);
+        Assert.Greater(reloaded.S.hours,6.5);Assert.IsTrue(reloaded.ShouldReturn());
+        double hours=reloaded.S.hours;reloaded.Tick();Assert.AreEqual(Phase.Report,reloaded.S.phase);Assert.AreEqual(hours,reloaded.S.hours);
+    }
+    [Test] public void ReturnLimitLeavesExplicitReturnAndUnlockedRiskReturnAvailable()
+    {
+        Select();g.S.phase=Phase.Running;g.S.avatar.health=1;g.S.hours=0;Assert.IsTrue(g.ShouldReturn());
+        g.S.controlLocked=true;g.S.avatar.sanity=29;Assert.IsTrue(g.ReturnToShelter());
+        Assert.AreEqual(Phase.Report,g.S.phase);Assert.AreEqual(0,g.S.hours);
+    }
+    [Test] public void LockedAvatarCanStillDieBeforeSixteen()
+    {
+        Select();g.S.phase=Phase.Running;g.S.controlLocked=true;g.S.avatar.sanity=0;g.S.hours=0;
+        g.Tick();Assert.AreEqual(Phase.Death,g.S.phase);Assert.IsNull(g.S.avatar);
+    }
     [Test] public void LowSanityEventAutomaticallyResolves()
     { Veteran();g.S.controlLocked=true;g.S.avatar.sanity=29;g.S.hours=6;g.S.nextImportantHour=6;g.S.goal=Goal.Rift;g.Tick();Assert.AreNotEqual(Phase.Event,g.S.phase);Assert.IsNull(g.S.pending); }
     [TestCase(true)] [TestCase(false)] public void ZeroHungerOrSanityKillsImmediately(bool hunger)

@@ -56,6 +56,8 @@ namespace Apocalypse
         public bool ShouldReturn()
         {
             var a=S.avatar;if(a==null)return false;
+            // Keep taking real actions until 16:00; this gate never advances time or prevents death.
+            if(S.controlLocked&&Rules.DayStart+S.hours<Rules.LockedReturnEarliestHour)return false;
             double personality=B.returnPersonalityOffsets!=null&&B.returnPersonalityOffsets.Length==6?B.returnPersonalityOffsets[(int)a.personality]:0;
             double risk=S.goal==Goal.Rift?ActiveSealCount*B.returnRiskPerSeal:0;
             return a.health/a.MaxHealth<=B.returnHealthRatio+personality+risk || a.hunger<B.returnHunger ||
